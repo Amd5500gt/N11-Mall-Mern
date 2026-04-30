@@ -1,0 +1,36 @@
+{
+  "name": "n11mall",
+  "version": "1.2.1",
+  "description": "users Data of N11Mall Platform",
+  "keywords": [
+    "N11Mall",
+    "Mall",
+    "Cheap",
+    "Price",
+    "Projects",
+    "cheapMall",
+    "budgetmall"
+  ],
+  "homepage": "https://github.com/Amd5500gt/N11-Mall#readme",
+  "bugs": {
+    "url": "https://github.com/Amd5500gt/N11-Mall/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Amd5500gt/N11-Mall.git"
+  },
+  "license": "ISC",
+  "author": "harjeetvx",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "mongoose": "^9.6.0",
+    "nodemon": "^3.1.14"
+  }
+}
