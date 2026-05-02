@@ -13,7 +13,9 @@ import ErrorPage from './ErrorPage';
 import Layout from './Layout';
 import { useEffect } from 'react'
 import UseCart from './RootPage';
-import AuthSystem from './User/Auth';
+import LoginPage from './User/LoginPage';
+import RegisterPage from './User/RegisterPage';
+import ForgetPass from './User/ForgetPass';
 
 
 const App = () => {
@@ -63,7 +65,9 @@ const App = () => {
               />
             }
           />
-          <Route path='/auth' element={<AuthSystem />} />
+          <Route path='/register' element={<RegisterPage />} />
+          <Route path='/login' element={<LoginPage />} />
+          <Route path='/forgetpassword' element={<ForgetPass />} />
           <Route path='/*' element={<ErrorPage />} />
           <Route path='/products/*' element={<ErrorPage />} />
           <Route path='/about' element={<About />} />

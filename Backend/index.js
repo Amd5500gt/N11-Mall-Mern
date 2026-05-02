@@ -1,22 +1,19 @@
-const express = require("express")
-const server = express();
-const cors = require("cors")
+const express = require("express");
+const app = express();
+const cors = require("cors");
 
-const products = require("./data.json")
-server.use(cors({
-     origin: "http://localhost:5173"
-}))
-server.get("/products", (req, res) => {
-    try{
+const productRouter = require("./Router/getProducts");
+const newUserRouter = require("./Router/Register");
+const userLoginRouter = require("./Router/Login");
 
-        res.json(products)
-        console.log("Data Sent")
-    }
-    catch(err){
-        res.json([{id:1,name:null,descipton:null,thumbnail:null}])
-         console.log(err)
-    }
-});
+app.use(cors({
+  origin: "http://localhost:5173"
+}));
 
-server.listen(3000,()=> console.log("Server is Running"))
+app.use(express.json());
 
+app.use("/products", productRouter);
+app.use("/register", newUserRouter);
+app.use("/login", userLoginRouter);
+
+app.listen(3000, () => console.log("Server is Running"));

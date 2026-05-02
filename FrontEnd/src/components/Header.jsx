@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BsCart, BsCartFill } from 'react-icons/bs';
 import { FiHome, FiInfo, FiPhone, FiMenu, FiX } from 'react-icons/fi';
 import './components.css';
-import AuthPages from '../User/Auth';
+
 
 const Header = ({ cartCount, FindItems, user}) => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -38,7 +38,7 @@ const Header = ({ cartCount, FindItems, user}) => {
     const LoginChecker = ()=>{
      return <h2 style={{textAlign:"center", color:'blue'}}>Login First!</h2>
       setTimeout(() => {
-      navigate("/auth")
+      navigate("/login")
     }, 2000);
   }
 
@@ -100,7 +100,7 @@ const Header = ({ cartCount, FindItems, user}) => {
               )}
             </div>
             <span className="cart-text">Cart</span>
-          </Link> : <Link className='cart-button' to={"/auth"} onClick={LoginChecker}> Login / Register </Link>
+          </Link> : <Link className='cart-button' to={"/login"} onClick={LoginChecker}> Login / Register </Link>
         }
     
 
