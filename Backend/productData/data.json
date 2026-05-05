@@ -1,4 +1,5 @@
 {
+  "success": true,
   "products": [
     {
       "id": 1,
@@ -11804,5 +11805,6 @@
       ],
       "thumbnail": "https://cdn.dummyjson.com/product-images/womens-watches/women's-wrist-watch/thumbnail.webp"
     }
-  ]
+  ],
+    "total": 194
 }

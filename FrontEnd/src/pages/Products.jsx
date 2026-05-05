@@ -1,44 +1,27 @@
 import React, { useEffect, useState } from 'react';
-import { FaCartPlus, FaHeart, FaRegHeart, FaEye } from "react-icons/fa";
-import { BsFillCartCheckFill, BsStar, BsStarHalf, BsStarFill, BsLightningCharge } from "react-icons/bs";
+import { FaCartPlus, FaHeart, FaRegHeart, FaEye, FaSearch } from "react-icons/fa";
+import { BsFillCartCheckFill, BsStar, BsStarHalf, BsStarFill, BsLightningCharge, BsEmojiFrown } from "react-icons/bs";
 import { Link } from 'react-router-dom';
 import './pages.css';
 import Header from '../components/Header';
+import { useSearch } from '../Context/SearchContext';
+import NoProductsFound from './ProductNotFound';
+import { handleSuccess } from '../utils/Utils';
 
-const Products = ({ newCart,FindItems }) => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [skip, setSkip] = useState(0);
+const Products = ({ newCart }) => {
   const [addedItemId, setAddedItemId] = useState(null);
   const [showToast, setShowToast] = useState(false);
   const [toastProduct, setToastProduct] = useState(null);
   const [wishlist, setWishlist] = useState([]);
-  const [filterData, setFilterData] = useState([])
-  const [total, setTotal] = useState(0);
-  const limit = 12;
+  const {searchTerm,setSearchTerm,data,setData,filterData,setFilterData,loading,setLoading,skip,setSkip,total,setTotal,limit} = useSearch();
   const visibleData = Array.isArray(filterData)
   ? filterData.slice(skip, skip + limit)
   : [];
-  // Fetch products
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    setLoading(true);
-    fetch(`http://localhost:3000/products`)
-      .then(res => res.json())
-      .then(json => {
-        setData(json.products);
-        setFilterData(json.products)
-        setTotal(json.products.length);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.log(err);
-        setLoading(false);
-      });
-  }, [skip]);
+  
 useEffect(() => {
-  setTotal(filterData.length);
-}, [filterData]);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}, [skip]);
+
   // Load wishlist from localStorage
   useEffect(() => {
     const savedWishlist = localStorage.getItem('wishlist_n11');
@@ -49,6 +32,24 @@ useEffect(() => {
   useEffect(() => {
     localStorage.setItem('wishlist_n11', JSON.stringify(wishlist));
   }, [wishlist]);
+useEffect(() => {
+  const value = searchTerm.toLowerCase();
+
+  if (!value) {
+    setFilterData(data);
+    setTotal(data.length);
+    return;
+  }
+
+  const result = data.filter(item =>
+    item.title?.toLowerCase().includes(value)
+  );
+
+  setFilterData(result);
+  setTotal(result.length);
+  setSkip(0);
+
+}, [searchTerm, data]);
 
   // Render stars
   const renderStars = (rating) => {
@@ -88,22 +89,14 @@ useEffect(() => {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(price * 20);
-
-
-   FindItems = (searchValue) => {
-    const value = searchValue.toLowerCase()
-
-    const result = data.filter(items => (
-      items.title?.toLowerCase().includes(value)
-    ))
-    setFilterData(result)
-    setSkip(0)
-  }
+  
   // Pagination
   const handleNext = () => { if (skip + limit < total) setSkip(p => p + limit); };
   const handlePrev = () => { if (skip > 0) setSkip(p => p - limit); };
   const currentPage = Math.floor(skip / limit) + 1;
   const totalPages = Math.ceil(total / limit);
+
+
 
   // Loading Skeleton
   if (loading) {
@@ -135,7 +128,7 @@ useEffect(() => {
     <div className="products-page">
 
       {/* ── Hero Banner ── */}
-      {skip === 0 && (
+      {skip === 0 && total > 0 && (
         <div className="products-hero-banner">
           {/* Background watermark text */}
           <div className="hero-watermark" aria-hidden="true">SHOP</div>
@@ -172,24 +165,27 @@ useEffect(() => {
         </div>
       )}
 
-
-
       {/* ── Products Grid ── */}
       <div className="products-container">
         <div className="products-header">
-          <h2>{skip === 0 ? 'Featured Products' : 'All Products'}</h2>
-          <p>Showing {skip + 1}–{Math.min(skip + limit, total)} of {total} products</p>
+          <h2>{skip === 0 && total > 0 ? 'Featured Products' : total > 0 ? 'All Products' : ''}</h2>
+          {total > 0 && (
+            <p>Showing {skip + 1}–{Math.min(skip + limit, total)} of {total} products</p>
+          )}
         </div>
 
-        <div className="products-grid">
-          {
-            visibleData.length > 0 ?
-              visibleData.map((item, index) => (
+        {total === 0 ? (
+          <NoProductsFound />
+        ) : (
+          <>
+            <div className="products-grid">
+              {visibleData.map((item, index) => (
                 <div
                   key={item.id}
                   className="product-card"
                   style={{ animationDelay: `${(index % 12) * 0.05}s` }}
                 >
+                  
                   {/* Image */}
                   <div className="product-image-section">
                     <Link to={`/product/${item.id}`} className="product-link">
@@ -258,7 +254,10 @@ useEffect(() => {
                     </div>
 
                     <button
-                      onClick={() => handleAddToCart(item)}
+                      onClick={() =>{
+                     handleAddToCart(item)
+                     handleSuccess()
+                      }}
                       className={`add-to-cart-btn ${addedItemId === item.id ? 'added' : ''}`}
                       disabled={item.stock === 0}
                     >
@@ -270,54 +269,49 @@ useEffect(() => {
                     </button>
                   </div>
                 </div>
-              )) : (
-             <div style={{textAlign:"center",margin:"60px auto"}}>
-  <h3>Result Not Found!</h3>
-  <p>Please try again with different keywords</p>
-</div>)
-          }
-
-        </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="pagination-wrapper">
-            <div className="pagination">
-              <button onClick={handlePrev} disabled={skip === 0} className="page-btn prev-btn">
-                ← Prev
-              </button>
-
-              <div className="page-numbers">
-                {[...Array(Math.min(5, totalPages))].map((_, i) => {
-                  let pageNum;
-                  if (totalPages <= 5) pageNum = i + 1;
-                  else if (currentPage <= 3) pageNum = i + 1;
-                  else if (currentPage >= totalPages - 2) pageNum = totalPages - 4 + i;
-                  else pageNum = currentPage - 2 + i;
-
-                  if (pageNum <= totalPages && pageNum > 0) {
-                    return (
-                      <button
-                        key={pageNum}
-                        onClick={() => setSkip((pageNum - 1) * limit)}
-                        className={`page-number ${currentPage === pageNum ? 'active' : ''}`}
-                      >
-                        {pageNum}
-                      </button>
-                    );
-                  }
-                  return null;
-                })}
-              </div>
-
-              <button onClick={handleNext} disabled={skip + limit >= total} className="page-btn next-btn">
-                Next →
-              </button>
+              ))}
             </div>
-          </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="pagination-wrapper">
+                <div className="pagination">
+                  <button onClick={handlePrev} disabled={skip === 0} className="page-btn prev-btn">
+                    ← Prev
+                  </button>
+
+                  <div className="page-numbers">
+                    {[...Array(Math.min(5, totalPages))].map((_, i) => {
+                      let pageNum;
+                      if (totalPages <= 5) pageNum = i + 1;
+                      else if (currentPage <= 3) pageNum = i + 1;
+                      else if (currentPage >= totalPages - 2) pageNum = totalPages - 4 + i;
+                      else pageNum = currentPage - 2 + i;
+
+                      if (pageNum <= totalPages && pageNum > 0) {
+                        return (
+                          <button
+                            key={pageNum}
+                            onClick={() => setSkip((pageNum - 1) * limit)}
+                            className={`page-number ${currentPage === pageNum ? 'active' : ''}`}
+                          >
+                            {pageNum}
+                          </button>
+                        );
+                      }
+                      return null;
+                    })}
+                  </div>
+
+                  <button onClick={handleNext} disabled={skip + limit >= total} className="page-btn next-btn">
+                    Next →
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </div>
-
 
       {/* Toast */}
       {showToast && toastProduct && (

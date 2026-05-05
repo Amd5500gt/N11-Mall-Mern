@@ -1626,13 +1626,10 @@ html {
 }
 
 .spinner {
-  width: 55px;
-  height: 55px;
-  border: 3px solid #ffb6d9;
-  border-top-color: #ff1493;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
-  margin: 0 auto 15px;
 }
 
 /* No Products */

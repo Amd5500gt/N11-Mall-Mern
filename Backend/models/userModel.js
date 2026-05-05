@@ -1,34 +1,24 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose")
+const schema = mongoose.Schema
 
-const userSchema = new mongoose.Schema({
-  name: {
+const userSchema = new schema({
+  name:{
     type: String,
-    required: true,
+    required: true
+  },
+  email:{
+    type :String,
+    required : true,
+    lowercase: true,
+    unique: true,
     trim: true
   },
-
-  email: {
+  password:{
     type: String,
-    required: true,
-    unique: true,        // duplicate email nahi aayega
-    trim: true
-  },
-
-  number: {
-    type: String,        // better than Number (leading 0 issue avoid)
-    required: true,
-    minlength: 10,
-    maxlength: 10
-  },
-
-  password: {
-    type: String,
-    required: true,
-    minlength: 6
+    required: true
   }
+})
 
-}, { timestamps: true });  // createdAt, updatedAt auto
+const userModel = mongoose.model("users",userSchema)
 
-const userModel = mongoose.model("users", userSchema);
-
-module.exports = userModel;
+module.exports = userModel
