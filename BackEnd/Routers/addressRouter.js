@@ -4,7 +4,7 @@ const {  userAddress,
   updateAddress,
   setDefaultAddress,
   removeAddress,
-  deleteAllAddresses} = require("../Controllors/AddressAPI");
+  deleteAllAddresses} = require("../api/AddressAPI");
 const authCart = require("../Middlewares/authCart");
 
 // routes/addressRoutes.js

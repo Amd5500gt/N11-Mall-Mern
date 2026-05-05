@@ -1,6 +1,6 @@
 
 const Router = require("express").Router()
-const { addToCart, goToCart, removeFromCart } = require("../Controllors/CartAPIs")
+const { addToCart, goToCart, removeFromCart } = require("../api/CartAPIs")
 const authCart = require("../Middlewares/authCart")
 
 Router.post("/add",authCart,addToCart);
