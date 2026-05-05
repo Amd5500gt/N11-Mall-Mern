@@ -15,7 +15,7 @@ const ForgetPass = () => {
 const handleForgot = (e) => {
   e.preventDefault();
 
-  axios.post("http://localhost:8080/login", {
+  axios.post("https://n11-backend-2.vercel.app/login", {
     email
   })
   .then(res => {

@@ -48,7 +48,7 @@ const LoginPage = () => {
       // Simulate network delay for smooth animation
       await new Promise(resolve => setTimeout(resolve, 1500))
 
-      const response = await fetch("http://localhost:8080/login", {
+      const response = await fetch("https://n11-backend-2.vercel.app/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -98,7 +98,7 @@ const LoginPage = () => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500))
       
-      const response = await fetch("http://localhost:8080/forgot-password", {
+      const response = await fetch("https://n11-backend-2.vercel.app/forgot-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

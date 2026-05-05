@@ -87,7 +87,7 @@ const RegisterPage = () => {
       await new Promise(resolve => setTimeout(resolve, 1500))
       
       // API call
-      const url = "http://localhost:8080/register"
+      const url = "https://n11-backend-2.vercel.app/register"
       const response = await fetch(url, {
         method: "POST",
         headers: {

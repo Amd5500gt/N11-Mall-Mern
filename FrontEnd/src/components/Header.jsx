@@ -62,19 +62,7 @@ const Header = ({ cartCount }) => {
     }
   }, [isLogged, token]);
 
-  const fetchAddresses = async () => {
-    try {
-      const response = await fetch('http://localhost:8080/address', {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setAddresses(data);
-      }
-    } catch (error) {
-      console.error('Error fetching addresses:', error);
-    }
-  };
+ 
 
   const navLinks = [
     { name: 'Home', path: '/', icon: <FiHome size={18} /> },

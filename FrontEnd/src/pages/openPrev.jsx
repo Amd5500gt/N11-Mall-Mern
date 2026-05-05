@@ -27,7 +27,7 @@ const OpenPrev = () => {
       setLoading(false);
     }, 6000);
 
-    fetch(`http://localhost:8080/products/${id}`)
+    fetch(`https://n11-backend-2.vercel.app/products/${id}`)
       .then(res => res.json())
       .then(data => {
         clearTimeout(timer);
