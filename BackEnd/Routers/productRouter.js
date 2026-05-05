@@ -1,5 +1,5 @@
 const Router = require("express").Router()
-const {products, productPage} = require("../api/productAPIs")
+const {products, productPage} = require("../Controllors/productAPIs")
 const ensureAuthenticated = require("../Middlewares/authData")
 
 
