@@ -5,8 +5,9 @@ import { FaCartPlus, FaCheck, FaMinus, FaPlus, FaHeart, FaShare, FaTruck, FaShie
 import { BsFillCartCheckFill, BsStar, BsStarHalf, BsStarFill, BsLightningCharge } from "react-icons/bs";
 import ErrorPage from '../ErrorPage';
 import './pages.css';
+import { useCart } from '../Context/CartContext';
 
-const OpenPrev = ({ newCart, addWithQuantity }) => {
+const OpenPrev = () => {
   const { id } = useParams();
   const [item, setItem] = useState({});
   const [loading, setLoading] = useState(true);
@@ -18,6 +19,7 @@ const OpenPrev = ({ newCart, addWithQuantity }) => {
   const [activeTab, setActiveTab] = useState('details');
   const [showToast, setShowToast] = useState(false);
   const [toastProduct, setToastProduct] = useState(null);
+  const{newCart, addWithQuantity} = useCart()
 
   useEffect(() => {
     let timer = setTimeout(() => {
@@ -25,7 +27,7 @@ const OpenPrev = ({ newCart, addWithQuantity }) => {
       setLoading(false);
     }, 6000);
 
-    fetch(`https://dummyjson.com/products/${id}`)
+    fetch(`http://localhost:8080/products/${id}`)
       .then(res => res.json())
       .then(data => {
         clearTimeout(timer);

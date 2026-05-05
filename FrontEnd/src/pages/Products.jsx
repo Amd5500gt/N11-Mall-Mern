@@ -7,17 +7,17 @@ import Header from '../components/Header';
 import { useSearch } from '../Context/SearchContext';
 import NoProductsFound from './ProductNotFound';
 import { handleSuccess } from '../utils/Utils';
+import toast from 'react-hot-toast';
+import { useCart } from '../Context/CartContext';
 
-const Products = ({ newCart }) => {
+const Products = () => {
   const [addedItemId, setAddedItemId] = useState(null);
-  const [showToast, setShowToast] = useState(false);
-  const [toastProduct, setToastProduct] = useState(null);
   const [wishlist, setWishlist] = useState([]);
   const {searchTerm,setSearchTerm,data,setData,filterData,setFilterData,loading,setLoading,skip,setSkip,total,setTotal,limit} = useSearch();
+  const { newCart, removeCart, addedItems } = useCart();
   const visibleData = Array.isArray(filterData)
   ? filterData.slice(skip, skip + limit)
   : [];
-  
 useEffect(() => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }, [skip]);
@@ -65,15 +65,18 @@ useEffect(() => {
     );
   };
 
-  // Add to cart with toast
-  const handleAddToCart = (item) => {
+const handleAddToCart = async (item) => {
+  try {
+    // ✅ UI update bhi rakho
     newCart(item);
+
     setAddedItemId(item.id);
-    setToastProduct(item);
-    setShowToast(true);
+
     setTimeout(() => setAddedItemId(null), 500);
-    setTimeout(() => { setShowToast(false); setToastProduct(null); }, 3000);
-  };
+  } catch (err) {
+    console.log(err);
+  }
+};
 
   // Wishlist toggle
   const handleWishlist = (itemId) => {
@@ -256,7 +259,7 @@ useEffect(() => {
                     <button
                       onClick={() =>{
                      handleAddToCart(item)
-                     handleSuccess()
+                   
                       }}
                       className={`add-to-cart-btn ${addedItemId === item.id ? 'added' : ''}`}
                       disabled={item.stock === 0}
@@ -312,24 +315,6 @@ useEffect(() => {
           </>
         )}
       </div>
-
-      {/* Toast */}
-      {showToast && toastProduct && (
-        <div className="toast-notification">
-          <div className="toast-content">
-            <div className="toast-image">
-              <img src={toastProduct.thumbnail} alt={toastProduct.title} />
-            </div>
-            <div className="toast-details">
-              <div className="toast-title">{toastProduct.title}</div>
-              <div className="toast-message">
-                <BsFillCartCheckFill className="toast-icon" />
-                Added to cart
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

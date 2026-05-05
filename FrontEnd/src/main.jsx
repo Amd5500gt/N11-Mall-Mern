@@ -1,19 +1,15 @@
-
 import { createRoot } from 'react-dom/client'
 import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
-import  { Cart } from './Context/RootPage.jsx'
-import { SearchProvider } from './Context/SearchContext.jsx'
+import { CartProvider } from './Context/CartContext'  // Change Cart to CartProvider
+import { SearchProvider } from './Context/SearchContext'  // Change CartContext to SearchProvider
 
 createRoot(document.getElementById('root')).render(
-    <BrowserRouter >
-    <SearchProvider >
-
-    <Cart>
-        <App />
-    </Cart>
-
-    </SearchProvider>
+    <BrowserRouter>
+        <SearchProvider>
+            <CartProvider>  {/* Change Cart to CartProvider */}
+                <App />
+            </CartProvider>
+        </SearchProvider>
     </BrowserRouter>
- 
 )

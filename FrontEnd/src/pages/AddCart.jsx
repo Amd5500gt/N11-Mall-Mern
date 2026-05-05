@@ -1,33 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import EmptyCart from '../components/Emptycart';
 import { FaTrash, FaPlus, FaMinus, FaShoppingBag, FaArrowLeft, FaCreditCard } from 'react-icons/fa';
 import './pages.css';
 import { FaSpinner } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
+import { useCart } from '../Context/CartContext'; // Import the hook
+import toast from 'react-hot-toast';
 
-const AddCart = ({ addedItems, setAddedItems, newCart, removeCart, total }) => {
-  const[loader,setLoader] = useState(false)
-  const navigate = useNavigate()
+const AddCart = () => {
+  const [loader, setLoader] = useState(false);
+  const navigate = useNavigate();
   const [animateRemove, setAnimateRemove] = useState(null);
-  let totalPrice = (total*20).toFixed(2);
-  const totalAmout = (totalPrice * 1.03).toFixed(2)
-  const handleCheckoutItem = ()=>{
-      setLoader(true)
-      setTimeout(() => {
-        navigate("/cart/payment")
-        localStorage.setItem("total",totalAmout)
-      }, 2000);
-  }
-  const removeAllCart = (item) => {
-  setAddedItems((prev) =>
-    prev.filter(p => p.id !== item.id)
-  );
-};
-  const handleRemove = (item) => {
-    setAnimateRemove(item.id);
+  
+  // Get everything from context instead of props
+  const { addedItems, newCart, removeCart, total } = useCart();
+
+  let totalPrice = (total * 20).toFixed(2);
+  const totalAmount = (totalPrice * 1.03).toFixed(2);
+
+  const handleCheckoutItem = () => {
+    setLoader(true);
     setTimeout(() => {
-      removeAllCart(item);
+      navigate("/cart/payment");
+      localStorage.setItem("total", totalAmount);
+    }, 2000);
+  };
+
+  const handleRemove = async (item) => {
+    setAnimateRemove(item.id);
+    setTimeout(async () => {
+      await removeCart(item);
       setAnimateRemove(null);
     }, 300);
   };
@@ -121,17 +124,16 @@ const AddCart = ({ addedItems, setAddedItems, newCart, removeCart, total }) => {
               <div className="summary-divider"></div>
               <div className="summary-row total">
                 <span>Total</span>
-                <span>₹{totalAmout}</span>
+                <span>₹{totalAmount}</span>
               </div>
             </div>
-  
 
             <button onClick={handleCheckoutItem} className="checkout-btn">
-             {
-              loader ? <> Proceed to Checkout <FaSpinner className='spin'/></> :  <><FaCreditCard /> Proceed to Checkout</>
-            } 
-
-              
+              {loader ? (
+                <>Proceed to Checkout <FaSpinner className='spin' /></>
+              ) : (
+                <><FaCreditCard /> Proceed to Checkout</>
+              )}
             </button>
             
             <Link to="/" className="continue-shopping">

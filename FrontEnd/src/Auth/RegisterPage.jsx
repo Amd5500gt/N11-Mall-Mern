@@ -104,7 +104,7 @@ const RegisterPage = () => {
       const { success, message, error } = result
       
       if (success) {
-        handleSuccess(message)
+        handleSuccess(message+"please Login")
         setTimeout(() => {
           navigate("/login")
         }, 1000)

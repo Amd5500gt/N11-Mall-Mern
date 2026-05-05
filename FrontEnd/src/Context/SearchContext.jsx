@@ -70,7 +70,7 @@ useEffect(() => {
   toast.success("Logged out successfully");
 };
   return (
-   <SearchContext.Provider value={ {searchTerm,setSearchTerm,data,filterData,total,loading,skip,limit,setData,setLoading,setSkip,setFilterData,setTotal,isLogged,userName,userEmail,handleLogout,setToken,setUserName,setUserEmail} } >
+   <SearchContext.Provider value={ {searchTerm,setSearchTerm,data,filterData,total,loading,skip,limit,setData,setLoading,setSkip,setFilterData,setTotal,isLogged,userName,userEmail,handleLogout,setToken,setUserName,setUserEmail,token} } >
    {children}
    </SearchContext.Provider>
   )

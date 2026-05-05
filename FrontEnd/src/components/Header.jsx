@@ -1,27 +1,32 @@
-import React, { useState, useEffect, useContext } from 'react';
+// components/Header.jsx
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { BsCart, BsCartFill } from 'react-icons/bs';
-
+import { BsCartFill } from 'react-icons/bs';
 import './components.css';
 import { useSearch } from '../Context/SearchContext';
-import { FiHome, FiInfo, FiPhone, FiMenu, FiX, FiUser, FiLogOut, FiSettings, FiShoppingBag, FiHeart } from 'react-icons/fi';
+import { FiHome, FiInfo, FiPhone, FiMenu, FiX, FiUser, FiLogOut, FiSettings, FiMapPin, FiPackage } from 'react-icons/fi';
 import { FaUserCircle, FaMoon, FaSun, FaChevronDown } from 'react-icons/fa';
-import { useRef } from 'react';
+import ProfileDropdown from './ProfileDropdown';
+import AddressModal from './AddressModal';
 
 const Header = ({ cartCount }) => {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [showAddressModal, setShowAddressModal] = useState(false);
   const dropdownRef = useRef(null);
   const profileBtnRef = useRef(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [animate, setAnimate] = useState(false);
   const location = useLocation();
-  const [value, setValue] = useState("")
-  const { setSearchTerm, token, setToken, userData, setUserData, isLogged, userName, userEmail, handleLogout } = useSearch()
-  const navigate = useNavigate()
-  console.log("isLogged:", isLogged);
-  console.log("HEADER CONTEXT:", useSearch());
+  const [value, setValue] = useState("");
+  const [addresses, setAddresses] = useState([]);
+
+  const { 
+    setSearchTerm, token, isLogged, userName, userEmail, 
+    userData, handleLogout 
+  } = useSearch();
+  const navigate = useNavigate();
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -32,8 +37,10 @@ const Header = ({ cartCount }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target) &&
-        profileBtnRef.current && !profileBtnRef.current.contains(event.target)) {
+      if (
+        dropdownRef.current && !dropdownRef.current.contains(event.target) &&
+        profileBtnRef.current && !profileBtnRef.current.contains(event.target)
+      ) {
         setIsProfileDropdownOpen(false);
       }
     };
@@ -49,36 +56,47 @@ const Header = ({ cartCount }) => {
     }
   }, [cartCount]);
 
+  useEffect(() => {
+    if (isLogged && token) {
+      fetchAddresses();
+    }
+  }, [isLogged, token]);
+
+  const fetchAddresses = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/address', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setAddresses(data);
+      }
+    } catch (error) {
+      console.error('Error fetching addresses:', error);
+    }
+  };
 
   const navLinks = [
     { name: 'Home', path: '/', icon: <FiHome size={18} /> },
     { name: 'About', path: '/about', icon: <FiInfo size={18} /> },
     { name: 'Contact', path: '/contact', icon: <FiPhone size={18} /> },
   ];
-  const handleSearch = async () => {
+
+  const handleSearch = () => {
     if (!value.trim()) return;
-     const val = value.trim().toLowerCase();
-    setSearchTerm(val)
-  }
+    setSearchTerm(value.trim().toLowerCase());
+  };
+
   const handleLogin = () => {
-    navigate("/login")
-
-  }
-
-  // Profile dropdown items
-  const profileMenuItems = [
-    { name: 'My Profile', path: '/profile', icon: <FiUser size={16} /> },
-    { name: 'Settings', path: '/settings', icon: <FiSettings size={16} /> }
-  ];
+    navigate("/login");
+  };
 
   return (
     <>
       <header className={`n11-header ${isScrolled ? 'scrolled' : ''}`}>
         <div className="header-container">
           {/* Logo */}
-          <Link className="logo" onClick={() => {
-            setIsMobileMenuOpen(false)
-          }}>
+          <Link className="logo" to="/" onClick={() => setIsMobileMenuOpen(false)}>
             <div className="logo-icon">
               <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M16 2L19.5 12.5L30 16L19.5 19.5L16 30L12.5 19.5L2 16L12.5 12.5L16 2Z" fill="currentColor" fillOpacity="0.9" />
@@ -102,25 +120,22 @@ const Header = ({ cartCount }) => {
               </Link>
             ))}
           </nav>
+
+          {/* Search Box */}
           <div className="search-box">
             <input
               value={value}
-              onChange={(e) => {
-                const val = e.target.value.trim().toLowerCase();
-                setValue(val)
-                setSearchTerm(val)
-              }
-              }
+              onChange={(e) => setValue(e.target.value)}
               className="search-input"
               type="text"
               placeholder="Search products..."
+              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
             />
-            <button onClick={handleSearch} className="search-btn">
-              🔍
-            </button>
+            <button onClick={handleSearch} className="search-btn">🔍</button>
           </div>
-          {
-            isLogged ? (<>
+
+          {isLogged ? (
+            <>
               <Link to="/cart" className="cart-button">
                 <div className="cart-icon-wrapper">
                   <BsCartFill className='cart-icon' />
@@ -134,80 +149,59 @@ const Header = ({ cartCount }) => {
               </Link>
 
               <div className="user-section">
-                <>
-                  <button
-                    ref={profileBtnRef}
-                    className="profile-btn"
-                    onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
-                  >
-                    {userData?.avatar ? (
-                      <img src={userData.avatar} alt="Profile" className="profile-avatar" />
-                    ) : (
-                      <FaUserCircle size={28} />
-                    )}
-                    <span className="profile-name">
-                      {userName?.split(' ')[0] || 'User'}
-                    </span>
-                    <FaChevronDown size={12} className={`dropdown-arrow ${isProfileDropdownOpen ? 'rotate' : ''}`} />
-                  </button>
-
-                  {/* Profile Dropdown */}
-                  {isProfileDropdownOpen && (
-                    <div ref={dropdownRef} className="profile-dropdown">
-                      <div className="dropdown-header">
-                        {userData?.avatar ? (
-                          <img src={userData.avatar} alt="Profile" className="dropdown-avatar" />
-                        ) : (
-                          <FaUserCircle size={40} />
-                        )}
-                        <div className="dropdown-user-info">
-                          <h4>{userName || 'User'}</h4>
-                          <p>{userEmail || ''}</p>
-                        </div>
-                      </div>
-                      <div className="dropdown-divider"></div>
-                      {profileMenuItems.map((item) => (
-                        <Link
-                          key={item.name}
-                          to={item.path}
-                          className="dropdown-item"
-                          onClick={() => {
-                            setIsProfileDropdownOpen(false);
-                            setIsMobileMenuOpen(false);
-                          }}
-                        >
-                          {item.icon}
-                          <span>{item.name}</span>
-                        </Link>
-                      ))}
-                      <div className="dropdown-divider"></div>
-                      <button className="dropdown-item logout" onClick={() => {
-                        handleLogout()
-                        setIsProfileDropdownOpen(false);
-                        setTimeout(() => {
-                          navigate('/login');
-                        }, 500);
-                      }}>
-                        <FiLogOut size={16} />
-                        <span>Logout</span>
-                      </button>
-                    </div>
+                <button
+                  ref={profileBtnRef}
+                  className="profile-btn"
+                  onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                >
+                  {userData?.avatar ? (
+                    <img src={userData.avatar} alt="Profile" className="profile-avatar" />
+                  ) : (
+                    <FaUserCircle size={28} />
                   )}
-                </>
+                  <span className="profile-name">
+                    {userName?.split(' ')[0] || 'User'}
+                  </span>
+                  <FaChevronDown size={12} className={`dropdown-arrow ${isProfileDropdownOpen ? 'rotate' : ''}`} />
+                </button>
+
+                {isProfileDropdownOpen && (
+                  <ProfileDropdown
+                    dropdownRef={dropdownRef}
+                    userName={userName}
+                    userEmail={userEmail}
+                    userData={userData}
+                    addressesCount={addresses.length}
+                    onClose={() => setIsProfileDropdownOpen(false)}
+                    onShowAddress={() => {
+                      setShowAddressModal(true);
+                      setIsProfileDropdownOpen(false);
+                    }}
+                   
+                    onLogout={handleLogout}
+                  />
+                )}
               </div>
-
-            </>) : (<button className="login-btn" onClick={handleLogin}>
-              Login
-            </button>)
-          }
-
+            </>
+          ) : (
+            <button className="login-btn" onClick={handleLogin}>Login</button>
+          )}
         </div>
-
       </header>
 
+      {/* Address Modal */}
+      {showAddressModal && (
+        <AddressModal
+          token={token}
+          addresses={addresses}
+          onClose={() => setShowAddressModal(false)}
+          onAddressChange={fetchAddresses}
+        />
+      )}
+
+  
     </>
   );
 };
-
 
 export default Header;

@@ -1,0 +1,861 @@
+/* Payments.css - Complete Responsive Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap');
+
+/* ==================== CONTAINER ==================== */
+.payment-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Animated Background */
+.payment-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  animation: float 6s ease-in-out infinite;
+}
+
+.bg-circle-1 {
+  width: 300px;
+  height: 300px;
+  top: -150px;
+  right: -100px;
+  animation-delay: 0s;
+}
+
+.bg-circle-2 {
+  width: 200px;
+  height: 200px;
+  bottom: -100px;
+  left: -50px;
+  animation-delay: 2s;
+}
+
+.bg-circle-3 {
+  width: 150px;
+  height: 150px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation-delay: 4s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-20px) scale(1.1);
+  }
+}
+
+/* ==================== PAYMENT CARD ==================== */
+.payment-card {
+  background: white;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 480px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Custom Scrollbar */
+.payment-card::-webkit-scrollbar {
+  width: 6px;
+}
+
+.payment-card::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.payment-card::-webkit-scrollbar-thumb {
+  background: #667eea;
+  border-radius: 10px;
+}
+
+/* ==================== HEADER ==================== */
+.payment-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  border-radius: 24px 24px 0 0;
+}
+
+.header-back-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.header-back-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.header-content {
+  flex: 1;
+}
+
+.header-content h1 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.header-content p {
+  font-size: 0.8rem;
+  opacity: 0.9;
+  margin: 2px 0 0;
+}
+
+.header-lock {
+  background: rgba(255, 255, 255, 0.2);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ==================== BODY ==================== */
+.payment-body {
+  padding: 24px;
+}
+
+/* ==================== ORDER SUMMARY ==================== */
+.order-summary {
+  background: #f8f9fa;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #e5e7eb;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.summary-label {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.summary-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.order-id {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #667eea;
+}
+
+.summary-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 12px 0;
+}
+
+.summary-item.total {
+  padding-top: 8px;
+}
+
+.summary-item.total .summary-label {
+  font-size: 0.9rem;
+  color: #1f2937;
+  font-weight: 600;
+}
+
+.amount {
+  font-size: 1.5rem !important;
+  font-weight: 800 !important;
+  color: #667eea !important;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.rupee-icon {
+  font-size: 1rem;
+  margin-right: 2px;
+}
+
+/* ==================== TIMER SECTION ==================== */
+.timer-section {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 2px solid #fbbf24;
+  transition: all 0.3s ease;
+}
+
+.timer-section.urgent {
+  background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+  border-color: #f87171;
+  animation: urgentPulse 1s ease-in-out infinite;
+}
+
+@keyframes urgentPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+}
+
+.timer-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.timer-icon-wrapper {
+  background: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.timer-icon {
+  font-size: 24px;
+  color: #d97706;
+}
+
+.timer-section.urgent .timer-icon {
+  color: #ef4444;
+}
+
+.timer-icon.pulse {
+  animation: iconPulse 1s infinite;
+}
+
+@keyframes iconPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.timer-info {
+  flex: 1;
+}
+
+.timer-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #92400e;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.timer-section.urgent .timer-label {
+  color: #991b1b;
+}
+
+.timer-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #92400e;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
+}
+
+.timer-section.urgent .timer-value {
+  color: #dc2626;
+}
+
+.timer-warning {
+  background: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 12px;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.timer-progress {
+  height: 4px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.timer-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+  border-radius: 2px;
+  transition: width 1s linear;
+}
+
+.timer-section.urgent .timer-progress-bar {
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+/* ==================== QR CODE SECTION ==================== */
+.qr-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.qr-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 16px;
+}
+
+.qr-header-icon {
+  font-size: 20px;
+  color: #667eea;
+}
+
+.qr-container {
+  background: white;
+  padding: 16px;
+  border-radius: 20px;
+  display: inline-block;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e5e7eb;
+  margin-bottom: 12px;
+  transition: all 0.3s ease;
+}
+
+.qr-container:hover {
+  transform: scale(1.02);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.qr-image {
+  width: 200px;
+  height: 200px;
+  display: block;
+}
+
+.qr-loading {
+  width: 200px;
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #f3f4f6;
+  border-radius: 12px;
+  color: #6b7280;
+  font-size: 0.85rem;
+}
+
+.qr-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #667eea;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.qr-instruction {
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* ==================== UPI SECTION ==================== */
+.upi-section {
+  margin-bottom: 20px;
+}
+
+.upi-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-bottom: 8px;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.upi-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8f9fa;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  gap: 12px;
+}
+
+.upi-id {
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  color: #1f2937;
+  word-break: break-all;
+  flex: 1;
+  user-select: all;
+}
+
+.copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: white;
+  border: 2px solid #667eea;
+  color: #667eea;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.copy-btn:hover {
+  background: #667eea;
+  color: white;
+}
+
+.copy-btn.copied {
+  background: #10b981;
+  border-color: #10b981;
+  color: white;
+}
+
+/* ==================== PAY BUTTON ==================== */
+.pay-now-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 16px;
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.pay-now-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.pay-now-btn:hover::before {
+  width: 400px;
+  height: 400px;
+}
+
+.pay-now-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(16, 185, 129, 0.4);
+}
+
+.pay-now-btn:active {
+  transform: translateY(0);
+}
+
+/* ==================== SECURITY BADGE ==================== */
+.security-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #9ca3af;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.security-icon {
+  color: #10b981;
+  font-size: 16px;
+}
+
+/* ==================== EXPIRED & ERROR STATES ==================== */
+.payment-card.expired,
+.payment-card.error {
+  padding: 40px 24px;
+  text-align: center;
+}
+
+.expired-content,
+.error-content {
+  animation: fadeIn 0.5s ease;
+}
+
+.expired-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+}
+
+.error-icon {
+  font-size: 48px;
+  color: #ef4444;
+  margin-bottom: 16px;
+}
+
+.expired-content h2,
+.error-content h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.expired-content p,
+.error-content p {
+  color: #6b7280;
+  margin-bottom: 24px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.expired-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn-back,
+.btn-retry {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-back {
+  background: #6366f1;
+  color: white;
+  border: none;
+}
+
+.btn-back:hover {
+  background: #4f46e5;
+}
+
+.btn-retry {
+  background: white;
+  color: #6366f1;
+  border: 2px solid #6366f1;
+}
+
+.btn-retry:hover {
+  background: #6366f1;
+  color: white;
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+@media (max-width: 768px) {
+  .payment-container {
+    padding: 0;
+    align-items: flex-start;
+  }
+
+  .payment-card {
+    max-width: 100%;
+    max-height: 100vh;
+    border-radius: 0;
+    min-height: 100vh;
+  }
+
+  .payment-header {
+    border-radius: 0;
+    padding: 16px 20px;
+  }
+
+  .payment-body {
+    padding: 20px;
+  }
+
+  .qr-image {
+    width: 180px;
+    height: 180px;
+  }
+
+  .qr-loading {
+    width: 180px;
+    height: 180px;
+  }
+
+  .timer-value {
+    font-size: 1.75rem;
+  }
+
+  .amount {
+    font-size: 1.25rem !important;
+  }
+
+  .upi-id {
+    font-size: 0.7rem;
+  }
+
+  .copy-btn span {
+    display: none;
+  }
+
+  .pay-now-btn {
+    padding: 14px;
+    font-size: 1rem;
+  }
+
+  /* Bottom sheet for mobile */
+  @media (max-height: 700px) {
+    .payment-card {
+      overflow-y: auto;
+    }
+    
+    .qr-image {
+      width: 150px;
+      height: 150px;
+    }
+    
+    .qr-loading {
+      width: 150px;
+      height: 150px;
+    }
+    
+    .timer-value {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .payment-body {
+    padding: 16px;
+  }
+
+  .header-content h1 {
+    font-size: 1.1rem;
+  }
+
+  .order-summary {
+    padding: 16px;
+  }
+
+  .timer-content {
+    gap: 12px;
+  }
+
+  .timer-icon-wrapper {
+    width: 40px;
+    height: 40px;
+  }
+
+  .timer-icon {
+    font-size: 20px;
+  }
+
+  .timer-value {
+    font-size: 1.5rem;
+  }
+
+  .qr-container {
+    padding: 12px;
+  }
+
+  .qr-image {
+    width: 150px;
+    height: 150px;
+  }
+
+  .qr-loading {
+    width: 150px;
+    height: 150px;
+  }
+
+  .upi-box {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .upi-id {
+    text-align: center;
+  }
+
+  .copy-btn {
+    justify-content: center;
+  }
+
+  .copy-btn span {
+    display: inline;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .payment-card {
+    max-width: 440px;
+  }
+  
+  .qr-image {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+/* ==================== DARK MODE SUPPORT ==================== */
+@media (prefers-color-scheme: dark) {
+  .payment-card {
+    background: #1f2937;
+  }
+
+  .order-summary {
+    background: #374151;
+    border-color: #4b5563;
+  }
+
+  .summary-label {
+    color: #d1d5db;
+  }
+
+  .summary-value {
+    color: #f3f4f6;
+  }
+
+  .upi-box {
+    background: #374151;
+    border-color: #4b5563;
+  }
+
+  .upi-id {
+    color: #f3f4f6;
+  }
+
+  .security-badge {
+    background: #374151;
+    color: #9ca3af;
+  }
+
+  .qr-header {
+    color: #f3f4f6;
+  }
+
+  .qr-instruction {
+    color: #9ca3af;
+  }
+}
+
+/* ==================== PRINT STYLES ==================== */
+@media print {
+  .payment-container {
+    background: white !important;
+    padding: 0;
+  }
+
+  .payment-card {
+    box-shadow: none !important;
+    max-width: 100%;
+  }
+
+  .pay-now-btn,
+  .header-back-btn,
+  .copy-btn {
+    display: none !important;
+  }
+}

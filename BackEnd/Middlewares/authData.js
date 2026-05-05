@@ -6,7 +6,8 @@ const ensureAuthenticated = (req, res, next) => {
     try {
         if (!authHeader) {
               
-            return res.json(demodata)
+            return res.status(403).json(demodata)
+
         
         }
         // ✅ correct split

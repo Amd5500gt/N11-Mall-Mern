@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { Route, Routes } from 'react-router-dom';
@@ -12,40 +12,20 @@ import AddCart from './pages/AddCart';
 import Payments from './PayPage';
 import ErrorPage from './ErrorPage';
 import Layout from './Context/Layout';
-import UseCart from './Context/RootPage';
+import UseCart from './Context/CartContext';
 
 import LoginPage from './Auth/LoginPage';
 import RegisterPage from './Auth/RegisterPage';
 import ForgetPass from './Auth/ForgetPass';
 import AuthLayout from './Auth/AuthLayout';
 
-import toast, { Toaster } from 'react-hot-toast';
-import { useSearch } from './Context/SearchContext';
+import { Toaster } from 'react-hot-toast';
+import ProfilePage from './components/ProfilePage';
+import AddressModal from './components/AddressModal';
 
 const App = () => {
 
-  const {
-    addedItems,
-    setAddedItems,
-    cartCount,
-    newCart,
-    removeCart,
-    addWithQuantity,
-    total,
-  } = useContext(UseCart);
-
-  // 🔥 Load cart
-  useEffect(() => {
-    const data = localStorage.getItem("cart");
-    if (data) {
-      setAddedItems(JSON.parse(data));
-    }
-  }, []);
-
-  // 🔥 Save cart (fix: always save)
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(addedItems));
-  }, [addedItems]);
+  const { cartCount, total } = useContext(UseCart);
 
   return (
     <div>
@@ -55,39 +35,21 @@ const App = () => {
         <Route element={<Layout cartCount={cartCount} />}>
 
           {/* 🔓 Public Routes */}
-          <Route path='/' element={<Products newCart={newCart} />} />
+          <Route path='/' element={<Products />} />
           <Route path='/login' element={<LoginPage />} />
           <Route path='/register' element={<RegisterPage />} />
           <Route path='/forgetpassword' element={<ForgetPass />} />
-             <Route path='/about' element={<About />} />
-            <Route path='/contact' element={<Contact />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/profile' element={<ProfilePage />} />
+          <Route path='/user/address' element={<AddressModal />} />
+          <Route path='/contact' element={<Contact />} />
 
           {/* 🔒 Protected Routes */}
           <Route element={<AuthLayout />}>
 
-            <Route
-              path='/product/:id'
-              element={
-                <OpenPrev
-                  cartCount={cartCount}
-                  newCart={newCart}
-                  addWithQuantity={addWithQuantity}
-                />
-              }
-            />
+            <Route path='/product/:id' element={<OpenPrev />} />
 
-            <Route
-              path='/cart'
-              element={
-                <AddCart
-                  addedItems={addedItems}
-                  newCart={newCart}
-                  setAddedItems={setAddedItems}
-                  removeCart={removeCart}
-                  total={total}
-                />
-              }
-            />
+            <Route path='/cart' element={<AddCart />} />
 
           </Route>
 
@@ -95,14 +57,40 @@ const App = () => {
           <Route path='*' element={<ErrorPage />} />
 
         </Route>
-            <Route path='/cart/payment' element={<Payments total={total} />} />
+
+        {/* 💳 Payment */}
+        <Route path='/cart/payment' element={<Payments total={total} />} />
 
       </Routes>
-      
- <Toaster
-  position="top-right"
-  reverseOrder={true}
-/>
+
+      {/* 🔥 Styled Toaster */}
+      <Toaster
+        position="bottom-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 2500,
+          style: {
+            background: '#1e293b',   // dark modern bg
+            color: '#fff',
+            borderRadius: '10px',
+            padding: '12px 16px',
+            fontSize: '14px',
+            boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
+          },
+          success: {
+            iconTheme: {
+              primary: '#22c55e',
+              secondary: '#fff',
+            },
+          },
+          error: {
+            iconTheme: {
+              primary: '#ef4444',
+              secondary: '#fff',
+            },
+          },
+        }}
+      />
 
     </div>
   );

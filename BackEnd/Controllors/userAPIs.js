@@ -63,7 +63,7 @@ const LoginUser = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { email: existUser.email, _id: existUser._id },
+      { email: existUser.email, id: existUser._id },
       process.env.jwt_secret,
       { expiresIn: "72h" }
     );
@@ -72,6 +72,7 @@ const LoginUser = async (req, res) => {
       message: "Login Success",
       success: true,
       token,
+      id:existUser._id,
       name: existUser.name,
       email: existUser.email
     });

@@ -57,18 +57,17 @@ const LoginPage = () => {
       })
 
       const result = await response.json()
-
       if (result.success) {
-        const token = result.jwtToken
+   
         const userProfile = {
           name: result.name,
           email: result.email
         }
 
         // ✅ Save to localStorage
-        localStorage.setItem("jwtToken", token)
+        
         localStorage.setItem("loggedInUser", JSON.stringify(userProfile))
-
+        await setToken(localStorage.setItem("jwtToken",result.token))
         toast.success(result.message)
         
         // Smooth transition before reload
@@ -266,7 +265,7 @@ const LoginPage = () => {
           </button>
         </form>
       )}
-
+    
       {!showForgotPassword && (
         <span>
           Don't have an account? <Link to="/register">Register</Link>
