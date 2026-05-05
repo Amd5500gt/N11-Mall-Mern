@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-    "logo": "./logo.png",
+  "logo": "./logo.png",
   "scripts": {
     "start": "nodemon index.js"
   },
@@ -21,6 +21,7 @@
     "jsonwebtoken": "^9.0.3",
     "mongodb": "^7.2.0",
     "mongoose": "^9.6.1",
-    "nodemon": "^3.1.14"
+    "nodemon": "^3.1.14",
+    "serverless-http": "^4.0.0"
   }
 }
