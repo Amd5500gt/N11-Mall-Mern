@@ -5,10 +5,10 @@ require("dotenv").config();
 const cors = require("cors");
 const bodyparser = require("body-parser");
 
-const authRouter = require("../Routers/authRouter");
-const productRouter = require("../Routers/productRouter");
-const cartRouter = require("../Routers/cartRouter");
-const addressRouter = require("../Routers/addressRouter");
+const authRouter = require("./Routers/authRouter");
+const productRouter = require("./Routers/productRouter");
+const cartRouter = require("./Routers/cartRouter");
+const addressRouter = require("./Routers/addressRouter");
 
 app.use(bodyparser.json());
 app.use(cors());
