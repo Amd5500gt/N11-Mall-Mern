@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, useCallback, useEffect } from "react";
 import { useSearch } from './SearchContext';
 import toast from 'react-hot-toast';
-
+ import BASE_URL from "../config/config";
 // Create context
 const CartContext = createContext();
 

@@ -5,7 +5,7 @@ import { handleError, handleSuccess } from '../utils/Utils'
 import { useNavigate } from 'react-router-dom'
 import { LiaSpinnerSolid } from "react-icons/lia";
 import { FaEye, FaEyeSlash, FaCheck } from 'react-icons/fa'
-
+ import BASE_URL from "../config/config";
 const RegisterPage = () => {
   const navigate = useNavigate()
   const [userInfo, setUserInfo] = useState({

@@ -6,7 +6,7 @@ import { BsFillCartCheckFill, BsStar, BsStarHalf, BsStarFill, BsLightningCharge 
 import ErrorPage from '../ErrorPage';
 import './pages.css';
 import { useCart } from '../Context/CartContext';
-
+ import BASE_URL from "../config/config";
 const OpenPrev = () => {
   const { id } = useParams();
   const [item, setItem] = useState({});
