@@ -88,9 +88,9 @@ const LoginUser = async (req, res) => {
 
 const GoogleUser = async (req,res) =>{
     try{
-      const { credentail } = req.body;
+      const { credential } = req.body;
       const ticket = await client.verifyIdToken({
-        idToken: credentail,
+        idToken: credential,
         audience: process.env.GOOGLE_CLIENT_ID
       });
 

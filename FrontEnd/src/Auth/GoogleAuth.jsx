@@ -33,7 +33,7 @@ const GoogleAuth = () => {
         localStorage.setItem("jwtToken", data.token);
 
         toast.success("Login Success");
-
+       window.location.reload()
       } else {
 
         toast.error(data.message || "Login Failed");
