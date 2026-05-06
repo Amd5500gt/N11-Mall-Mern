@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const mongoURL = process.env.mongodb_URL;
+const mongoURL = process.env.mongodb_url;
 
 if (!mongoURL) {
   console.error("FATAL ERROR: mongodb_URL is not defined in environment variables");
