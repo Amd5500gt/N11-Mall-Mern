@@ -17,8 +17,7 @@ app.use(express.json());
 
 app.use(cors({
   origin: [
-    "http://localhost:5173",
-    "https://YOUR-FRONTEND.vercel.app"
+    "https://nexxcart.pages.dev/"
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
