@@ -13,14 +13,13 @@ const addressRouter = require("./Routers/addressRouter");
 app.use(bodyparser.json());
 const cors = require("cors");
 
+const cors = require("cors");
+
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://your-frontend.vercel.app"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
+  origin: "*", // 🔥 test ke liye
 }));
+
+app.options("*", cors());
 app.get("/", (req, res) => {
   res.json({ message: "API running 🚀" });
 });
