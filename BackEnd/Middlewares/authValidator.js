@@ -1,35 +1,71 @@
-const Joi = require("joi")
-const { schema } = require("../Models/userModel")
+const Joi = require("joi");
 
-const  RegisterUserValidation = (req,res,next) =>{
-    const schema = Joi.object({
-        name:Joi.string().min(4).max(50),
-        email:Joi.string().min(4).max(50).email(),
-        password:Joi.string().min(6).max(50)
-    })
+const RegisterUserValidation = (req, res, next) => {
 
-const {error} = schema.validate(req.body)
-if(error){
-   return res.status(400)
-          .json({ message : "Bad Request",error})
-}
-  next()
-}
-const  LoginUserValidation = (req,res,next) =>{
-    const schema = Joi.object({
-        email:Joi.string().min(4).max(50).email(),
-        password:Joi.string().min(6).max(50)
-    })
+  const schema = Joi.object({
 
-const {error} = schema.validate(req.body)
-if(error){
-   return res.status(400)
-          .json({ message : "Bad Request",error})
-}
-  next()
-}
+    name: Joi.string()
+      .min(4)
+      .max(50)
+      .required(),
 
-module.exports ={
-                 RegisterUserValidation,
-                 LoginUserValidation
-                 }
+    email: Joi.string()
+      .email()
+      .required(),
+
+    password: Joi.string()
+      .min(6)
+      .max(50)
+      .required()
+
+  });
+
+  const { error } = schema.validate(req.body);
+
+  if (error) {
+
+    return res.status(400).json({
+      success: false,
+      message: error.details[0].message
+    });
+
+  }
+
+  next();
+
+};
+
+const LoginUserValidation = (req, res, next) => {
+
+  const schema = Joi.object({
+
+    email: Joi.string()
+      .email()
+      .required(),
+
+    password: Joi.string()
+      .min(6)
+      .max(50)
+      .required()
+
+  });
+
+  const { error } = schema.validate(req.body);
+
+  if (error) {
+
+    return res.status(400).json({
+      success: false,
+      message: error.details[0].message
+    });
+
+  }
+
+  next();
+
+};
+
+module.exports = {
+  RegisterUserValidation,
+  LoginUserValidation
+};
