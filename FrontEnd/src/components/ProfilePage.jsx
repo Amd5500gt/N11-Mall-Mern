@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSearch } from '../Context/SearchContext';
 import { FiUser, FiMail, FiPhone, FiMapPin, FiEdit2, FiCamera, FiSave, FiX } from 'react-icons/fi';
 import toast from 'react-hot-toast';
+ import BASE_URL from "../config/config";
 
 const ProfilePage = () => {
   const { token, userData, setUserData, isLogged, userName, userEmail } = useSearch();
