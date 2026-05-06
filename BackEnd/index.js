@@ -18,14 +18,12 @@ app.use(express.json());
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://yourfrontend.vercel.app"
+    "https://YOUR-FRONTEND.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-app.options("*", cors());
 app.use("/auth", authRouter);
 app.use("/products", productRouter);
 app.use("/cart", cartRouter);
@@ -34,8 +32,10 @@ app.get("/", (req, res) => {
 
   console.log("Root endpoint accessed");
 
-  return res.json({ message: "Hey Welcome To N11" });
+  return res.json({
+    message: "Hey Welcome To N11"
+  });
 
 });
 
-module.exports = app;
+module.exports = app;a
