@@ -2,7 +2,12 @@ const mongoose = require("mongoose");
 
 const mongoURL = process.env.mongodb_URL;
 
-// Global variable to cache the connection (important for serverless)
+if (!mongoURL) {
+  console.error("FATAL ERROR: mongodb_URL is not defined in environment variables");
+  process.exit(1);
+}
+
+// Cache connection for serverless
 let cached = global.mongoose;
 
 if (!cached) {
@@ -11,28 +16,39 @@ if (!cached) {
 
 async function connectDB() {
   if (cached.conn) {
+    console.log("Using cached database connection");
     return cached.conn;
   }
 
   if (!cached.promise) {
     const opts = {
-      bufferCommands: false,
-      // Add these options for better serverless performance
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+      family: 4,
       maxPoolSize: 1,
-      socketTimeoutMS: 30000,
-      family: 4
+      minPoolSize: 1
     };
 
-    cached.promise = mongoose.connect(mongoURL, opts).then((mongoose) => {
-      console.log("Database Connected....");
-      return mongoose;
-    }).catch((err) => {
-      console.log("Connect failed.... ", err);
-      throw err;
-    });
+    console.log("Creating new database connection...");
+    cached.promise = mongoose.connect(mongoURL, opts)
+      .then((mongoose) => {
+        console.log("Database Connected Successfully");
+        return mongoose;
+      })
+      .catch((err) => {
+        console.error("Database connection failed:", err.message);
+        cached.promise = null;
+        throw err;
+      });
   }
   
-  cached.conn = await cached.promise;
+  try {
+    cached.conn = await cached.promise;
+  } catch (e) {
+    cached.promise = null;
+    throw e;
+  }
+  
   return cached.conn;
 }
 

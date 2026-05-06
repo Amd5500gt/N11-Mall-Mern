@@ -5,8 +5,9 @@
   "main": "index.js",
   "logo": "./logo.png",
   "scripts": {
-    "start": "nodemon index.js",
-     "vercel-build": "echo Hello"
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "vercel-build": "echo Hello"
   },
   "keywords": [],
   "author": "",
@@ -24,5 +25,5 @@
     "mongoose": "^9.6.1",
     "nodemon": "^3.1.14",
     "serverless-http": "^4.0.0"
-  } 
+  }
 }
