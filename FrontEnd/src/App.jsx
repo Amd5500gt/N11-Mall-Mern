@@ -21,7 +21,6 @@ import AuthLayout from './Auth/AuthLayout';
 
 import { Toaster } from 'react-hot-toast';
 import ProfilePage from './components/ProfilePage';
-import AddressModal from './components/AddressModal';
 
 const App = () => {
 
@@ -41,7 +40,6 @@ const App = () => {
           <Route path='/forgetpassword' element={<ForgetPass />} />
           <Route path='/about' element={<About />} />
           <Route path='/profile' element={<ProfilePage />} />
-          <Route path='/user/address' element={<AddressModal />} />
           <Route path='/contact' element={<Contact />} />
 
           {/* 🔒 Protected Routes */}

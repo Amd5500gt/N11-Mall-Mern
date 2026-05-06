@@ -7,7 +7,6 @@ import { useSearch } from '../Context/SearchContext';
 import { FiHome, FiInfo, FiPhone, FiMenu, FiX, FiUser, FiLogOut, FiSettings, FiMapPin, FiPackage } from 'react-icons/fi';
 import { FaUserCircle, FaMoon, FaSun, FaChevronDown } from 'react-icons/fa';
 import ProfileDropdown from './ProfileDropdown';
-import AddressModal from './AddressModal';
 
 const Header = ({ cartCount }) => {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
@@ -56,13 +55,7 @@ const Header = ({ cartCount }) => {
     }
   }, [cartCount]);
 
-  useEffect(() => {
-    if (isLogged && token) {
-      fetchAddresses();
-    }
-  }, [isLogged, token]);
 
- 
 
   const navLinks = [
     { name: 'Home', path: '/', icon: <FiHome size={18} /> },
@@ -177,15 +170,7 @@ const Header = ({ cartCount }) => {
         </div>
       </header>
 
-      {/* Address Modal */}
-      {showAddressModal && (
-        <AddressModal
-          token={token}
-          addresses={addresses}
-          onClose={() => setShowAddressModal(false)}
-          onAddressChange={fetchAddresses}
-        />
-      )}
+  
 
   
     </>

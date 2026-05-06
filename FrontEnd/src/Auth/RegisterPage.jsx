@@ -87,7 +87,7 @@ const RegisterPage = () => {
       await new Promise(resolve => setTimeout(resolve, 1500))
       
       // API call
-      const url = "https://n11-backend-2.vercel.app/register"
+const url = `${import.meta.env.VITE_B_URL}/register`;
       const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -166,6 +166,7 @@ const RegisterPage = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 name='password'
+               autoComplete='password'
                 placeholder='Enter your password...'
                 onChange={handleChange}
                 value={userInfo.password}
@@ -211,6 +212,7 @@ const RegisterPage = () => {
                 name='confirmPassword'
                 placeholder='Confirm your password...'
                 onChange={handleChange}
+                autoComplete='password'
                 value={userInfo.confirmPassword}
                 disabled={isLoading}
               />

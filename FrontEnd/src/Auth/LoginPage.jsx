@@ -48,7 +48,7 @@ const LoginPage = () => {
       // Simulate network delay for smooth animation
       await new Promise(resolve => setTimeout(resolve, 1500))
 
-      const response = await fetch("https://n11-backend-2.vercel.app/login", {
+      const response = await fetch("https://n11-backend-2.vercel.app/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -165,6 +165,7 @@ const LoginPage = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 name="password"
+                autoComplete='password'
                 placeholder="Enter your password..."
                 value={userInfo.password}
                 onChange={handleChange}
