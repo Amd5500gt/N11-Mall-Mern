@@ -37,11 +37,7 @@ export const CartProvider = ({ children }) => {
 
     try {
       setLoading(true);
-      const res = await fetch(`${BASE_URL}/cart`, {
-        headers: {
-          "Authorization": `Bearer ${token}`
-        }
-      });
+      const res = await fetch(`${BASE_URL}/cart`);
 
       if (!res.ok) throw new Error("Failed to fetch cart");
 
@@ -82,7 +78,7 @@ export const CartProvider = ({ children }) => {
           "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({ 
-          productId: item.id 
+          productId: item.id
         })
       });
 
