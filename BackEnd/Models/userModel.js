@@ -2,36 +2,36 @@ const mongoose = require("mongoose");
 
 const schema = mongoose.Schema;
 
-const userSchema = new schema({
-
-  name: {
-    type: String,
-    required: true
-  },
-
-  email: {
-    type: String,
-    required: true,
-    lowercase: true,
-    unique: true,
-    trim: true
-  },
-
-  password: {
-    type: String,
-    default: null
-  },
-
-  googleAuth: {
-    type: Boolean,
-    default: false
-  },
-
-  picture: {
-    type: String,
-    default: ""
-  },
-
+const userSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        lowercase: true,
+        trim: true
+    },
+    password: {
+        type: String,
+        default: null // Allow null for Google auth users
+    },
+    picture: {
+        type: String,
+        default: null
+    },
+    googleId: {
+        type: String,
+        sparse: true // Allows multiple null values
+    },
+    googleAuth: {
+        type: Boolean,
+        default: false
+    },
+    
   cart: [
     {
       productId: Number,

@@ -30,10 +30,22 @@ const GoogleAuth = () => {
 
       if (data.success) {
 
+        // Save user data to localStorage
+        const userProfile = {
+          name: data.name,
+          email: data.email
+        };
+        
+        localStorage.setItem("loggedInUser", JSON.stringify(userProfile));
         localStorage.setItem("jwtToken", data.token);
 
         toast.success("Login Success");
-       window.location.reload()
+        
+        // Smooth transition before reload
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+        
       } else {
 
         toast.error(data.message || "Login Failed");
@@ -71,7 +83,7 @@ const GoogleAuth = () => {
       // Initialize Google Auth
       window.google.accounts.id.initialize({
 
-        client_id:"544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com",
+        client_id: "544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com",
 
         callback: handleCredentailResponse
 
@@ -98,8 +110,8 @@ const GoogleAuth = () => {
   }, []);
 
   return (
-    <div className='d-flex justify-content-center'>
-      <div id="googleBtn"></div>
+    <div className='d-flex justify-content-center' style={{ marginTop: '20px' }}>
+
     </div>
   );
 

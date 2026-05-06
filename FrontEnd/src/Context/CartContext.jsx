@@ -47,14 +47,12 @@ export const CartProvider = ({ children }) => {
 
       const cartData = await res.json();
       
-      // Your backend returns array of products with quantity
-      // cartData is already in format: [{...product, quantity: X}, ...]
+      
       setAddedItems(cartData || []);
       
     } catch (err) {
       console.error("Error fetching cart:", err);
-      // Don't show error toast on initial load
-      // toast.error("Failed to load cart");
+
     } finally {
       setLoading(false);
     }
@@ -130,8 +128,7 @@ export const CartProvider = ({ children }) => {
         throw new Error(data.message || "Failed to add to cart");
       }
 
-      // If quantity > 1, we need to update quantity multiple times
-      // Or you can modify your backend to accept quantity in addToCart
+    
       if (item.quantity > 1) {
         // Call addToCart multiple times for remaining quantity
         for (let i = 1; i < item.quantity; i++) {

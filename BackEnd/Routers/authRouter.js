@@ -8,7 +8,7 @@ Router.get("/login",(req,res)=>{
         res.status(200).json({message:"Login API is working"})
 })
 
-Router.post("/google-login",GoogleUser)
+Router.post("/google",GoogleUser)
 Router.post("/login",LoginUserValidation,LoginUser)
 Router.post("/register",RegisterUserValidation,RegisterUser)
 
