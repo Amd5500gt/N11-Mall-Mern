@@ -17,7 +17,7 @@ app.use(express.json());
 
 app.use(cors({
   origin: [
-    "https://nexxcart.pages.dev/"
+    "https://nexxcart.pages.dev"
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"]
