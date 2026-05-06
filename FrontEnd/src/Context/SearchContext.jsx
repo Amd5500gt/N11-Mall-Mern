@@ -19,11 +19,7 @@ export const SearchProvider = ({children}) => {
     useEffect(() => {
       setLoading(true);
     
-      fetch(`https://n11-backend.vercel.app/products`, {
-        headers: token
-          ? { Authorization: `Bearer ${token}` }
-          : {}
-      })
+      fetch(`https://n11-backend.vercel.app/products`)
         .then(res => {
           if (!res.ok) throw new Error("API Error");
           return res.json();
