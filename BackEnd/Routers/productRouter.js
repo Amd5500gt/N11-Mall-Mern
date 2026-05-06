@@ -3,7 +3,7 @@ const {products, productPage} = require("../Controllors/productAPIs")
 const ensureAuthenticated = require("../Middlewares/authData")
 
 
-Router.get("/products",ensureAuthenticated, products )
-Router.get("/products/:id", productPage );
+Router.get("/",ensureAuthenticated, products )
+Router.get("/:id", productPage );
 
 module.exports = Router

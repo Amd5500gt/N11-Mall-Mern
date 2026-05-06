@@ -23,11 +23,11 @@ app.use("/auth", authRouter);
 app.use("/products", productRouter);
 app.use("/cart", cartRouter);
 
-app.get("/", (req, res) => {
+app.get("/next", (req, res) => {
 
   console.log("Root endpoint accessed");
 
-  return res.send("Welcome to the N11 Backend API");
+  return res.json({ message: "Welcome to the N11 Backend API" });
 
 });
 
