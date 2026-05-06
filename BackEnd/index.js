@@ -14,12 +14,12 @@ app.use(bodyparser.json());
 const cors = require("cors");
 
 const cors = require("cors");
-
 app.use(cors({
-  origin: "*", // 🔥 test ke liye
+  origin: [
+    "http://localhost:5173",
+    "https://your-frontend.vercel.app"
+  ]
 }));
-
-app.options("*", cors());
 app.get("/", (req, res) => {
   res.json({ message: "API running 🚀" });
 });
