@@ -98,7 +98,7 @@ const LoginPage = () => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500))
       
-      const response = await fetch("https://n11-backend.vercel.app/api/forgot-password", {
+      const response = await fetch("https://n11-backend.vercel.app/forgot-password", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
