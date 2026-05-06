@@ -19,7 +19,7 @@ export const SearchProvider = ({children}) => {
     useEffect(() => {
       setLoading(true);
     
-      fetch("https://n11-backend-2.vercel.app/products", {
+      fetch(`https://n11-backend.vercel.app/products`, {
         headers: token
           ? { Authorization: `Bearer ${token}` }
           : {}
