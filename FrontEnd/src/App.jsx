@@ -39,14 +39,12 @@ const App = () => {
           <Route path='/register' element={<RegisterPage />} />
           <Route path='/forgetpassword' element={<ForgetPass />} />
           <Route path='/about' element={<About />} />
-          <Route path='/profile' element={<ProfilePage />} />
           <Route path='/contact' element={<Contact />} />
 
           {/* 🔒 Protected Routes */}
           <Route element={<AuthLayout />}>
-
-            <Route path='/product/:id' element={<OpenPrev />} />
-
+          <Route path='/profile' element={<ProfilePage />} />
+          <Route path='/products/:id' element={<OpenPrev />} />
             <Route path='/cart' element={<AddCart />} />
 
           </Route>

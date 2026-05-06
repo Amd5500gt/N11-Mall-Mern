@@ -11,7 +11,10 @@ const ensureAuthenticated = (req, res, next) => {
     // NO TOKEN
     if (!authHeader) {
 
-      return res.status(200).json(demodata);
+      return res.status(403).json({
+        success: false,
+        message: "No token provided"
+      });
 
     }
 
@@ -30,7 +33,10 @@ const ensureAuthenticated = (req, res, next) => {
 
     console.log(err);
 
-    return res.status(200).json(demodata);
+    return res.status(403).json({
+      success: false,
+      message: "Invalid token"
+    });
 
   }
 

@@ -17,33 +17,54 @@ export const SearchProvider = ({children}) => {
     const isLogged = !!token;
     const [userName,setUserName] = useState(null)
     const [userEmail,setUserEmail] = useState(null)
+useEffect(() => {
+  setLoading(true);
 
-    useEffect(() => {
-      setLoading(true);
-    
-      fetch(`${BASE_URL}/products`, {
-        headers: token
-          ? { Authorization: `Bearer ${token}` }
-          : {}
+  if (token) {
+    fetch(`${BASE_URL}/products`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error("API Error");
+        return res.json();
       })
-        .then(res => {
-          if (!res.ok) throw new Error("API Error");
-          return res.json();
-        })
-        .then(json => {
-          setData(json.products || []);
-          setFilterData(json.products || []);
-          setTotal(json.total || 0);
-        })
-        .catch(err => {
-          console.log(err);
-          setData([]);
-          setFilterData([]);
-          setTotal(0);
-        })
-        .finally(() => setLoading(false));
-    
-    }, []);
+      .then(json => {
+        setData(json.products || []);
+        setFilterData(json.products || []);
+        setTotal(json.total || 0);
+      })
+      .catch(err => {
+        console.log(err);
+        setData([]);
+        setFilterData([]);
+        setTotal(0);
+      })
+      .finally(() => setLoading(false));
+
+  } else {
+
+    fetch(`${BASE_URL}/products/demo`)
+      .then(res => {
+        if (!res.ok) throw new Error("API Error");
+        return res.json();
+      })
+      .then(json => {
+        setData(json.products || []);
+        setFilterData(json.products || []);
+        setTotal(json.total || 0);
+      })
+      .catch(err => {
+        console.log(err);
+        setData([]);
+        setFilterData([]);
+        setTotal(0);
+      })
+      .finally(() => setLoading(false));
+  }
+
+}, []);
 
 useEffect(() => {
   if (token) {
