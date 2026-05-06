@@ -327,7 +327,7 @@ const AuthPage = () => {
             <h1 data-text="Login">Login</h1>
 
             <div className='form-group'>
-              <label>Email</label>
+           
               <input
                 type="email"
                 name="email"
@@ -340,7 +340,7 @@ const AuthPage = () => {
             </div>
 
             <div className='form-group password-field'>
-              <label>Password</label>
+           
               <div className='password-input-wrapper'>
                 <input
                   type={showPassword ? "text" : "password"}
@@ -395,7 +395,7 @@ const AuthPage = () => {
             <h1 data-text="Register">Register</h1>
 
             <div className='form-group'>
-              <label>Name</label>
+           
               <input
                 type="text"
                 name="name"
@@ -408,7 +408,7 @@ const AuthPage = () => {
             </div>
 
             <div className='form-group'>
-              <label>Email</label>
+           
               <input
                 type="email"
                 name="email"
@@ -420,7 +420,7 @@ const AuthPage = () => {
             </div>
 
             <div className='form-group password-field'>
-              <label>Password</label>
+           
               <div className='password-input-wrapper'>
                 <input
                   type={showPassword ? "text" : "password"}
@@ -460,7 +460,7 @@ const AuthPage = () => {
             </div>
 
             <div className='form-group password-field'>
-              <label>Confirm Password</label>
+            
               <div className='password-input-wrapper'>
                 <input
                   type={showConfirmPassword ? "text" : "password"}
@@ -523,7 +523,7 @@ const AuthPage = () => {
                 </p>
                 
                 <div className='form-group'>
-                  <label>Email</label>
+                
                   <input
                     type="email"
                     name="email"
