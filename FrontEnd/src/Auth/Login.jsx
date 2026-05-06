@@ -244,9 +244,14 @@ const AuthPage = () => {
       setIsLoading(false)
     }
   }
-useEffect(() => {
+
+  useEffect(() => {
   const initializeGoogle = () => {
     if (!window.google) return;
+
+    // Prevent multiple initialization
+    if (window.googleInitialized) return;
+    window.googleInitialized = true;
 
     window.google.accounts.id.initialize({
       client_id:
@@ -267,13 +272,18 @@ useEffect(() => {
     }
   };
 
-  if (!document.getElementById("google-script")) {
+  const existingScript = document.getElementById("google-script");
+
+  if (!existingScript) {
     const script = document.createElement("script");
+
     script.src = "https://accounts.google.com/gsi/client";
     script.async = true;
     script.defer = true;
     script.id = "google-script";
+
     script.onload = initializeGoogle;
+
     document.body.appendChild(script);
   } else {
     initializeGoogle();
