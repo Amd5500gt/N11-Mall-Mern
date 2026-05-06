@@ -1,50 +1,21 @@
 const mongoose = require("mongoose");
 
-const schema = mongoose.Schema;
+const connectDB = async () => {
+  try {
 
-const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true,
-        trim: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-        lowercase: true,
-        trim: true
-    },
-    password: {
-        type: String,
-        default: null // Allow null for Google auth users
-    },
-    picture: {
-        type: String,
-        default: null
-    },
-    googleId: {
-        type: String,
-        sparse: true // Allows multiple null values
-    },
-    googleAuth: {
-        type: Boolean,
-        default: false
-    },
-    
-  cart: [
-    {
-      productId: Number,
-
-      quantity: {
-        type: Number,
-        default: 1
-      }
+    // Prevent multiple connections
+    if (mongoose.connections[0].readyState) {
+      console.log("Already connected");
+      return;
     }
-  ]
 
-});
+    await mongoose.connect(process.env.mongodb_url);
 
-const userModel = mongoose.model("users", userSchema);
+    console.log("MongoDB Connected");
 
-module.exports = userModel;
+  } catch (err) {
+    console.log("MongoDB Error:", err);
+  }
+};
+
+module.exports = connectDB;
