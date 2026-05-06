@@ -1,27 +1,32 @@
 const express = require("express");
 const app = express();
+
 require("dotenv").config();
+
+const connectDB = require("./Models/db");
+
 const cors = require("cors");
-const bodyparser = require("body-parser");
-const PORT = process.env.PORT || 8080;
+
 const authRouter = require("./Routers/authRouter");
 const productRouter = require("./Routers/productRouter");
 const cartRouter = require("./Routers/cartRouter");
 
+connectDB();
 
-app.use(bodyparser.json());
-app.use(cors());
+app.use(express.json());
 
-app.use("/", authRouter);
+app.use(cors({
+  origin: "*"
+}));
+
+app.use("/auth", authRouter);
+app.use("/products", productRouter);
 app.use("/cart", cartRouter);
-app.use("/", productRouter);
 
-// For Vercel
-module.exports = app;
-
-// For local development
-if (process.env.NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
-    console.log(`Server is Running on ${PORT}`);
+app.get("/", (req, res) => {
+  res.json({
+    message: "API running 🚀"
   });
-}
+});
+
+module.exports = app;
