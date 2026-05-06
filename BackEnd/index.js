@@ -24,9 +24,7 @@ app.use("/products", productRouter);
 app.use("/cart", cartRouter);
 
 app.get("/", (req, res) => {
-  res.json({
-    message: "API running 🚀"
-  });
+  res.send("Welcome to the N11 Backend API");
 });
 
 module.exports = app;
