@@ -8,6 +8,6 @@ Router.get("/demo", (req, res) => {
   res.json(demodata);
  });
 Router.get("/",ensureAuthenticated, products )
-Router.get("/:id", productPage );
+Router.get("/:id", ensureAuthenticated, productPage );
 
 module.exports = Router
