@@ -11,8 +11,6 @@ const authRouter = require("./Routers/authRouter");
 const productRouter = require("./Routers/productRouter");
 const cartRouter = require("./Routers/cartRouter");
 
-connectDB();
-
 app.use(express.json());
 
 app.use(cors({
@@ -31,13 +29,28 @@ app.get("/", (req, res) => {
 
 module.exports = app;
 
-// local only
-if (process.env.NODE_ENV !== "production") {
+const startServer = async () => {
+  try {
 
-  const PORT = process.env.PORT || 8080;
+    await connectDB();
 
-  app.listen(PORT, () => {
-    console.log(`Server running on ${PORT}`);
-  });
+    console.log("DB Connected");
 
-}
+    if (process.env.NODE_ENV !== "production") {
+
+      const PORT = process.env.PORT || 8080;
+
+      app.listen(PORT, () => {
+        console.log(`Server running on ${PORT}`);
+      });
+
+    }
+
+  } catch (err) {
+
+    console.log("Server Error:", err);
+
+  }
+};
+
+startServer();
