@@ -48,7 +48,7 @@ const LoginPage = () => {
       // Simulate network delay for smooth animation
       await new Promise(resolve => setTimeout(resolve, 1500))
 
-      const response = await fetch("https://n11-backend.vercel.app/login", {
+      const response = await fetch("http://localhost:8080/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

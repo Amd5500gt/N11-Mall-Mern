@@ -1,32 +1,30 @@
 const express = require("express");
 const app = express();
-
 require("dotenv").config();
-
+const connectDB = require("./Models/db"); // Import the connection function
 const cors = require("cors");
-
-app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}));
-
-// 🔥 important
-app.use(express.json());
-
+const bodyparser = require("body-parser");
+const PORT = process.env.PORT || 8080;
 const authRouter = require("./Routers/authRouter");
 const productRouter = require("./Routers/productRouter");
 const cartRouter = require("./Routers/cartRouter");
-const addressRouter = require("./Routers/addressRouter");
 
-// ✅ test route
-app.get("/", (req, res) => {
-  res.json({ message: "API running 🚀" });
-});
+// Connect to MongoDB before handling requests
+connectDB();
+
+app.use(bodyparser.json());
+app.use(cors());
 
 app.use("/", authRouter);
-app.use("/", productRouter);
 app.use("/cart", cartRouter);
-app.use("/address", addressRouter);
+app.use("/", productRouter);
 
+// For Vercel
 module.exports = app;
+
+// For local development
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => {
+    console.log(`Server is Running on ${PORT}`);
+  });
+}
