@@ -26,7 +26,7 @@ const Payments = () => {
       const remaining = Math.floor((parseInt(savedExpiry) - Date.now()) / 1000);
       return remaining > 0 ? remaining : 0;
     }
-    return 300; // 5 minutes default
+    return 90; 
   });
   
   const upiLink = `upi://pay?pa=${upiId}&pn=${name}&am=${total}&cu=INR&tn=${orderId}`;

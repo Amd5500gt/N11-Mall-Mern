@@ -87,7 +87,7 @@ const RegisterPage = () => {
       await new Promise(resolve => setTimeout(resolve, 1500))
       
       // API call
-const url = `${import.meta.env.VITE_B_URL}/register`;
+const url = `${BASE_URL}/auth/register`;
       const response = await fetch(url, {
         method: "POST",
         headers: {

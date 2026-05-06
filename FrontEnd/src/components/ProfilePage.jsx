@@ -87,7 +87,7 @@ const ProfilePage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('https://n11-backend-2.vercel.app/profile/update', {
+      const response = await fetch(`${BASE_URL}/auth/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

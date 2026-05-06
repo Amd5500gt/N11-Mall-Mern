@@ -37,7 +37,7 @@ export const CartProvider = ({ children }) => {
 
     try {
       setLoading(true);
-      const res = await fetch("https://n11-backend-2.vercel.app/cart", {
+      const res = await fetch(`${BASE_URL}/cart`, {
         headers: {
           "Authorization": `Bearer ${token}`
         }
@@ -77,7 +77,7 @@ export const CartProvider = ({ children }) => {
     }
 
     try {
-      const res = await fetch("https://n11-backend-2.vercel.app/cart/add", {
+      const res = await fetch(`${BASE_URL}/cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -113,7 +113,7 @@ export const CartProvider = ({ children }) => {
 
     try {
       // First add the product
-      const res = await fetch("https://n11-backend-2.vercel.app/cart/add", {
+      const res = await fetch(`${BASE_URL}/cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -135,7 +135,7 @@ export const CartProvider = ({ children }) => {
       if (item.quantity > 1) {
         // Call addToCart multiple times for remaining quantity
         for (let i = 1; i < item.quantity; i++) {
-          await fetch("https://n11-backend-2.vercel.app/add", {
+          await fetch(`${BASE_URL}/cart/add`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -163,7 +163,7 @@ export const CartProvider = ({ children }) => {
     if (!isLogged) return;
 
     try {
-      const res = await fetch("https://n11-backend-2.vercel.app/cart/remove", {
+      const res = await fetch(`${BASE_URL}/cart/remove`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
