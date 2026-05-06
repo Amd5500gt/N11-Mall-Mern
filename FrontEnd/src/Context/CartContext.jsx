@@ -37,7 +37,7 @@ export const CartProvider = ({ children }) => {
 
     try {
       setLoading(true);
-      const res = await fetch(`${BASE_URL}/cart`);
+      const res = await fetch(`${BASE_URL}/cart/details`);
 
       if (!res.ok) throw new Error("Failed to fetch cart");
 

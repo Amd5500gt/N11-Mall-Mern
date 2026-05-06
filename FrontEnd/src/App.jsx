@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { Route, Routes } from 'react-router-dom';
@@ -17,11 +17,17 @@ import AuthLayout from './Auth/AuthLayout';
 import { Toaster } from 'react-hot-toast';
 import ProfilePage from './components/ProfilePage';
 import AuthPage from './Auth/Login';
-
+import Payment from './pages/Payment';
+import OrderHistory from './pages/OrderHistory';
 const App = () => {
-
-  const { cartCount, total } = useContext(UseCart);
-
+  const { cartCount, total, addedItems } = useContext(UseCart);
+// Add this useEffect in your AddCart component
+useEffect(() => {
+  // Save cart items to localStorage for order history
+  if (addedItems.length > 0) {
+    localStorage.setItem('cartItems', JSON.stringify(addedItems));
+  }
+}, [addedItems]);
   return (
     <div>
       <Routes>
@@ -40,7 +46,8 @@ const App = () => {
           <Route path='/profile' element={<ProfilePage />} />
           <Route path='/product/:id' element={<OpenPrev />} />
             <Route path='/cart' element={<AddCart />} />
-
+<Route path="/cart/payment" element={<Payment />} />
+<Route path="/orders" element={<OrderHistory />} />
           </Route>
 
           {/* ❌ Catch all */}

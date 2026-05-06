@@ -245,18 +245,20 @@ const AuthPage = () => {
     }
   }
 
-  useEffect(() => {
+useEffect(() => {
   const initializeGoogle = () => {
     if (!window.google) return;
 
-    // Prevent multiple initialization
     if (window.googleInitialized) return;
     window.googleInitialized = true;
 
     window.google.accounts.id.initialize({
       client_id:
         "544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com",
+
       callback: handleGoogleAuth,
+
+      ux_mode: "popup",
     });
 
     const googleBtn = document.getElementById("googleBtn");
@@ -268,6 +270,10 @@ const AuthPage = () => {
         theme: "outline",
         size: "large",
         width: 320,
+        type: "standard",
+        shape: "pill",
+        text: "continue_with",
+        logo_alignment: "left",
       });
     }
   };
