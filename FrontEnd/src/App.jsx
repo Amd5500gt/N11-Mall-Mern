@@ -13,14 +13,10 @@ import Payments from './PayPage';
 import ErrorPage from './ErrorPage';
 import Layout from './Context/Layout';
 import UseCart from './Context/CartContext';
-
-import LoginPage from './Auth/LoginPage';
-import RegisterPage from './Auth/RegisterPage';
-import ForgetPass from './Auth/ForgetPass';
 import AuthLayout from './Auth/AuthLayout';
-
 import { Toaster } from 'react-hot-toast';
 import ProfilePage from './components/ProfilePage';
+import AuthPage from './Auth/Login';
 
 const App = () => {
 
@@ -35,9 +31,7 @@ const App = () => {
 
           {/* 🔓 Public Routes */}
           <Route path='/' element={<Products />} />
-          <Route path='/login' element={<LoginPage />} />
-          <Route path='/register' element={<RegisterPage />} />
-          <Route path='/forgetpassword' element={<ForgetPass />} />
+          <Route path='/login' element={<AuthPage/>} />
           <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />} />
 

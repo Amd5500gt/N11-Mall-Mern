@@ -795,3 +795,22 @@
     font-size: 12px;
   }
 }
+
+.googleBtn {
+    width: 230px !important;
+    height: 40px;
+    border-radius: 5px;
+    border: none !important;
+    outline: none;
+    background-color: white;
+  
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 20px 0;
+    color: #2c444e;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
