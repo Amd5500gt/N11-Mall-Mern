@@ -44,7 +44,7 @@ const App = () => {
           {/* 🔒 Protected Routes */}
           <Route element={<AuthLayout />}>
           <Route path='/profile' element={<ProfilePage />} />
-          <Route path='/products/:id' element={<OpenPrev />} />
+          <Route path='/product/:id' element={<OpenPrev />} />
             <Route path='/cart' element={<AddCart />} />
 
           </Route>

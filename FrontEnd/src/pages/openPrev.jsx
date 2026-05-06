@@ -27,7 +27,7 @@ const OpenPrev = () => {
       setLoading(false);
     }, 6000);
 
-    fetch(`${BASE_URL}/products/${id}`)
+    fetch(`${BASE_URL}/product/${id}`)
       .then(res => res.json())
       .then(data => {
         clearTimeout(timer);
