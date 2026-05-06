@@ -18,6 +18,7 @@ app.use(express.json());
 app.use(cors({
   origin: [
       "http://localhost:5173",
+     "https://nexxcartvx.vercel.app",
     "https://nexxcart.pages.dev"
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
