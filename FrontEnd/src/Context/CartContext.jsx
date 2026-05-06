@@ -45,10 +45,10 @@ export const CartProvider = ({ children }) => {
 
       if (!res.ok) throw new Error("Failed to fetch cart");
 
-      const cartData = await res.json();
+      const cart = await res.json();
       
       
-      setAddedItems(cartData || []);
+      setAddedItems(cart || []);
       
     } catch (err) {
       console.error("Error fetching cart:", err);
