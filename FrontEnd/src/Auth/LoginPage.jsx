@@ -6,6 +6,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import { useSearch } from '../Context/SearchContext'
 import toast from 'react-hot-toast'
 import { LiaSpinnerSolid } from "react-icons/lia";
+import BASE_URL from '../config/config'
 
 const LoginPage = () => {
   const navigate = useNavigate()
@@ -48,7 +49,7 @@ const LoginPage = () => {
       // Simulate network delay for smooth animation
       await new Promise(resolve => setTimeout(resolve, 1500))
 
-      const response = await fetch(`${import.meta.env.VITE_B_URL}/auth/login`, {
+      const response = await fetch(`${BASE_URL}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -67,7 +68,8 @@ const LoginPage = () => {
         // ✅ Save to localStorage
         
         localStorage.setItem("loggedInUser", JSON.stringify(userProfile))
-        await setToken(localStorage.setItem("jwtToken",result.token))
+      localStorage.setItem("jwtToken", result.token)
+      setToken(result.token)
         toast.success(result.message)
         
         // Smooth transition before reload
@@ -98,7 +100,7 @@ const LoginPage = () => {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500))
       
-      const response = await fetch("https://n11-backend.vercel.app/forgot-password", {
+      const response = await fetch(`${BASE_URL}/forgot-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

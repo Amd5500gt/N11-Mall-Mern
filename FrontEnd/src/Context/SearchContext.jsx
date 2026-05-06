@@ -2,6 +2,7 @@ import React from 'react'
 import { createContext,useEffect,useState,useContext } from 'react'
 import toast from 'react-hot-toast';
  const SearchContext = createContext()
+ import BASE_URL from "../config/config";
 
 export const SearchProvider = ({children}) => {
     const [data, setData] = useState([]);
@@ -16,10 +17,15 @@ export const SearchProvider = ({children}) => {
     const isLogged = !!token;
     const [userName,setUserName] = useState(null)
     const [userEmail,setUserEmail] = useState(null)
+
     useEffect(() => {
       setLoading(true);
     
-      fetch(`https://n11-backend.vercel.app/products`)
+      fetch(`${BASE_URL}/products`, {
+        headers: token
+          ? { Authorization: `Bearer ${token}` }
+          : {}
+      })
         .then(res => {
           if (!res.ok) throw new Error("API Error");
           return res.json();

@@ -3,6 +3,7 @@ import { FiMail, FiLock, FiUser, FiPhone, FiArrowLeft } from 'react-icons/fi';
 import './Auth.css';
 import axios from "axios"
 import { useNavigate } from 'react-router-dom';
+import BASE_URL from '../config/config';
 
 const ForgetPass = () => {
 
@@ -15,7 +16,7 @@ const ForgetPass = () => {
 const handleForgot = (e) => {
   e.preventDefault();
 
-  axios.post(`${process.env.B_URL}/login`, {
+  axios.post(`${BASE_URL}/login`, {
     email
   })
   .then(res => {
