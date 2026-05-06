@@ -1,120 +1,139 @@
-const userModel = require("../Models/userModel")
-const {products} = require("../productData/data.json")
+const userModel = require("../Models/userModel");
+const { products } = require("../productData/data.json");
 
+// Add To Cart
 const addToCart = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { productId, quantity = 1 } = req.body; // Accept quantity with default 1
+    const { productId, quantity = 1 } = req.body;
 
-    const product = products.find(p => p.id === Number(productId));
+    // Check product exists
+    const product = products.find(
+      (p) => p.id === Number(productId)
+    );
 
     if (!product) {
       return res.status(404).json({
+        success: false,
         message: "Product not found",
-        success: false
       });
     }
-      
+
+    // Find user
     const user = await userModel.findById(userId);
 
     if (!user) {
       return res.status(404).json({
-        message: `User not found ${userId}`,
-        success: false
+        success: false,
+        message: "User not found",
       });
     }
 
+    // Check existing cart item
     const existingCartItem = user.cart.find(
-      item => item.productId === Number(productId)
+      (item) => item.productId === Number(productId)
     );
 
     if (existingCartItem) {
-      existingCartItem.quantity += quantity; // Use the quantity from request
+      existingCartItem.quantity += Number(quantity);
     } else {
-      user.cart.push({ productId: Number(productId), quantity: quantity }); // Use the quantity from request
+      user.cart.push({
+        productId: Number(productId),
+        quantity: Number(quantity),
+      });
     }
 
     await user.save();
 
     res.status(200).json({
+      success: true,
       message: "Product added to cart",
-      success: true
     });
 
   } catch (err) {
-    console.log(err);
+    console.log("Add To Cart Error:", err);
+
     res.status(500).json({
+      success: false,
       message: "Internal server error",
-      success: false
     });
   }
 };
-// Simplified addWithQuantity (if backend supports quantity)
-const addWithQuantity = async (item) => {
-  if (!isLogged) {
-    toast.error("Please login to add items to cart");
-    return;
-  }
 
+// Go To Cart
+const goToCart = async (req, res) => {
   try {
-    const res = await fetch("http://localhost:8080/cart/add", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      },
-      body: JSON.stringify({ 
-        productId: item.id,
-        quantity: item.quantity // Send quantity to backend
-      })
+
+    const user = await userModel.findById(req.user.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    const cartData = user.cart.map((item) => {
+
+      const product = products.find(
+        (p) => p.id === item.productId
+      );
+
+      return {
+        ...product,
+        quantity: item.quantity,
+      };
     });
 
-    const data = await res.json();
+    res.status(200).json({
+      success: true,
+      cart: cartData,
+    });
 
-    if (!res.ok) {
-      throw new Error(data.message || "Failed to add to cart");
-    }
-
-    // Refresh cart from backend
-    await fetchCart();
-    toast.success(`Added ${item.title} to cart`);
-    
   } catch (err) {
-    console.error("Error adding to cart:", err);
-    toast.error(err.message || "Failed to add to cart");
+    console.log("Go To Cart Error:", err);
+
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
   }
 };
-{/*  Go To  Cart */}
 
-const goToCart = async (req,res) => {
-    try{
-        const user = await userModel.findById(req.user.id)
-        
-       const cartData = user.cart.map(item =>{
-            const product = products.find(p => p.id === item.productId)
+// Remove From Cart
+const removeFromCart = async (req, res) => {
+  try {
 
-            return{
-                ...product,
-                quantity: item.quantity
-            };
-        });
-        res.json(cartData)
+    const { productId } = req.body;
 
-    } catch(err){
-        res.status(500).json({message:err.message})
-    }
-}
+    await userModel.findByIdAndUpdate(
+      req.user.id,
+      {
+        $pull: {
+          cart: {
+            productId: Number(productId),
+          },
+        },
+      }
+    );
 
-{/* Remove from  Cart */}
+    res.status(200).json({
+      success: true,
+      message: "Removed from cart",
+    });
 
-const removeFromCart = async (req, res) => { 
-  const {productId} = req.body
-  await userModel.findByIdAndUpdate(req.user.id,{
-    $pull :{
-        cart : {productId}
-    }
-  });
-  res.json({message:"Removed From Cart"})
-}
+  } catch (err) {
+    console.log("Remove Cart Error:", err);
 
-module.exports = {addToCart,goToCart,removeFromCart}
+    res.status(500).json({
+      success: false,
+      message: "Internal server error",
+    });
+  }
+};
+
+module.exports = {
+  addToCart,
+  goToCart,
+  removeFromCart,
+};

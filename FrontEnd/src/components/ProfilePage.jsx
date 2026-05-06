@@ -2,14 +2,155 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSearch } from '../Context/SearchContext';
-import { FiUser, FiMail, FiPhone, FiMapPin, FiEdit2, FiCamera, FiSave, FiX } from 'react-icons/fi';
+import { FiUser, FiMail, FiPhone, FiMapPin, FiCamera, FiSave, FiX, FiCheck } from 'react-icons/fi';
 import toast from 'react-hot-toast';
- import BASE_URL from "../config/config";
+import BASE_URL from "../config/config";
+
+const styles = {
+  container: {
+    maxWidth: '800px',
+    margin: '0 auto',
+    padding: '20px',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  },
+  loadingContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: '400px',
+  },
+  spinner: {
+    width: '40px',
+    height: '40px',
+    border: '3px solid #f3f3f3',
+    borderTop: '3px solid #4f46e5',
+    borderRadius: '50%',
+    animation: 'spin 0.8s linear infinite',
+  },
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: '30px',
+    padding: '20px',
+    backgroundColor: '#ffffff',
+    borderRadius: '12px',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+  },
+  title: {
+    fontSize: '28px',
+    fontWeight: '600',
+    color: '#1f2937',
+    margin: 0,
+  },
+  subtitle: {
+    fontSize: '14px',
+    color: '#6b7280',
+    margin: '4px 0 0 0',
+  },
+  content: {
+    backgroundColor: '#ffffff',
+    borderRadius: '12px',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+    padding: '30px',
+  },
+  avatarSection: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    marginBottom: '30px',
+  },
+  avatarWrapper: {
+    position: 'relative',
+    width: '120px',
+    height: '120px',
+    borderRadius: '50%',
+    overflow: 'hidden',
+    backgroundColor: '#f3f4f6',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    border: '3px solid #e5e7eb',
+  },
+  avatarImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+  },
+  avatarPlaceholder: {
+    display: 'flex',
+    color: '#9ca3af',
+  },
+  infoCard: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '20px',
+  },
+  infoItem: {
+    display: 'flex',
+    gap: '16px',
+    padding: '16px',
+    backgroundColor: '#f9fafb',
+    borderRadius: '8px',
+    border: '1px solid #e5e7eb',
+  },
+  iconWrapper: {
+    width: '40px',
+    height: '40px',
+    borderRadius: '8px',
+    backgroundColor: '#e0e7ff',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+  },
+  icon: {
+    color: '#4f46e5',
+    fontSize: '18px',
+  },
+  infoContent: {
+    flex: 1,
+  },
+  infoLabel: {
+    fontSize: '12px',
+    color: '#6b7280',
+    marginBottom: '4px',
+    textTransform: 'uppercase',
+    letterSpacing: '0.5px',
+  },
+  infoValue: {
+    fontSize: '16px',
+    color: '#1f2937',
+    fontWeight: '500',
+    margin: 0,
+  },
+  statusBadge: {
+    display: 'inline-block',
+    padding: '4px 12px',
+    backgroundColor: '#d1fae5',
+    color: '#065f46',
+    borderRadius: '12px',
+    fontSize: '13px',
+    fontWeight: '500',
+  },
+  addressCount: {
+    fontSize: '12px',
+    color: '#6b7280',
+    marginTop: '4px',
+    display: 'block',
+  },
+  '@keyframes spin': {
+    '0%': { transform: 'rotate(0deg)' },
+    '100%': { transform: 'rotate(360deg)' },
+  },
+};
+
 
 const ProfilePage = () => {
   const { token, userData, setUserData, isLogged, userName, userEmail } = useSearch();
   const navigate = useNavigate();
-  const [isEditing, setIsEditing] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [profileForm, setProfileForm] = useState({
     name: '',
@@ -24,7 +165,6 @@ const ProfilePage = () => {
       return;
     }
 
-    // Load user data
     if (userData) {
       setProfileForm({
         name: userData.name || userName || '',
@@ -40,350 +180,85 @@ const ProfilePage = () => {
     setProfileForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Check file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error('Image size should be less than 5MB');
-        return;
-      }
-
-      // Check file type
-      if (!file.type.startsWith('image/')) {
-        toast.error('Please select an image file');
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfileForm(prev => ({ ...prev, avatar: reader.result }));
-      };
-      reader.onerror = () => {
-        toast.error('Failed to read image file');
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    // Validation
-    if (!profileForm.name.trim()) {
-      toast.error('Name is required');
-      return;
-    }
-    
-    if (!profileForm.email.trim()) {
-      toast.error('Email is required');
-      return;
-    }
-
-    if (profileForm.phone && !/^\+?[\d\s-]{10,}$/.test(profileForm.phone)) {
-      toast.error('Please enter a valid phone number');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const response = await fetch(`${BASE_URL}/auth/profile`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          name: profileForm.name,
-          email: profileForm.email,
-          phone: profileForm.phone,
-          avatar: profileForm.avatar
-        })
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        // Update context with new user data
-        setUserData({
-          ...userData,
-          name: profileForm.name,
-          email: profileForm.email,
-          phone: profileForm.phone,
-          avatar: profileForm.avatar
-        });
-        
-        toast.success('Profile updated successfully!');
-        setIsEditing(false);
-      } else {
-        throw new Error(data.message || 'Failed to update profile');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      
-      // If API fails, still update local state for better UX
-      if (error.message === 'Failed to fetch') {
-        setUserData({
-          ...userData,
-          name: profileForm.name,
-          email: profileForm.email,
-          phone: profileForm.phone,
-          avatar: profileForm.avatar
-        });
-        
-        // Save to localStorage as fallback
-        const updatedUserData = {
-          ...userData,
-          name: profileForm.name,
-          email: profileForm.email,
-          phone: profileForm.phone,
-          avatar: profileForm.avatar
-        };
-        localStorage.setItem('userData', JSON.stringify(updatedUserData));
-        
-        toast.success('Profile updated locally!');
-        setIsEditing(false);
-      } else {
-        toast.error(error.message || 'Failed to update profile');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCancel = () => {
-    // Reset form to original values
-    setProfileForm({
-      name: userData?.name || userName || '',
-      email: userData?.email || userEmail || '',
-      phone: userData?.phone || '',
-      avatar: userData?.avatar || ''
-    });
-    setIsEditing(false);
-  };
-
-  if (!isLogged) {
-    return (
-      <div className="profile-page">
-        <div className="profile-container">
-          <div className="loading-state">
-            <div className="spinner"></div>
-            <p>Loading profile...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="profile-page">
-      <div className="profile-container">
-        {/* Header */}
-        <div className="profile-header">
-          <div>
-            <h1>My Profile</h1>
-            <p className="profile-subtitle">Manage your personal information</p>
-          </div>
-          {!isEditing && (
-            <button className="edit-profile-btn" onClick={() => setIsEditing(true)}>
-              <FiEdit2 size={18} />
-              <span>Edit Profile</span>
-            </button>
-          )}
+    <div style={styles.container}>
+      {/* Header */}
+      <div style={styles.header}>
+        <div>
+          <h1 style={styles.title}>My Profile</h1>
+          <p style={styles.subtitle}>Manage your personal information</p>
         </div>
+    
+      </div>
 
-        <div className="profile-content">
-          {/* Avatar Section */}
-          <div className="avatar-section">
-            <div className="avatar-wrapper">
-              {profileForm.avatar ? (
-                <img 
-                  src={profileForm.avatar} 
-                  alt="Profile" 
-                  className="profile-avatar-large"
-                  onError={(e) => {
-                    e.target.onerror = null;
-                    e.target.style.display = 'none';
-                    e.target.parentNode.querySelector('.avatar-placeholder').style.display = 'flex';
-                  }}
-                />
-              ) : null}
-              <div 
-                className="avatar-placeholder" 
-                style={{ display: profileForm.avatar ? 'none' : 'flex' }}
-              >
-                <FiUser size={64} />
+      <div style={styles.content}>
+        {/* Avatar Section */}
+        <div style={styles.avatarSection}>
+          <div style={styles.avatarWrapper}>
+            {profileForm.avatar ? (
+              <img 
+                src={profileForm.avatar} 
+                alt="Profile" 
+                style={styles.avatarImage}
+                onError={(e) => {
+                  e.target.style.display = 'none';
+                }}
+              />
+            ) : (
+              <div style={styles.avatarPlaceholder}>
+                <FiUser size={48} />
               </div>
-              {isEditing && (
-                <label className="change-avatar-btn" title="Change avatar">
-                  <FiCamera size={18} />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleAvatarChange}
-                    style={{ display: 'none' }}
-                  />
-                </label>
-              )}
-            </div>
-            {isEditing && (
-              <p className="avatar-hint">Click camera icon to change avatar</p>
             )}
+           
           </div>
+        
+        </div>
 
-          {/* Profile Form or View */}
-          {isEditing ? (
-            <form onSubmit={handleSubmit} className="profile-form">
-              <div className="form-group">
-                <label htmlFor="name">
-                  <FiUser size={16} />
-                  <span>Full Name</span>
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={profileForm.name}
-                  onChange={handleInputChange}
-                  placeholder="Enter your full name"
-                  required
-                  autoFocus
-                />
+        {/* Profile Form or View */}
+        
+          <div style={styles.infoCard}>
+            <div style={styles.infoItem}>
+              <div style={styles.iconWrapper}>
+                <FiUser size={18} style={styles.icon} />
               </div>
-
-              <div className="form-group">
-                <label htmlFor="email">
-                  <FiMail size={16} />
-                  <span>Email Address</span>
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={profileForm.email}
-                  onChange={handleInputChange}
-                  placeholder="Enter your email"
-                  required
-                  disabled
-                />
-                <small className="field-hint">Email cannot be changed</small>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="phone">
-                  <FiPhone size={16} />
-                  <span>Phone Number</span>
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={profileForm.phone}
-                  onChange={handleInputChange}
-                  placeholder="Enter phone number"
-                  pattern="[\+]?[\d\s-]{10,}"
-                />
-              </div>
-
-              <div className="form-actions">
-                <button 
-                  type="button" 
-                  className="cancel-btn"
-                  onClick={handleCancel}
-                  disabled={loading}
-                >
-                  <FiX size={18} />
-                  <span>Cancel</span>
-                </button>
-                <button 
-                  type="submit" 
-                  className="save-btn"
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <span className="spinner-small"></span>
-                      <span>Saving...</span>
-                    </>
-                  ) : (
-                    <>
-                      <FiSave size={18} />
-                      <span>Save Changes</span>
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-          ) : (
-            <div className="profile-info">
-              <div className="info-card">
-                <div className="info-item">
-                  <div className="info-icon-wrapper">
-                    <FiUser className="info-icon" />
-                  </div>
-                  <div className="info-content">
-                    <label>Full Name</label>
-                    <p>{userData?.name || userName || 'Not set'}</p>
-                  </div>
-                </div>
-
-                <div className="info-item">
-                  <div className="info-icon-wrapper">
-                    <FiMail className="info-icon" />
-                  </div>
-                  <div className="info-content">
-                    <label>Email Address</label>
-                    <p>{userData?.email || userEmail || 'Not set'}</p>
-                  </div>
-                </div>
-
-                <div className="info-item">
-                  <div className="info-icon-wrapper">
-                    <FiPhone className="info-icon" />
-                  </div>
-                  <div className="info-content">
-                    <label>Phone Number</label>
-                    <p>{userData?.phone || 'Not set'}</p>
-                  </div>
-                </div>
-
-                {userData?.addresses && userData.addresses.length > 0 && (
-                  <div className="info-item">
-                    <div className="info-icon-wrapper">
-                      <FiMapPin className="info-icon" />
-                    </div>
-                    <div className="info-content">
-                      <label>Default Address</label>
-                      <p>
-                        {userData.addresses.find(addr => addr.isDefault)?.street || 
-                         userData.addresses[0]?.street || 'No address set'}
-                      </p>
-                      {userData.addresses.length > 1 && (
-                        <span className="address-count">
-                          +{userData.addresses.length - 1} more address(es)
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Account Info */}
-                <div className="info-item">
-                  <div className="info-icon-wrapper">
-                    <FiUser className="info-icon" />
-                  </div>
-                  <div className="info-content">
-                    <label>Account Status</label>
-                    <p>
-                      <span className="status-badge active">Active</span>
-                    </p>
-                  </div>
-                </div>
+              <div style={styles.infoContent}>
+                <div style={styles.infoLabel}>Full Name</div>
+                <p style={styles.infoValue}>{userData?.name || userName || 'Not set'}</p>
               </div>
             </div>
-          )}
-        </div>
+
+            <div style={styles.infoItem}>
+              <div style={styles.iconWrapper}>
+                <FiMail size={18} style={styles.icon} />
+              </div>
+              <div style={styles.infoContent}>
+                <div style={styles.infoLabel}>Email Address</div>
+                <p style={styles.infoValue}>{userData?.email || userEmail || 'Not set'}</p>
+              </div>
+            </div>
+
+            <div style={styles.infoItem}>
+              <div style={styles.iconWrapper}>
+                <FiPhone size={18} style={styles.icon} />
+              </div>
+              <div style={styles.infoContent}>
+                <div style={styles.infoLabel}>Phone Number</div>
+                <p style={styles.infoValue}>{userData?.phone || 'Not set'}</p>
+              </div>
+            </div>
+            <div style={styles.infoItem}>
+              <div style={styles.iconWrapper}>
+                <FiCheck size={18} style={styles.icon} />
+              </div>
+              <div style={styles.infoContent}>
+                <div style={styles.infoLabel}>Account Status</div>
+                <p style={styles.infoValue}>
+                  <span style={styles.statusBadge}>Active</span>
+                </p>
+              </div>
+            </div>
+          </div>
+     
       </div>
     </div>
   );
