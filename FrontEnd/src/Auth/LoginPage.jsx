@@ -149,7 +149,7 @@ const LoginPage = () => {
           <h1>Login</h1>
 
           <div className='form-group'>
-            <label>Email</label>
+        
             <input
               type="email"
               name="email"
@@ -162,7 +162,7 @@ const LoginPage = () => {
           </div>
 
           <div className='form-group password-field'>
-            <label>Password</label>
+
             <div className='password-input-wrapper'>
               <input
                 type={showPassword ? "text" : "password"}

@@ -136,7 +136,7 @@ const url = `${BASE_URL}/auth/register`;
           <h1>Register</h1>
           
           <div className='form-group'>
-            <label htmlFor="name">Name</label>
+          
             <input
               type="text"
               name='name'
@@ -149,7 +149,7 @@ const url = `${BASE_URL}/auth/register`;
           </div>
 
           <div className='form-group'>
-            <label htmlFor="email">Email</label>
+           
             <input
               type="email"
               name='email'
@@ -161,7 +161,7 @@ const url = `${BASE_URL}/auth/register`;
           </div>
 
           <div className='form-group password-field'>
-            <label htmlFor="password">Password</label>
+          
             <div className='password-input-wrapper'>
               <input
                 type={showPassword ? "text" : "password"}
@@ -205,7 +205,7 @@ const url = `${BASE_URL}/auth/register`;
           </div>
 
           <div className='form-group password-field'>
-            <label htmlFor="confirmPassword">Confirm Password</label>
+           
             <div className='password-input-wrapper'>
               <input
                 type={showConfirmPassword ? "text" : "password"}
