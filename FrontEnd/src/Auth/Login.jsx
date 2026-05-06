@@ -244,44 +244,41 @@ const AuthPage = () => {
       setIsLoading(false)
     }
   }
+useEffect(() => {
+  const initializeGoogle = () => {
+    if (!window.google) return;
 
-  // Load Google Sign-In
-  useEffect(() => {
-    const loadGoogleScript = () => {
-      // Check if script already exists
-      if (document.querySelector('script[src="https://accounts.google.com/gsi/client"]')) {
-        initializeGoogleBtn()
-        return
-      }
-      
-      const script = document.createElement('script')
-      script.src = 'https://accounts.google.com/gsi/client'
-      script.async = true
-      script.defer = true
-      script.onload = initializeGoogleBtn
-      document.body.appendChild(script)
+    window.google.accounts.id.initialize({
+      client_id:
+        "544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com",
+      callback: handleGoogleAuth,
+    });
+
+    const googleBtn = document.getElementById("googleBtn");
+
+    if (googleBtn) {
+      googleBtn.innerHTML = "";
+
+      window.google.accounts.id.renderButton(googleBtn, {
+        theme: "outline",
+        size: "large",
+        width: 320,
+      });
     }
+  };
 
-    const initializeGoogleBtn = () => {
-      if (window.google) {
-        window.google.accounts.id.initialize({
-          client_id: "544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com",
-          callback: handleGoogleAuth
-        })
-        
-        const googleBtn = document.getElementById("googleBtn")
-        if (googleBtn) {
-          window.google.accounts.id.renderButton(googleBtn, {
-            theme: "outline",
-            size: "large"
-          })
-        }
-      }
-    }
-
-    loadGoogleScript()
-  }, [authMode]) // Re-initialize when mode changes
-
+  if (!document.getElementById("google-script")) {
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.defer = true;
+    script.id = "google-script";
+    script.onload = initializeGoogle;
+    document.body.appendChild(script);
+  } else {
+    initializeGoogle();
+  }
+}, []);
   // Check if already logged in
   useEffect(() => {
     const token = localStorage.getItem("jwtToken")
