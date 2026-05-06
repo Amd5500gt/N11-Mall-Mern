@@ -1,51 +1,108 @@
-import React, { useEffect } from 'react'
-import { jwtDecode} from  "jwt-decode"
+import React, { useEffect, useRef } from 'react'
 import BASE_URL from '../config/config'
 import toast from 'react-hot-toast'
 
-
 const GoogleAuth = () => {
-    handleCredentailResponse = async (respone) =>{
-         try{
-             const res = await fetch(`${BASE_URL}/goole-login`, {
-                method: "POST",
-                headers :{
-                    "Content-Type":"application/json"
-                },
-                body: JSON.stringify({
-                    credential : respone.credential
-                })
-                });
 
-                const  data = await res.json();
-                console.log(data)
-                if(data.success){
-                    localStorage.setItem("token",data.token)
-                    toast.success("Login Success")
-                }
-         } catch(err){
-            console.log(err)
-         }
+  const initialized = useRef(false);
+
+  const handleCredentailResponse = async (response) => {
+
+    try {
+
+      const res = await fetch(`${BASE_URL}/auth/google-login`, {
+
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          credential: response.credential
+        })
+
+      });
+
+      const data = await res.json();
+
+      console.log(data);
+
+      if (data.success) {
+
+        localStorage.setItem("jwtToken", data.token);
+
+        toast.success("Login Success");
+
+      } else {
+
+        toast.error(data.message || "Login Failed");
+
+      }
+
+    } catch (err) {
+
+      console.log(err);
+
+      toast.error("Something went wrong");
+
     }
 
-     useEffect(()=>{
-        google.accounts.id.initialize({
-            client_id :"544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com",
-            callback : handleCredentailResponse
-        });
-        google.accounts.id.renderButton(
-            document.getElementById("googleBtn"),
-            {
-                theme: "outline",
-                size:"large"
-            }
-        );
-     },[]);
+  };
+
+  useEffect(() => {
+
+    // Prevent multiple initialization
+    if (initialized.current) return;
+
+    initialized.current = true;
+
+    const initGoogle = () => {
+
+      // Check Google Script
+      if (!window.google) {
+
+        console.log("Google script not loaded");
+
+        return;
+
+      }
+
+      // Initialize Google Auth
+      window.google.accounts.id.initialize({
+
+        client_id:"544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com",
+
+        callback: handleCredentailResponse
+
+      });
+
+      // Render Google Button
+      window.google.accounts.id.renderButton(
+
+        document.getElementById("googleBtn"),
+
+        {
+          theme: "outline",
+          size: "large",
+          width: "300"
+        }
+
+      );
+
+    };
+
+    // Wait for script load
+    setTimeout(initGoogle, 1000);
+
+  }, []);
+
   return (
-       <div>
+    <div className='d-flex justify-content-center'>
       <div id="googleBtn"></div>
     </div>
-  )
-}
+  );
 
-export default GoogleAuth
+};
+
+export default GoogleAuth;

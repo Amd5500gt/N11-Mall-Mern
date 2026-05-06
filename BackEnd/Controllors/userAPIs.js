@@ -1,7 +1,8 @@
 const userModel = require("../Models/userModel")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
-
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 const RegisterUser = async (req, res) => {
     try {
         const { name, email, password } = req.body
@@ -84,7 +85,66 @@ const LoginUser = async (req, res) => {
     });
   }
 };
+
+const GoogleUser = async (req,res) =>{
+    try{
+      const { credentail } = req.body;
+      const ticket = await client.verifyIdToken({
+        idToken: credentail,
+        audience: process.env.GOOGLE_CLIENT_ID
+      });
+
+      const playload = ticket.getPayload();
+      const { name,email, picture } = playload
+
+      let user = await userModel.findOne({email});
+    
+      //// Create User
+      if(!user) {
+        user  = await userModel.create({
+          name,
+          email,
+          picture,
+          googleAuth: true
+        });
+
+      }
+
+      //JWT token
+       const token = jwt.sign(
+        { userId : user._id },
+        process.env.jwt_secret,
+        {expiresIn: "72h"}    
+       );
+
+
+       res.status(200).json({
+      message: "Login Success",
+      success: true,
+      token,
+      id: user.id,
+      name: user.name,
+      email: user.email
+       })
+    
+  } catch (err) {
+
+    console.log(err);
+
+    res.status(500).json({
+      success: false,
+      message: "Google Login Failed"
+    });
+
+  }
+
+};
+
+
+
+
 module.exports = {
     RegisterUser,
-    LoginUser
+    LoginUser,
+    GoogleUser
 }

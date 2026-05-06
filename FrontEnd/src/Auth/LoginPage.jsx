@@ -7,6 +7,7 @@ import { useSearch } from '../Context/SearchContext'
 import toast from 'react-hot-toast'
 import { LiaSpinnerSolid } from "react-icons/lia";
 import BASE_URL from '../config/config'
+import GoogleAuth from './GoogleAuth'
 
 const LoginPage = () => {
   const navigate = useNavigate()
@@ -274,6 +275,7 @@ const LoginPage = () => {
           Don't have an account? <Link to="/register">Register</Link>
         </span>
       )}
+      <GoogleAuth />
     </div>
   )
 }
