@@ -12,10 +12,10 @@
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  padding: 30px 60px;
+  padding: 24px 48px; /* Reduced from 30px 60px */
   border-radius: 32px;
   width: 100%;
-  max-width: 540px;
+  max-width: 460px; /* Reduced from 540px for a smaller, more compact look */
   /* Premium shadow with reflective illusion */
   box-shadow: 
     0 20px 35px rgba(0, 0, 0, 0.3),
@@ -25,7 +25,7 @@
   transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
   position: relative;
   z-index: 1;
-  margin: 80px auto 20px;
+  margin: 60px auto 20px; /* Reduced top margin from 80px */
   overflow: hidden;
 }
 
@@ -108,9 +108,9 @@
 
 /* Enhanced heading with glow and reflection */
 .container > h1 {
-  margin-bottom: 62px;
+  margin-bottom: 48px; /* Reduced from 62px */
   text-align: center;
-  font-size: 34px;
+  font-size: 30px; /* Reduced from 34px */
   background: linear-gradient(135deg, #a78bfa 0%, #ec4899 50%, #fbbf24 100%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -154,33 +154,32 @@
 .container > form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px; /* Reduced from 24px */
 }
 
 .container .form-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px; /* Reduced from 8px */
   position: relative;
 }
 
 /* Enhanced label styling */
 .container label {
-  font-size: 15px;
+  font-size: 13px; /* Reduced from 15px */
   font-weight: 600;
   color: rgba(255, 255, 255, 0.9);
   transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
   letter-spacing: 0.3px;
   text-transform: uppercase;
   opacity: 0.8;
- 
 }
 
 /* Premium input styling */
 .container input {
   width: 100%;
-  font-size: 17px;
-  padding: 14px 12px 14px 0;
+  font-size: 15px; /* Reduced from 17px */
+  padding: 12px 10px 12px 0; /* Adjusted padding */
   border: none;
   outline: none;
   border-bottom: 2px solid rgba(255, 255, 255, 0.2);
@@ -201,7 +200,7 @@
 }
 
 .container input::placeholder {
-  font-size: 14px;
+  font-size: 13px; /* Reduced from 14px */
   font-style: italic;
   color: rgba(2, 2, 2, 0.2);
   transition: all 0.3s ease;
@@ -231,7 +230,7 @@
 /* Floating label animation - enhanced */
 .container .form-group:focus-within label,
 .container .form-group input:not(:placeholder-shown) + label {
-  transform: translateY(-10px) scale(0.85);
+  transform: translateY(-22px) scale(0.85); /* Adjusted for smaller scale */
   color: #a78bfa;
   opacity: 1;
 }
@@ -266,7 +265,7 @@
   border: none;
   cursor: pointer;
   color: rgba(167, 139, 250, 0.8);
-  font-size: 20px;
+  font-size: 18px; /* Slightly reduced from 20px */
   padding: 0;
   margin: 0;
   width: auto;
@@ -276,8 +275,8 @@
   transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
   backdrop-filter: blur(4px);
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 34px; /* Reduced from 36px */
+  height: 34px; /* Reduced from 36px */
 }
 
 .container .eye-btn:hover {
@@ -295,13 +294,13 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #ec4899 100%);
   background-size: 200% 200%;
   border: none;
-  font-size: 17px;
+  font-size: 15px; /* Reduced from 17px */
   font-weight: 600;
   color: white;
   border-radius: 60px;
-  padding: 16px 28px;
+  padding: 14px 24px; /* Reduced from 16px 28px */
   cursor: pointer;
-  margin: 24px 0 12px;
+  margin: 20px 0 10px; /* Adjusted margins */
   transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
   position: relative;
   overflow: hidden;
@@ -380,8 +379,8 @@
 .container span {
   display: block;
   text-align: center;
-  margin-top: 20px;
-  font-size: 14px;
+  margin-top: 16px; /* Reduced from 20px */
+  font-size: 13px; /* Reduced from 14px */
   color: rgba(86, 106, 223, 0.7);
 }
 
@@ -418,109 +417,109 @@
 @media (max-width: 768px) {
   .container {
     max-width: 85%;
-    padding: 32px 28px;
-    margin: 16px auto;
+    padding: 24px 28px;
+    margin: 40px auto 20px;
   }
 
   .container > h1 {
-    font-size: 30px;
-    margin-bottom: 28px;
+    font-size: 26px;
+    margin-bottom: 32px;
   }
 
   .container label {
-    font-size: 13px;
+    font-size: 12px;
   }
 
   .container input {
-    font-size: 16px;
-    padding: 12px 10px 12px 0;
+    font-size: 14px;
+    padding: 10px 10px 10px 0;
   }
 
   .container button[type="submit"] {
-    font-size: 16px;
-    padding: 14px 24px;
+    font-size: 14px;
+    padding: 12px 22px;
   }
 
   .container .eye-btn {
-    font-size: 18px;
-    width: 32px;
-    height: 32px;
+    font-size: 16px;
+    width: 30px;
+    height: 30px;
   }
 }
 
 @media (max-width: 480px) {
   .container {
-    margin: 12px;
-    padding: 24px 20px;
+    margin: 20px 12px;
+    padding: 20px 20px;
     max-width: calc(100% - 24px);
     border-radius: 28px;
   }
 
   .container > h1 {
-    font-size: 26px;
-    margin-bottom: 24px;
+    font-size: 24px;
+    margin-bottom: 28px;
   }
 
   .container > form {
-    gap: 20px;
+    gap: 18px;
   }
 
   .container label {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .container input {
-    font-size: 15px;
-    padding: 10px 8px 10px 0;
+    font-size: 14px;
+    padding: 9px 6px 9px 0;
   }
 
   .container input::placeholder {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .container button[type="submit"] {
-    font-size: 15px;
-    padding: 12px 20px;
-    margin: 20px 0 8px;
+    font-size: 14px;
+    padding: 11px 18px;
+    margin: 18px 0 6px;
   }
 
   .container .eye-btn {
-    font-size: 16px;
+    font-size: 15px;
     width: 28px;
     height: 28px;
-    right: 8px;
+    right: 6px;
   }
 
   .container span {
-    font-size: 12px;
-    margin-top: 16px;
+    font-size: 11px;
+    margin-top: 14px;
   }
 
   /* Adjusted floating label for mobile */
   .container .form-group:focus-within label,
   .container .form-group input:not(:placeholder-shown) + label {
-    transform: translateY(-24px) scale(0.8);
+    transform: translateY(-18px) scale(0.75);
   }
 }
 
 /* Small height screens (landscape on mobile) */
 @media (max-height: 600px) and (orientation: landscape) {
   .container {
-    padding: 20px 32px;
-    margin: 10px auto;
+    padding: 16px 28px;
+    margin: 20px auto;
   }
 
   .container > h1 {
-    font-size: 24px;
+    font-size: 22px;
     margin-bottom: 16px;
   }
 
   .container > form {
-    gap: 16px;
+    gap: 12px;
   }
 
   .container button[type="submit"] {
-    margin: 12px 0 8px;
+    margin: 10px 0 6px;
   }
 }
 
@@ -542,7 +541,6 @@
     transition-duration: 0.01ms !important;
   }
 }
-/* Add these styles to your existing Auth.css */
 
 /* Spinner animation */
 @keyframes spin {
@@ -581,7 +579,7 @@
 /* Forgot password link */
 .forgot-password-link {
   text-align: right;
-  margin-top: -10px;
+  margin-top: -8px;
 }
 
 .text-btn {
@@ -589,7 +587,7 @@
   border: none;
   color: #a78bfa;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   transition: all 0.3s ease;
   padding: 4px 0;
   opacity: 0.8;
@@ -604,7 +602,7 @@
 /* Forgot password form */
 .forgot-password-text {
   color: rgba(255, 255, 255, 0.8);
-  font-size: 14px;
+  font-size: 13px;
   line-height: 1.6;
   margin-bottom: 16px;
   text-align: center;
@@ -615,10 +613,10 @@
   background: rgba(255, 255, 255, 0.1);
   border: 1px solid rgba(167, 139, 250, 0.3);
   color: rgba(255, 255, 255, 0.9);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   border-radius: 60px;
-  padding: 12px 24px;
+  padding: 10px 22px;
   cursor: pointer;
   margin-top: 16px;
   transition: all 0.3s ease;
@@ -650,14 +648,14 @@
 }
 
 .success-icon {
-  width: 60px;
-  height: 60px;
+  width: 55px;
+  height: 55px;
   background: linear-gradient(135deg, #00C851, #007E33);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 30px;
+  font-size: 28px;
   color: white;
   margin: 0 auto 16px;
   animation: scaleIn 0.5s cubic-bezier(0.34, 1.2, 0.64, 1);
@@ -677,26 +675,26 @@
 .success-message p {
   color: rgba(255, 255, 255, 0.9);
   margin: 8px 0;
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .email-sent-to {
   color: #a78bfa !important;
-  font-size: 14px !important;
+  font-size: 13px !important;
   font-weight: 600;
 }
 
 /* Password strength indicator */
 .password-strength {
-  margin-top: 8px;
+  margin-top: 6px;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .strength-bar {
   flex: 1;
-  height: 4px;
+  height: 3px;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 2px;
   overflow: hidden;
@@ -709,7 +707,7 @@
 }
 
 .strength-text {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
   min-width: 40px;
   text-align: right;
@@ -718,8 +716,8 @@
 
 /* Password match indicators */
 .password-match {
-  margin-top: 8px;
-  font-size: 13px;
+  margin-top: 6px;
+  font-size: 12px;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -785,16 +783,16 @@
   }
   
   .text-btn {
-    font-size: 13px;
+    font-size: 12px;
   }
   
   .success-icon {
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
+    width: 48px;
+    height: 48px;
+    font-size: 22px;
   }
   
   .forgot-password-text {
-    font-size: 13px;
+    font-size: 12px;
   }
 }
