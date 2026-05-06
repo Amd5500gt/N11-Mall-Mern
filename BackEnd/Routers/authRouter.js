@@ -3,7 +3,7 @@ const { LoginUserValidation, RegisterUserValidation } = require("../Middlewares/
 
 const Router = require("express").Router()
 
-Router.post("/login",(req,res)=>{
+Router.get("/login",(req,res)=>{
         res.status(200).json({message:"Login API is working"})
 })
 
