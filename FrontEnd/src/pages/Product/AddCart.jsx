@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import EmptyCart from '../components/ui/Emptycart';
+import EmptyCart from '../../components/ui/Emptycart';
 import { FaTrash, FaPlus, FaMinus, FaShoppingBag, FaArrowLeft, FaCreditCard } from 'react-icons/fa';
-import './pages.css';
+import '../pages.css';
 import { FaSpinner } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
-import  useCart  from '../context/CartContext'; // Import the hook
+import  useCart  from '../../context/CartContext'; // Import the hook
 import toast from 'react-hot-toast';
 import { usecontext } from 'react';
 

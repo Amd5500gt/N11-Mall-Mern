@@ -1,6 +1,6 @@
 import React from 'react';
 import { FaRocket, FaGlobe, FaHeart, FaFire, FaBolt, FaBox, FaHeadset, FaShoppingBag, FaTrophy, FaUsers, FaShieldAlt, FaCreditCard } from 'react-icons/fa';
-import './pages.css';
+import '../pages.css';
 
 const About = () => {
   const features = [
