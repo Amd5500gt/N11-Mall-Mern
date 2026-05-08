@@ -7,7 +7,7 @@ import ErrorPage from '../../ErrorPage';
 import '../pages.css';
 import { useCart } from '../../context/CartContext';
  import BASE_URL from "../../config/config";
-import { useSearch } from '../../Context/SearchContext';
+import { useSearch } from '../../context/SearchContext';
 const OpenPrev = () => {
   const { id } = useParams();
   const [item, setItem] = useState({});
