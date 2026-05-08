@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FiInstagram, FiGithub, FiTwitter, FiMail, FiMapPin, FiPhone } from 'react-icons/fi';
 import { BsSuitcase2 } from 'react-icons/bs';
-import './components.css';
+import '../components.css';
 
 const Footer = () => {
   const [email, setEmail] = useState('');

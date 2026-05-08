@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import EmptyCart from '../components/common/Emptycart';
+import EmptyCart from '../components/ui/Emptycart';
 import { FaTrash, FaPlus, FaMinus, FaShoppingBag, FaArrowLeft, FaCreditCard } from 'react-icons/fa';
 import './pages.css';
 import { FaSpinner } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
-import { useCart } from '../Context/CartContext'; // Import the hook
+import  useCart  from '../context/CartContext'; // Import the hook
 import toast from 'react-hot-toast';
+import { usecontext } from 'react';
 
 const AddCart = () => {
   const [loader, setLoader] = useState(false);
@@ -14,7 +15,7 @@ const AddCart = () => {
   const [animateRemove, setAnimateRemove] = useState(null);
   
   // Get everything from context instead of props
-  const { addedItems, newCart, removeCart, total } = useCart();
+  const { addedItems, newCart, removeCart, total } = useContext(useCart)
 
   let totalPrice = (total * 20).toFixed(2);
   const totalAmount = (totalPrice * 1.03).toFixed(2);

@@ -1,4 +1,3 @@
-// components/ProfileDropdown.jsx
 import React from 'react';
 import { FiUser, FiMapPin, FiPackage, FiLogOut, FiSettings } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom'; // if using Link, otherwise use navigate

@@ -1,9 +1,7 @@
-import Header from "../components/Header"
-import Footer from "../components/Footer"
+import Header from "../components/common/Header"
+import Footer from "../components/common/Footer"
 import { Outlet } from "react-router-dom"
-import ScrollToTop from "../components/common/ScrollToTop"
-import { SearchProvider } from "./SearchContext"
-
+import ScrollToTop from "../components/ui/ScrollToTop"
 const Layout = ({ cartCount }) => {
   return (
     <div className="app">

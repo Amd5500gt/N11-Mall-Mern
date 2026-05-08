@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import Loader from '../components/common/Loader';
+import Loader from '../../components/ui/Loader';
 import { FaCartPlus, FaCheck, FaMinus, FaPlus, FaHeart, FaShare, FaTruck, FaShieldAlt, FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import { BsFillCartCheckFill, BsStar, BsStarHalf, BsStarFill, BsLightningCharge } from "react-icons/bs";
-import ErrorPage from '../ErrorPage';
-import './pages.css';
-import { useCart } from '../Context/CartContext';
- import BASE_URL from "../config/config";
+import ErrorPage from '../../ErrorPage';
+import '../pages.css';
+import { useCart } from '../../context/CartContext';
+ import BASE_URL from "../../config/config";
 const OpenPrev = () => {
   const { id } = useParams();
   const [item, setItem] = useState({});

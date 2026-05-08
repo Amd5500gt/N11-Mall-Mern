@@ -25,7 +25,8 @@ const Login = ({
           type="email"
           name="email"
           placeholder="Enter your email..."
-   
+          autoFocus
+          autoComplete='email'
           value={formData.email}
           onChange={handleChange}
           disabled={isLoading}
@@ -40,6 +41,7 @@ const Login = ({
             type={showPassword ? "text" : "password"}
             name="password"
             placeholder="Enter your password..."
+            autoComplete="current-password"
             value={formData.password}
             onChange={handleChange}
             disabled={isLoading}

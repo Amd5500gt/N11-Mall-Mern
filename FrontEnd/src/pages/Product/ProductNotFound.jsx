@@ -1,8 +1,8 @@
 import React from 'react'
-import { useSearch } from '../Context/SearchContext';
-import { BsFillCartCheckFill, BsStar, BsStarHalf, BsStarFill, BsLightningCharge, BsEmojiFrown } from "react-icons/bs";
-import { FaCartPlus, FaHeart, FaRegHeart, FaEye, FaSearch } from "react-icons/fa";
-
+import { useSearch } from '../../context/SearchContext'
+import { BsEmojiFrown } from "react-icons/bs"
+import { FaSearch } from "react-icons/fa"
+import "../pages.css"
   const NoProductsFound = () => {
 
  const {searchTerm,setSearchTerm} = useSearch()

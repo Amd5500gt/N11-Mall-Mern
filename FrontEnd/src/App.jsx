@@ -1,27 +1,27 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { Route, Routes } from 'react-router-dom';
-
 import About from './pages/About';
 import Contact from './pages/Contact';
 import './css/main.css';
-import OpenPrev from './pages/openPrev';
-import Products from './pages/Products';
+import OpenPrev from './pages/Product/OpenPrev';
+import Products from './pages/Product/Products';
 import AddCart from './pages/AddCart';
 import Payments from './PayPage';
 import ErrorPage from './ErrorPage';
-import Layout from './Context/Layout';
-import UseCart from './Context/CartContext';
-import AuthLayout from './Auth/AuthLayout';
+import Layout from './context/Layout';
+import useCart  from './context/CartContext';
+import AuthLayout from './context/AuthLayout';
 import { Toaster } from 'react-hot-toast';
 import ProfilePage from './userInfo/ProfilePage';
 import AuthPage from './Auth/Auth';
-import Payment from './pages/Payment';
-import OrderHistory from './pages/OrderHistory';
+import Payment from './userInfo/Payment';
+import OrderHistory from './pages/Order/OrderHistory';
 import AddressForm from './userInfo/AddressForm';
+import { useContext } from 'react';
 const App = () => {
-  const { cartCount, total, addedItems } = useContext(UseCart);
+  const { cartCount, total, addedItems } = useContext(useCart);
 // Add this useEffect in your AddCart component
 useEffect(() => {
   // Save cart items to localStorage for order history

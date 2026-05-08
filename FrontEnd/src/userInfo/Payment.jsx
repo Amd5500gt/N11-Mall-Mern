@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaCashRegister, FaSpinner, FaCheckCircle } from 'react-icons/fa';
-import AddressForm from '../userInfo/AddressForm';
+import AddressForm from './AddressForm';
 import './Payment.css';
 
 const Payment = () => {

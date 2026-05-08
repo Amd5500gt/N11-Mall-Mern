@@ -6,6 +6,8 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import ForgetPassword from './pages/ForgetPassword'
 import './Auth.css'
+import GoogleAuth from './components/GoogleAuth'
+import PageForward from './components/PageForward'
 const AuthPage = () => {
   const navigate = useNavigate()
 
@@ -346,7 +348,7 @@ const AuthPage = () => {
   getPasswordStrengthColor={getPasswordStrengthColor}
 />
         {/* Forgot Password Form */}
-        <ForgetPassword
+<ForgetPassword
   authMode={authMode}
   formData={formData}
   handleChange={handleChange}
@@ -359,22 +361,15 @@ const AuthPage = () => {
       
       
         {/* Toggle between Login and Register */}
-        {authMode !== 'forgotPassword' && (
-          <span>
-            {authMode === 'login' ? (
-              <>Don't have an account? <a href="#" onClick={(e) => { e.preventDefault(); switchMode('register'); }}>Register</a></>
-            ) : (
-              <>Already have an account? <a href="#" onClick={(e) => { e.preventDefault(); switchMode('login'); }}>Login</a></>
-            )}
-          </span>
-        )}
-
+<PageForward
+  authMode={authMode}
+  switchMode={switchMode}
+/>
         {/* Google Auth Button */}
-        {(authMode === 'login' || authMode === 'register') && (
-          <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-            <div id="googleBtn"></div>
-          </div>
-        )}
+    <GoogleAuth
+  authMode={authMode}
+  isLoading={isLoading}
+/>
       </div>
     </div>
   )

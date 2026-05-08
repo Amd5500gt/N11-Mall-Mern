@@ -32,6 +32,7 @@ const Register = ({
           name="name"
           placeholder="Enter your name..."
           autoFocus
+          autoComplete='name'
           value={formData.name}
           onChange={handleChange}
           disabled={isLoading}
@@ -46,6 +47,7 @@ const Register = ({
           name="email"
           placeholder="Enter your email..."
           value={formData.email}
+          autoComplete='email'
           onChange={handleChange}
           disabled={isLoading}
         />
@@ -62,7 +64,7 @@ const Register = ({
             placeholder="Enter your password..."
             value={formData.password}
             onChange={handleChange}
-            autoComplete='password'
+            autoComplete="new-password"
             disabled={isLoading}
           />
 
@@ -116,7 +118,7 @@ const Register = ({
             placeholder="Confirm your password..."
             value={formData.confirmPassword}
             onChange={handleChange}
-            autoComplete='password'
+            autoComplete="new-password"
             disabled={isLoading}
           />
 

@@ -1,7 +1,7 @@
 import toast, { Toaster } from 'react-hot-toast';
 // 🔊 SOUND (No file needed)
 const playBeep = (type = "success") => {
-  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const ctx = new (window.Audiocontext || window.webkitAudiocontext)();
   const oscillator = ctx.createOscillator();
   const gainNode = ctx.createGain();
 

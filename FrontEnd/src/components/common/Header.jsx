@@ -2,11 +2,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BsCartFill } from 'react-icons/bs';
-import { useSearch } from '../Context/SearchContext';
+import { useSearch } from '../../context/SearchContext';
 import { FiHome, FiInfo, FiPhone, FiMenu, FiX, FiUser, FiLogOut, FiSettings, FiMapPin, FiPackage } from 'react-icons/fi';
 import { FaUserCircle, FaMoon, FaSun, FaChevronDown } from 'react-icons/fa';
-import ProfileDropdown from './ProfileDropdown';
-import './components.css';
+import ProfileDropdown from './navbar/ProfileDropdown';
+import '../components.css';
+import Cart from './navbar/Cart';
 
 const Header = ({ cartCount }) => {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
@@ -69,7 +70,7 @@ const Header = ({ cartCount }) => {
   };
 
   const handleLogin = () => {
-    navigate("/login");
+    navigate("/auth");
   };
 // Inside Header component, after handleLogout and other functions
 
@@ -124,17 +125,7 @@ const handleShowOrders = () => {
 
           {isLogged ? (
             <>
-              <Link to="/cart" className="cart-button">
-                <div className="cart-icon-wrapper">
-                  <BsCartFill className='cart-icon' />
-                  {cartCount > 0 && (
-                    <span className={`cart-badge ${animate ? 'animate' : ''}`}>
-                      {cartCount > 99 ? '99+' : cartCount}
-                    </span>
-                  )}
-                </div>
-                <span className="cart-text">Cart</span>
-              </Link>
+         <Cart />
 
               <div className="user-section">
                 <button

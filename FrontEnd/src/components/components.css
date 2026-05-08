@@ -829,7 +829,6 @@ body.dark-mode .n11-footer {
   margin-bottom: 2rem;
 }
 
-.footer-brand { /* full width on mobile */ }
 
 .footer-logo {
   display: flex;
@@ -879,7 +878,6 @@ body.dark-mode .footer-logo-text {
 
 .contact-item svg { color: var(--primary); flex-shrink: 0; }
 
-.footer-links-column { /* stacked on mobile */ }
 
 .footer-links-title {
   font-size: 0.95rem;
