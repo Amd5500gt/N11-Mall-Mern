@@ -93,11 +93,13 @@ const AuthPage = () => {
       const result = await response.json()
 
       if (result.success) {
-        const userProfile = {
+       const userProfile = {
           id: result.user.id,
           name: result.user.name,
           email: result.user.email,
-          picture: result.user.picture || ""
+          picture: result.user.picture || "",
+          address: result.user.address || "",
+          cart:result.user.cart || ""
         }
 
         localStorage.setItem("loggedInUser", JSON.stringify(userProfile))
@@ -106,7 +108,7 @@ const AuthPage = () => {
         toast.success(result.message || "Login successful!")
 
         setTimeout(() => {
-          window.location.reload()
+          navigate("/")
         }, 1000)
       } else {
         toast.error(result.message || "Login failed")
@@ -151,7 +153,9 @@ const AuthPage = () => {
           id: result.user.id,
           name: result.user.name,
           email: result.user.email,
-          picture: result.user.picture || ""
+          picture: result.user.picture || "",
+          address: result.user.address || "",
+          cart:result.user.cart || ""
         }
         localStorage.setItem("loggedInUser", JSON.stringify(userProfile))
         localStorage.setItem("jwtToken", result.token)
@@ -159,7 +163,7 @@ const AuthPage = () => {
         toast.success("Registration successful!")
 
         setTimeout(() => {
-          window.location.reload()
+           navigate("/")
         }, 1000)
       } else {
         const details = result.error?.details?.[0]?.message
@@ -221,26 +225,28 @@ const AuthPage = () => {
         body: JSON.stringify({ credential: credentialResponse.credential })
       })
 
-      const data = await response.json()
+      const result = await response.json()
 
-      if (data.success) {
-        const userProfile = {
-          id: data.user.id,
-          name: data.user.name,
-          email: data.user.email,
-          picture: data.user.picture || ""
+      if (result.success) {
+       const userProfile = {
+          id: result.user.id,
+          name: result.user.name,
+          email: result.user.email,
+          picture: result.user.picture || "",
+          address: result.user.address || "",
+          cart:result.user.cart || ""
         }
 
         localStorage.setItem("loggedInUser", JSON.stringify(userProfile))
-        localStorage.setItem("jwtToken", data.token)
+        localStorage.setItem("jwtToken", result.token)
 
         toast.success("Authentication successful!")
 
         setTimeout(() => {
-          window.location.reload()
+          navigate("/")
         }, 1000)
       } else {
-        toast.error(data.message || "Authentication failed")
+        toast.error(result.message || "Authentication failed")
       }
     } catch (err) {
       toast.error("Something went wrong")
@@ -251,36 +257,29 @@ const AuthPage = () => {
 
   useEffect(() => {
     const initializeGoogle = () => {
-      if (!window.google) return;
+    if (!window.google) return;
 
-      if (window.googleInitialized) return;
-      window.googleInitialized = true;
+window.google.accounts.id.initialize({
+  client_id: "544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com",
+  callback: (response) => handleGoogleAuth(response),
+  ux_mode: "popup",
+});
 
-      window.google.accounts.id.initialize({
-        client_id:
-          "544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com",
+const googleBtn = document.getElementById("googleBtn");
 
-        callback: (response) => handleGoogleAuth(response),
+if (googleBtn) {
+  googleBtn.innerHTML = "";
 
-        ux_mode: "popup",
-      });
-
-      const googleBtn = document.getElementById("googleBtn");
-
-      if (googleBtn) {
-        googleBtn.innerHTML = "";
-
-        window.google.accounts.id.renderButton(googleBtn, {
-          theme: "outline",
-          size: "large",
-          width: 320,
-          type: "standard",
-          shape: "pill",
-          text: "continue_with",
-          logo_alignment: "left",
-        });
-      }
-    };
+  window.google.accounts.id.renderButton(googleBtn, {
+    theme: "outline",
+    size: "large",
+    width: 320,
+    type: "standard",
+    shape: "pill",
+    text: "continue_with",
+    logo_alignment: "left",
+  });
+}}
 
     const existingScript = document.getElementById("google-script");
 

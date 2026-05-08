@@ -1,50 +1,127 @@
 const mongoose = require("mongoose");
 
-const schema = mongoose.Schema;
+const addressSchema = new mongoose.Schema(
+  {
+    fullName: {
+      type: String,
+      trim: true,
+      default: "",
+    },
 
-const userSchema = new mongoose.Schema({
+    phone: {
+      type: String,
+      default: "",
+    },
+
+    addressLine1: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    addressLine2: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    city: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    state: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    pincode: {
+      type: String,
+      default: "",
+    },
+
+    landmark: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+  },
+  { _id: false }
+);
+
+const userSchema = new mongoose.Schema(
+  {
     name: {
-        type: String,
-        required: true,
-        trim: true
+      type: String,
+      required: true,
+      trim: true,
     },
+
     email: {
-        type: String,
-        required: true,
-        unique: true,
-        lowercase: true,
-        trim: true
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
     },
+
     password: {
-        type: String,
-        default: null // Allow null for Google auth users
+      type: String,
+      default: null,
     },
+
     picture: {
-        type: String,
-        default: null
+      type: String,
+      default: "",
     },
+
     googleId: {
-        type: String,
-        sparse: true // Allows multiple null values
+      type: String,
+      sparse: true,
+      default: null,
     },
+
     googleAuth: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false,
     },
-    
-  cart: [
-    {
-      productId: Number,
 
-      quantity: {
-        type: Number,
-        default: 1
-      }
-    }
-  ]
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
 
-}, { timestamps: true });
+    address: {
+      type: addressSchema,
+      default: () => ({}),
+    },
 
-const userModel = mongoose.model("users", userSchema);
+    cart: [
+      {
+        productId: {
+          type: Number,
+          required: true,
+        },
+
+        quantity: {
+          type: Number,
+          default: 1,
+          min: 1,
+        },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
+
+const userModel = mongoose.model(
+  "users",
+  userSchema
+);
 
 module.exports = userModel;

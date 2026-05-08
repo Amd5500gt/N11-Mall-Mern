@@ -1,102 +1,199 @@
-import React from 'react'
-import { createContext,useEffect,useState,useContext } from 'react'
-import toast from 'react-hot-toast';
- const SearchContext = createContext()
- import BASE_URL from "../config/config";
+import React, {
+  createContext,
+  useEffect,
+  useState,
+  useContext,
+} from "react";
 
-export const SearchProvider = ({children}) => {
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [skip, setSkip] = useState(0);
-    const [filterData, setFilterData] = useState([])
-    const [total, setTotal] = useState(0);
-    const limit = 12;
-    const [searchTerm, setSearchTerm] = useState("")
-    const [token,setToken] = useState(localStorage.getItem("jwtToken"));
-    const [userData,setUserData] = useState(null);
-    const isLogged = !!token;
-    const [userName,setUserName] = useState(null)
-    const [userEmail,setUserEmail] = useState(null)
-useEffect(() => {
-  setLoading(true);
+import toast from "react-hot-toast";
+import BASE_URL from "../config/config";
 
-  if (token) {
-    fetch(`${BASE_URL}/products`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-      .then(res => {
-        if (!res.ok) throw new Error("API Error");
-        return res.json();
-      })
-      .then(json => {
+const SearchContext = createContext();
+
+export const SearchProvider = ({ children }) => {
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const [skip, setSkip] = useState(0);
+  const [filterData, setFilterData] = useState([]);
+  const [total, setTotal] = useState(0);
+
+  const limit = 12;
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [token, setToken] = useState(
+    localStorage.getItem("jwtToken")
+  );
+
+  const isLogged = !!token;
+
+  // User Data
+  const [userData, setUserData] = useState({
+    name: "",
+    email: "",
+    picture: "",
+    address: "",
+    cart: [],
+  });
+
+  // Fetch Products
+  useEffect(() => {
+    setLoading(true);
+
+    const fetchProducts = async () => {
+      try {
+        const url = token
+          ? `${BASE_URL}/products`
+          : `${BASE_URL}/products/demo`;
+
+        const response = await fetch(url, {
+          headers: token
+            ? {
+              Authorization: `Bearer ${token}`,
+            }
+            : {},
+        });
+
+        if (!response.ok) {
+          throw new Error("API Error");
+        }
+
+        const json = await response.json();
+
         setData(json.products || []);
         setFilterData(json.products || []);
         setTotal(json.total || 0);
-      })
-      .catch(err => {
+      } catch (err) {
         console.log(err);
+
         setData([]);
         setFilterData([]);
         setTotal(0);
-      })
-      .finally(() => setLoading(false));
-
-  } else {
-
-    fetch(`${BASE_URL}/products/demo`)
-      .then(res => {
-        if (!res.ok) throw new Error("API Error");
-        return res.json();
-      })
-      .then(json => {
-        setData(json.products || []);
-        setFilterData(json.products || []);
-        setTotal(json.total || 0);
-      })
-      .catch(err => {
-        console.log(err);
-        setData([]);
-        setFilterData([]);
-        setTotal(0);
-      })
-      .finally(() => setLoading(false));
-  }
-
-}, []);
-
-useEffect(() => {
-  if (token) {
-    const user = JSON.parse(localStorage.getItem("loggedInUser"));
-    if (user) {
-      setUserName(user.name);
-      setUserEmail(user.email);
-      if(localStorage.getItem("welcomeToastShown") !== "true") {
-        toast.success(`Welcome back, ${user.name}!`);
-        localStorage.setItem("welcomeToastShown", "true");
+      } finally {
+        setLoading(false);
       }
-  
+    };
+
+    fetchProducts();
+  }, [token]);
+
+  // Sync Token
+  useEffect(() => {
+    const handleStorage = () => {
+      setToken(localStorage.getItem("jwtToken"));
+    };
+
+    window.addEventListener("storage", handleStorage);
+
+    return () =>
+      window.removeEventListener(
+        "storage",
+        handleStorage
+      );
+  }, []);
+
+  // Load User
+  useEffect(() => {
+    if (token) {
+      const user = JSON.parse(
+        localStorage.getItem("loggedInUser")
+      );
+
+      if (user) {
+        setUserData(user);
+
+        if (
+          localStorage.getItem(
+            "welcomeToastShown"
+          ) !== "true"
+        ) {
+          toast.success(
+            `Welcome back, ${user.name}!`
+          );
+
+          localStorage.setItem(
+            "welcomeToastShown",
+            "true"
+          );
+        }
+      }
     }
-  }
-}, [token]);
+  }, [token]);
 
+  // Search Filter
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      setFilterData(data);
+      return;
+    }
+
+    const filtered = data.filter((item) =>
+      item.title
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    );
+
+    setFilterData(filtered);
+  }, [searchTerm, data]);
+
+  // Logout
   const handleLogout = () => {
-  localStorage.removeItem("jwtToken");
-  localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("welcomeToastShown");
 
-  setToken(null);
-  setUserData(null);
-  setUserName(null);
-  setUserEmail(null);
+    setToken(null);
 
-  toast.success("Logged out successfully");
-};
+    setUserData({
+      name: "",
+      email: "",
+      picture: "",
+      address: "",
+      cart: [],
+    });
+
+    toast.success("Logged out successfully");
+  };
+
   return (
-   <SearchContext.Provider value={ {searchTerm,setSearchTerm,data,filterData,total,loading,skip,limit,setData,setLoading,setSkip,setFilterData,setTotal,isLogged,userName,userEmail,handleLogout,setToken,setUserName,setUserEmail,token} } >
-   {children}
-   </SearchContext.Provider>
-  )
-}
+    <SearchContext.Provider
+      value={{
+        // Search
+        searchTerm,
+        setSearchTerm,
 
-export const useSearch = () => useContext(SearchContext)
+        // Products
+        data,
+        filterData,
+        total,
+        loading,
+        skip,
+        limit,
+
+        setData,
+        setLoading,
+        setSkip,
+        setFilterData,
+        setTotal,
+
+        // Auth
+        token,
+        setToken,
+        isLogged,
+
+        // User
+        userData,
+        setUserData,
+
+        // Logout
+        handleLogout,
+      }}
+    >
+      {children}
+    </SearchContext.Provider>
+  );
+};
+
+export const useSearch = () =>
+  useContext(SearchContext);

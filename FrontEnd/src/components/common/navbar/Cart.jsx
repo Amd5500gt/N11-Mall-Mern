@@ -1,6 +1,7 @@
 import React from 'react'
-
-const Cart = () => {
+import { Link } from 'react-router-dom'
+import { BsCartFill } from 'react-icons/bs';
+const Cart = ({cartCount,animate}) => {
   return (
     <div>
              <Link to="/cart" className="cart-button">

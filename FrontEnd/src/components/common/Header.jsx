@@ -125,7 +125,7 @@ const handleShowOrders = () => {
 
           {isLogged ? (
             <>
-         <Cart />
+         <Cart cartCount={cartCount} animate = {animate}/>
 
               <div className="user-section">
                 <button

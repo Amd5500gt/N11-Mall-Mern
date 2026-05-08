@@ -7,6 +7,7 @@ import ErrorPage from '../../ErrorPage';
 import '../pages.css';
 import { useCart } from '../../context/CartContext';
  import BASE_URL from "../../config/config";
+import { useSearch } from '../../Context/SearchContext';
 const OpenPrev = () => {
   const { id } = useParams();
   const [item, setItem] = useState({});
@@ -20,6 +21,7 @@ const OpenPrev = () => {
   const [showToast, setShowToast] = useState(false);
   const [toastProduct, setToastProduct] = useState(null);
   const{newCart, addWithQuantity} = useCart()
+  const{token}  = useSearch()
 
   useEffect(() => {
     let timer = setTimeout(() => {
@@ -27,7 +29,11 @@ const OpenPrev = () => {
       setLoading(false);
     }, 6000);
 
-    fetch(`${BASE_URL}/product/${id}`)
+    fetch(`${BASE_URL}/products/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            }}
+          )
       .then(res => res.json())
       .then(data => {
         clearTimeout(timer);

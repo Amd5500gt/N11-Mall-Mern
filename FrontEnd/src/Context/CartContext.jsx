@@ -31,10 +31,24 @@ export const useCart = () => {
 // Provider
 export const CartProvider = ({ children }) => {
 
-  const [addedItems, setAddedItems] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const { token, isLogged } = useSearch();
+  const {
+    token,
+    isLogged,
+    userData,
+    setUserData
+  } = useSearch();
+
+  // Cart State
+  const [addedItems, setAddedItems] = useState(
+    userData?.cart || []
+  );
+
+  // Sync Cart From SearchContext
+  useEffect(() => {
+    setAddedItems(userData?.cart || []);
+  }, [userData]);
 
   // Cart Count
   const cartCount = Array.isArray(addedItems)
@@ -62,7 +76,14 @@ export const CartProvider = ({ children }) => {
   const fetchCart = useCallback(async () => {
 
     if (!isLogged || !token) {
+
       setAddedItems([]);
+
+      setUserData((prev) => ({
+        ...prev,
+        cart: []
+      }));
+
       return;
     }
 
@@ -75,7 +96,7 @@ export const CartProvider = ({ children }) => {
         {
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            Authorization: `Bearer ${token}`
           }
         }
       );
@@ -87,6 +108,12 @@ export const CartProvider = ({ children }) => {
       const data = await res.json();
 
       setAddedItems(data.cart || []);
+
+      // Sync SearchContext
+      setUserData((prev) => ({
+        ...prev,
+        cart: data.cart || []
+      }));
 
     } catch (err) {
 
@@ -103,7 +130,7 @@ export const CartProvider = ({ children }) => {
 
     }
 
-  }, [token, isLogged]);
+  }, [token, isLogged, setUserData]);
 
   // Load Cart
   useEffect(() => {
@@ -111,18 +138,32 @@ export const CartProvider = ({ children }) => {
     if (isLogged && token) {
       fetchCart();
     } else {
+
       setAddedItems([]);
+
+      setUserData((prev) => ({
+        ...prev,
+        cart: []
+      }));
+
     }
 
-  }, [fetchCart, isLogged, token]);
+  }, [
+    fetchCart,
+    isLogged,
+    token,
+    setUserData
+  ]);
 
   // Add To Cart
   const newCart = async (item) => {
 
     if (!isLogged) {
+
       toast.error(
         "Please login to add items to cart"
       );
+
       return;
     }
 
@@ -135,7 +176,7 @@ export const CartProvider = ({ children }) => {
 
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            Authorization: `Bearer ${token}`
           },
 
           body: JSON.stringify({
@@ -147,10 +188,12 @@ export const CartProvider = ({ children }) => {
       const data = await res.json();
 
       if (!res.ok) {
+
         throw new Error(
           data.message ||
           "Failed to add to cart"
         );
+
       }
 
       await fetchCart();
@@ -179,9 +222,11 @@ export const CartProvider = ({ children }) => {
   const addWithQuantity = async (item) => {
 
     if (!isLogged) {
+
       toast.error(
         "Please login to add items to cart"
       );
+
       return;
     }
 
@@ -194,7 +239,7 @@ export const CartProvider = ({ children }) => {
 
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            Authorization: `Bearer ${token}`
           },
 
           body: JSON.stringify({
@@ -207,10 +252,12 @@ export const CartProvider = ({ children }) => {
       const data = await res.json();
 
       if (!res.ok) {
+
         throw new Error(
           data.message ||
           "Failed to add to cart"
         );
+
       }
 
       await fetchCart();
@@ -249,7 +296,7 @@ export const CartProvider = ({ children }) => {
 
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
+            Authorization: `Bearer ${token}`
           },
 
           body: JSON.stringify({
@@ -261,10 +308,12 @@ export const CartProvider = ({ children }) => {
       const data = await res.json();
 
       if (!res.ok) {
+
         throw new Error(
           data.message ||
           "Failed to remove from cart"
         );
+
       }
 
       await fetchCart();
