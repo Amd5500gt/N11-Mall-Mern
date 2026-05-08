@@ -1,7 +1,7 @@
 // pages/ProfilePage.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSearch } from '../context/Searchcontext';
+import { useSearch } from '../context/SearchContext';
 import { FiUser, FiMail, FiPhone, FiMapPin, FiCamera, FiSave, FiX, FiCheck } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 import BASE_URL from "../config/config";
