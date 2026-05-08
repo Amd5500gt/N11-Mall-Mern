@@ -21,7 +21,7 @@ const authCart = (req, res, next) => {
     // VERIFY TOKEN
     const decoded = jwt.verify(
       token,
-      process.env.jwt_secret
+      process.env.JWT_SECRET
     );
 
     req.user = decoded;

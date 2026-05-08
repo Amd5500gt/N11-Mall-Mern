@@ -37,7 +37,7 @@ export const CartProvider = ({ children }) => {
 
     try {
       setLoading(true);
-      const res = await fetch(`${BASE_URL}/cart/details`);
+      const res = await fetch(`http://localhost:8080/cart/details`);
 
       if (!res.ok) throw new Error("Failed to fetch cart");
 
@@ -71,7 +71,7 @@ export const CartProvider = ({ children }) => {
     }
 
     try {
-      const res = await fetch(`${BASE_URL}/cart/add`, {
+      const res = await fetch(`http://localhost:8080/cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

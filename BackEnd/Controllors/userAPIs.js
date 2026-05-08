@@ -48,7 +48,7 @@ const RegisterUser = async (req, res) => {
         await newUser.save()
      
           const token = jwt.sign(
-            { userId: newUser._id , email: newUser.email },
+            { userId: newUser._id.toString() , email: newUser.email },
             process.env.jwt_secret,
             { expiresIn: "72h" }
         )
@@ -58,7 +58,7 @@ const RegisterUser = async (req, res) => {
             success: true,
             token,
             data: {
-                id: newUser._id,
+                id: newUser._id.toString(),
                 name: newUser.name,
                 email: newUser.email,
                 picture: newUser.picture || null
@@ -116,7 +116,7 @@ const LoginUser = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { userId: existUser._id, email: existUser.email },
+            { userId: existUser._id.toString(), email: existUser.email },
             process.env.jwt_secret,
             { expiresIn: "72h" }
         )
@@ -126,11 +126,12 @@ const LoginUser = async (req, res) => {
             success: true,
             token,
             user: {
-                id: existUser._id,
+                id: existUser._id.toString(),
                 name: existUser.name,
                 email: existUser.email,
                 picture: existUser.picture || null
             }
+            
         })
 
     } catch (err) {
@@ -189,7 +190,7 @@ const GoogleUser = async (req, res) => {
         // Generate JWT token
         const token = jwt.sign(
             { 
-                userId: user._id, 
+                userId: user._id.toString(), 
                 email: user.email,
                 googleAuth: user.googleAuth 
             },
@@ -204,7 +205,7 @@ const GoogleUser = async (req, res) => {
             success: true, 
             token,
             data: {
-                id: user._id,
+                id: user._id.toString(),
                 name: user.name,
                 email: user.email,
                 picture: user.picture

@@ -92,6 +92,7 @@ const AuthPage = () => {
       
       if (result.success) {
         const userProfile = {
+          id: result._id,
           name: result.name,
           email: result.email,
           picture: result.picture || ""
@@ -99,7 +100,7 @@ const AuthPage = () => {
         
         localStorage.setItem("loggedInUser", JSON.stringify(userProfile))
         localStorage.setItem("jwtToken", result.token)
-        
+
         toast.success(result.message || "Login successful!")
         
         setTimeout(() => {
