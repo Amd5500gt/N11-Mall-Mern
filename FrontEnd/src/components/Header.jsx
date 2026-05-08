@@ -71,6 +71,13 @@ const Header = ({ cartCount }) => {
   const handleLogin = () => {
     navigate("/login");
   };
+// Inside Header component, after handleLogout and other functions
+
+const handleShowOrders = () => {
+  navigate('/orders');
+};
+
+// Then inside the ProfileDropdown component:
 
   return (
     <>
@@ -148,19 +155,19 @@ const Header = ({ cartCount }) => {
 
                 {isProfileDropdownOpen && (
                   <ProfileDropdown
-                    dropdownRef={dropdownRef}
-                    userName={userName}
-                    userEmail={userEmail}
-                    userData={userData}
-                    addressesCount={addresses.length}
-                    onClose={() => setIsProfileDropdownOpen(false)}
-                    onShowAddress={() => {
-                      setShowAddressModal(true);
-                      setIsProfileDropdownOpen(false);
-                    }}
-                   
-                    onLogout={handleLogout}
-                  />
+  dropdownRef={dropdownRef}
+  userName={userName}
+  userEmail={userEmail}
+  userData={userData}
+  addressesCount={addresses.length}
+  onClose={() => setIsProfileDropdownOpen(false)}
+  onShowAddress={() => {
+    setShowAddressModal(true);
+    setIsProfileDropdownOpen(false);
+  }}
+  onShowOrders={handleShowOrders}   // <-- pass the new prop
+  onLogout={handleLogout}
+/>
                 )}
               </div>
             </>
