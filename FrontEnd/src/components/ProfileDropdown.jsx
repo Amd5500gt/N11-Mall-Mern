@@ -1,7 +1,7 @@
 // components/ProfileDropdown.jsx
 import React from 'react';
 import { FiUser, FiMapPin, FiPackage, FiLogOut, FiSettings } from 'react-icons/fi';
-import { Link } from 'react-router-dom'; // if using Link, otherwise use navigate
+import { Link, useNavigate } from 'react-router-dom'; // if using Link, otherwise use navigate
 
 const ProfileDropdown = ({
   dropdownRef,
@@ -10,10 +10,11 @@ const ProfileDropdown = ({
   userData,
   addressesCount,
   onClose,
-  onShowAddress,
   onShowOrders,   // <-- new prop
   onLogout
 }) => {
+
+  const navigation = useNavigate()
   return (
     <div className="profile-dropdown" ref={dropdownRef}>
       <div className="dropdown-header">
@@ -24,10 +25,10 @@ const ProfileDropdown = ({
       </div>
       <div className="dropdown-divider"></div>
       <ul className="dropdown-menu-list">
-        <li onClick={() => { onClose(); /* navigate to profile if needed */ }}>
+        <li onClick={() => { onClose(); navigation("/user/profile")}}>
           <FiUser /> My Profile
         </li>
-        <li onClick={() => { onShowAddress(); onClose(); }}>
+        <li onClick={() => { onClose(); navigation("/user/addresses") }}>
           <FiMapPin /> My Addresses
         </li>
         <li onClick={() => { onShowOrders(); onClose(); }}>   {/* new item */}

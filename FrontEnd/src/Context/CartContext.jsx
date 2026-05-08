@@ -37,14 +37,20 @@ export const CartProvider = ({ children }) => {
 
     try {
       setLoading(true);
-      const res = await fetch(`http://localhost:8080/cart/details`);
+      const res = await fetch(`http://localhost:8080/cart/details`, {
+         headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      }
+      );
 
       if (!res.ok) throw new Error("Failed to fetch cart");
 
       const cart = await res.json();
       
       
-      setAddedItems(cart || []);
+      setAddedItems(cart.cart || []);
       
     } catch (err) {
       console.error("Error fetching cart:", err);

@@ -48,16 +48,16 @@ const RegisterUser = async (req, res) => {
         await newUser.save()
      
           const token = jwt.sign(
-            { userId: newUser._id.toString() , email: newUser.email },
-            process.env.jwt_secret,
+            { id: newUser._id.toString() , email: newUser.email },
+            process.env.JWT_SECRET,
             { expiresIn: "72h" }
         )
 
-        res.status(200).json({
-            message: "Login successful!",
+        res.status(201).json({
+          message: "Registration successful!",
             success: true,
             token,
-            data: {
+            user: {
                 id: newUser._id.toString(),
                 name: newUser.name,
                 email: newUser.email,
@@ -116,8 +116,8 @@ const LoginUser = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { userId: existUser._id.toString(), email: existUser.email },
-            process.env.jwt_secret,
+            { id: existUser._id.toString(), email: existUser.email },
+            process.env.JWT_SECRET,
             { expiresIn: "72h" }
         )
 
@@ -147,6 +147,7 @@ const LoginUser = async (req, res) => {
 const GoogleUser = async (req, res) => {
     try {
         const { credential } = req.body
+        let isNewUser = false
         
         if (!credential) {
             return res.status(400).json({
@@ -168,6 +169,7 @@ const GoogleUser = async (req, res) => {
         let user = await userModel.findOne({ email: email.toLowerCase() })
         
         if (!user) {
+            isNewUser = true;
             // Create new user with Google auth
             user = await userModel.create({
                 name: name,
@@ -190,21 +192,21 @@ const GoogleUser = async (req, res) => {
         // Generate JWT token
         const token = jwt.sign(
             { 
-                userId: user._id.toString(), 
+                id: user._id.toString(), 
                 email: user.email,
                 googleAuth: user.googleAuth 
             },
-            process.env.jwt_secret,
+            process.env.JWT_SECRET,
             { expiresIn: "72h" }
         )
 
         res.status(200).json({
-            message: user.googleAuth && user.createdAt !== user.updatedAt ? 
-                     "Login successful with Google!" : 
-                     "Registration and login successful with Google!",
+            message: isNewUser ? 
+            "Registration and login successful with Google!":
+                     "Login successful with Google!",
             success: true, 
             token,
-            data: {
+            user: {
                 id: user._id.toString(),
                 name: user.name,
                 email: user.email,

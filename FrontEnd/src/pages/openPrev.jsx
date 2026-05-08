@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import Loader from '../components/Loader';
+import Loader from '../components/common/Loader';
 import { FaCartPlus, FaCheck, FaMinus, FaPlus, FaHeart, FaShare, FaTruck, FaShieldAlt, FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import { BsFillCartCheckFill, BsStar, BsStarHalf, BsStarFill, BsLightningCharge } from "react-icons/bs";
 import ErrorPage from '../ErrorPage';

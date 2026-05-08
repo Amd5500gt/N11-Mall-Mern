@@ -15,10 +15,11 @@ import Layout from './Context/Layout';
 import UseCart from './Context/CartContext';
 import AuthLayout from './Auth/AuthLayout';
 import { Toaster } from 'react-hot-toast';
-import ProfilePage from './components/ProfilePage';
-import AuthPage from './Auth/Login';
+import ProfilePage from './userInfo/ProfilePage';
+import AuthPage from './Auth/Auth';
 import Payment from './pages/Payment';
 import OrderHistory from './pages/OrderHistory';
+import AddressForm from './userInfo/AddressForm';
 const App = () => {
   const { cartCount, total, addedItems } = useContext(UseCart);
 // Add this useEffect in your AddCart component
@@ -37,17 +38,18 @@ useEffect(() => {
 
           {/* 🔓 Public Routes */}
           <Route path='/' element={<Products />} />
-          <Route path='/login' element={<AuthPage/>} />
+          <Route path='/auth' element={<AuthPage/>} />
           <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />} />
 
           {/* 🔒 Protected Routes */}
           <Route element={<AuthLayout />}>
-          <Route path='/profile' element={<ProfilePage />} />
+          <Route path='/user/profile' element={<ProfilePage />} />
           <Route path='/product/:id' element={<OpenPrev />} />
             <Route path='/cart' element={<AddCart />} />
 <Route path="/cart/payment" element={<Payment />} />
-<Route path="/orders" element={<OrderHistory />} />
+<Route path="/user/orders" element={<OrderHistory />} />
+<Route path="/user/addresses" element={<AddressForm />} />
           </Route>
 
           {/* ❌ Catch all */}

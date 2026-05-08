@@ -4,7 +4,7 @@ const AuthLayout = () => {
   const token = localStorage.getItem("jwtToken");
 
   if (!token) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/auth" replace />;
   }
 
   return <Outlet />;

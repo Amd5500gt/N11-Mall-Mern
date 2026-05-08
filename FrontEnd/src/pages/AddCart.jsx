@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import EmptyCart from '../components/Emptycart';
+import EmptyCart from '../components/common/Emptycart';
 import { FaTrash, FaPlus, FaMinus, FaShoppingBag, FaArrowLeft, FaCreditCard } from 'react-icons/fa';
 import './pages.css';
 import { FaSpinner } from 'react-icons/fa6';

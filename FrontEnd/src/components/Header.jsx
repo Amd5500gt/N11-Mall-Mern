@@ -2,11 +2,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { BsCartFill } from 'react-icons/bs';
-import './components.css';
 import { useSearch } from '../Context/SearchContext';
 import { FiHome, FiInfo, FiPhone, FiMenu, FiX, FiUser, FiLogOut, FiSettings, FiMapPin, FiPackage } from 'react-icons/fi';
 import { FaUserCircle, FaMoon, FaSun, FaChevronDown } from 'react-icons/fa';
 import ProfileDropdown from './ProfileDropdown';
+import './components.css';
 
 const Header = ({ cartCount }) => {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
@@ -74,7 +74,7 @@ const Header = ({ cartCount }) => {
 // Inside Header component, after handleLogout and other functions
 
 const handleShowOrders = () => {
-  navigate('/orders');
+  navigate('/user/orders');
 };
 
 // Then inside the ProfileDropdown component:
@@ -161,10 +161,6 @@ const handleShowOrders = () => {
   userData={userData}
   addressesCount={addresses.length}
   onClose={() => setIsProfileDropdownOpen(false)}
-  onShowAddress={() => {
-    setShowAddressModal(true);
-    setIsProfileDropdownOpen(false);
-  }}
   onShowOrders={handleShowOrders}   // <-- pass the new prop
   onLogout={handleLogout}
 />

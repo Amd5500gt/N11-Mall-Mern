@@ -17,7 +17,6 @@ const authCart = (req, res, next) => {
     }
 
     const token = authHeader.split(" ")[1];
-
     // VERIFY TOKEN
     const decoded = jwt.verify(
       token,
@@ -25,7 +24,6 @@ const authCart = (req, res, next) => {
     );
 
     req.user = decoded;
-
     next();
 
   } catch (err) {
