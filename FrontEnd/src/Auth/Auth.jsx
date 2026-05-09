@@ -215,90 +215,144 @@ const AuthPage = () => {
   }
 
   
-    useEffect(() => {
-      const initializeGoogle = () => {
-      if (!window.google) return;
-  
-  window.google.accounts.id.initialize({
-    client_id: "544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com",
-    callback: handleGoogleAuth,
-    ux_mode: "redirect",
-    login_uri: `${window.location.origin}/auth`
-  });
-  
-  const googleBtn = document.getElementById("googleBtn");
-  
-  if (googleBtn) {
-    googleBtn.innerHTML = "";
-  
-    window.google.accounts.id.renderButton(googleBtn, {
-      theme: "outline",
-      size: "large",
-      width: 320,
-      type: "standard",
-      shape: "pill",
-      text: "continue_with",
-      logo_alignment: "left",
-    });
-  }}
-  // Handle Google Auth
-  const handleGoogleAuth = async (credentialResponse) => {
-    setIsLoading(true)
+const handleGoogleAuth = async (
+  credentialResponse
+) => {
+  setIsLoading(true);
 
-    try {
-      const response = await fetch(`${BASE_URL}/auth/google`, {
+  try {
+    const response = await fetch(
+      `${BASE_URL}/auth/google`,
+      {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ credential: credentialResponse.credential })
-      })
-
-      const result = await response.json()
-
-      if (result.success) {
-       const userProfile = {
-          id: result.user.id,
-          name: result.user.name,
-          email: result.user.email,
-          picture: result.user.picture || "",
-          address: result.user.address || "",
-          cart:result.user.cart || ""
-        }
-
-        localStorage.setItem("loggedInUser", JSON.stringify(userProfile))
-        localStorage.setItem("jwtToken", result.token)
-
-        toast.success("Authentication successful!")
-
-        setTimeout(() => {
-          navigate("/")
-        }, 1000)
-      } else {
-        toast.error(result.message || "Authentication failed")
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          credential:
+            credentialResponse.credential,
+        }),
       }
-    } catch (err) {
-      toast.error("Something went wrong")
-    } finally {
-      setIsLoading(false)
+    );
+
+    const result = await response.json();
+
+    if (result.success) {
+      const userProfile = {
+        id: result.user._id,
+        name: result.user.name,
+        email: result.user.email,
+        picture:
+          result.user.picture || "",
+        address:
+          result.user.address || "",
+        cart:
+          result.user.cart || [],
+      };
+
+      localStorage.setItem(
+        "loggedInUser",
+        JSON.stringify(userProfile)
+      );
+
+      localStorage.setItem(
+        "jwtToken",
+        result.token
+      );
+
+      toast.success(
+        "Authentication successful!"
+      );
+
+      navigate("/");
+
+    } else {
+      toast.error(
+        result.message ||
+        "Authentication failed"
+      );
     }
+
+  } catch (err) {
+    console.log(err);
+
+    toast.error(
+      "Something went wrong"
+    );
+
+  } finally {
+    setIsLoading(false);
+  }
+};
+useEffect(() => {
+
+  const initializeGoogle = () => {
+
+    if (!window.google) return;
+
+    window.google.accounts.id.initialize({
+      client_id: "544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com",
+
+      callback: handleGoogleAuth,
+
+      ux_mode: "popup",
+    });
+
+    const googleBtn =
+      document.getElementById(
+        "googleBtn"
+      );
+
+    if (googleBtn) {
+
+      googleBtn.innerHTML = "";
+
+      window.google.accounts.id.renderButton(
+        googleBtn,
+        {
+          theme: "outline",
+          size: "large",
+          width: 320,
+          type: "standard",
+          shape: "pill",
+          text: "continue_with",
+          logo_alignment: "left",
+        }
+      );
+    }
+  };
+
+  const existingScript =
+    document.getElementById(
+      "google-script"
+    );
+
+  if (!existingScript) {
+
+    const script =
+      document.createElement(
+        "script"
+      );
+
+    script.src =
+      "https://accounts.google.com/gsi/client";
+
+    script.async = true;
+    script.defer = true;
+    script.id = "google-script";
+
+    script.onload =
+      initializeGoogle;
+
+    document.body.appendChild(
+      script
+    );
+
+  } else {
+    initializeGoogle();
   }
 
-    const existingScript = document.getElementById("google-script");
-
-    if (!existingScript) {
-      const script = document.createElement("script");
-
-      script.src = "https://accounts.google.com/gsi/client";
-      script.async = true;
-      script.defer = true;
-      script.id = "google-script";
-
-      script.onload = initializeGoogle;
-
-      document.body.appendChild(script);
-    } else {
-      initializeGoogle();
-    }
-  }, []);
+}, []);
   // Check if already logged in
   useEffect(() => {
     const token = localStorage.getItem("jwtToken")
