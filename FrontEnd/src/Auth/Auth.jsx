@@ -234,7 +234,7 @@ const handleGoogleAuth = async (
         }),
       }
     );
-
+console.log(credentialResponse);
     const result = await response.json();
 
     if (result.success) {
