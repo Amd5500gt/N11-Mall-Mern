@@ -319,6 +319,7 @@ useEffect(() => {
           logo_alignment: "left",
         }
       );
+      window.google.accounts.id.cancel();
     }
   };
 
