@@ -160,7 +160,7 @@ const GoogleUser = async (req, res) => {
       idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
-
+console.log(process.env.GOOGLE_CLIENT_ID)
     const payload = ticket.getPayload();
 
     const {
