@@ -222,7 +222,7 @@ const AuthPage = () => {
   window.google.accounts.id.initialize({
     client_id: "544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com",
     callback: handleGoogleAuth,
-    ux_mode: "popup",
+    ux_mode: "redirect",
   });
   
   const googleBtn = document.getElementById("googleBtn");
