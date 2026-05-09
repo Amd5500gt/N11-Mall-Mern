@@ -22,11 +22,11 @@ const Header = ({ cartCount }) => {
   const [addresses, setAddresses] = useState([]);
 
   const { 
-    setSearchTerm, token, isLogged, userName, userEmail, 
+    setSearchTerm, token, isLogged,
     userData, handleLogout 
   } = useSearch();
+  const {name,email,picture} = userData
   const navigate = useNavigate();
-
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -133,13 +133,13 @@ const handleShowOrders = () => {
                   className="profile-btn"
                   onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                 >
-                  {userData?.avatar ? (
-                    <img src={userData.avatar} alt="Profile" className="profile-avatar" />
+                  {userData?.picture ? (
+                    <img src={picture} alt="Profile" className="profile-avatar" />
                   ) : (
                     <FaUserCircle size={28} />
                   )}
                   <span className="profile-name">
-                    {userName?.split(' ')[0] || 'User'}
+                    {name?.split(' ')[0] || 'User'}
                   </span>
                   <FaChevronDown size={12} className={`dropdown-arrow ${isProfileDropdownOpen ? 'rotate' : ''}`} />
                 </button>
@@ -147,8 +147,8 @@ const handleShowOrders = () => {
                 {isProfileDropdownOpen && (
                   <ProfileDropdown
   dropdownRef={dropdownRef}
-  userName={userName}
-  userEmail={userEmail}
+  userName={name}
+  userEmail={email}
   userData={userData}
   addressesCount={addresses.length}
   onClose={() => setIsProfileDropdownOpen(false)}

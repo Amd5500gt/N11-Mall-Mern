@@ -7,7 +7,7 @@ import { FaSpinner } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 import  useCart  from '../../context/CartContext'; // Import the hook
 import toast from 'react-hot-toast';
-import { usecontext } from 'react';
+import { useContext } from 'react';
 
 const AddCart = () => {
   const [loader, setLoader] = useState(false);

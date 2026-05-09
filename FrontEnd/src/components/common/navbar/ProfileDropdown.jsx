@@ -18,7 +18,10 @@ const ProfileDropdown = ({
     <div className="profile-dropdown" ref={dropdownRef}>
       <div className="dropdown-header">
         <div className="dropdown-user-info">
-          <strong>{userName}</strong>
+       <div>
+        <strong>{userName}</strong>
+        </div>   
+
           <span>{userEmail}</span>
         </div>
       </div>

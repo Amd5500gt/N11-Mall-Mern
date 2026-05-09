@@ -18,7 +18,7 @@ import ProfilePage from './userInfo/ProfilePage';
 import AuthPage from './Auth/Auth';
 import Payment from './userInfo/Payment';
 import OrderHistory from './pages/Order/OrderHistory';
-import AddressForm from './userInfo/AddressForm';
+import AddressForm from './userInfo/address/Addresses';
 import { useContext } from 'react';
 const App = () => {
   const { cartCount, total, addedItems } = useContext(useCart);

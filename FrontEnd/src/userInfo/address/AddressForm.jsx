@@ -1,6 +1,8 @@
 // src/components/AddressForm.jsx
 import React, { useState } from 'react';
 import './AddressForm.css';
+import BASE_URL from '../../config/config';
+import toast from 'react-hot-toast';
 
 const AddressForm = ({ onSubmit, initialData = {} }) => {
   const [formData, setFormData] = useState({
@@ -31,10 +33,27 @@ const AddressForm = ({ onSubmit, initialData = {} }) => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    if (validateForm()) {
+    try{
+          if (validateForm()) {
+      await fetch(`${BASE_URL}/user/address`,{
+        method: "POST",
+        headers :{
+          "Content-Type" : "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          formData
+        })
+      })
       onSubmit(formData);
+      toast.success("Address Saved Success")
+    }
+    }
+    catch (err) {
+        console.log("Failed to Save FormData")
+        toast.error( "Form submit Failed")
     }
   };
 

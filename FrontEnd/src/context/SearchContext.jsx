@@ -102,8 +102,9 @@ export const SearchProvider = ({ children }) => {
 
       if (user) {
         setUserData(user);
+        console.log(userData)
 
-        if (
+        if ( 
           localStorage.getItem(
             "welcomeToastShown"
           ) !== "true"
