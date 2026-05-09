@@ -223,6 +223,7 @@ const AuthPage = () => {
     client_id: "544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com",
     callback: handleGoogleAuth,
     ux_mode: "redirect",
+    login_uri: `${window.location.origin}/auth`
   });
   
   const googleBtn = document.getElementById("googleBtn");
