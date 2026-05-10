@@ -4,7 +4,7 @@ const { products } = require("../productData/data.json");
 // Add To Cart
 const addToCart = async (req, res) => {
   try {
-    const userId = req.user.id;
+   
     const { productId, quantity = 1 } = req.body;
 
     // Check product exists
@@ -106,34 +106,93 @@ const removeFromCart = async (req, res) => {
 
     const { productId } = req.body;
 
-    await userModel.findByIdAndUpdate(
-      req.user.id,
-      {
-        $pull: {
-          cart: {
-            productId: Number(productId),
-          },
-        },
-      }
-    );
+  const user = await userModel.findById(req.user.id,);
+    
+   const cartItem = user.cart.find((item)=> item.productId === Number(productId));
 
-    res.status(200).json({
-      success: true,
-      message: "Removed from cart",
-    });
-
-  } catch (err) {
-    console.log("Remove Cart Error:", err);
-
-    res.status(500).json({
+  if(!cartItem){
+    return res.status(404).json({
       success: false,
-      message: "Internal server error",
+      message:"Item not found"
     });
   }
-};
 
+//Decrease Quanitity
+
+// Decrease Quantity
+
+if (cartItem.quantity > 1) {
+
+  cartItem.quantity -= 1;
+
+}
+ //remove compleltey
+else{
+  user.cart = user.cart.filter((item)=> item.productId !== Number(productId));
+}
+
+ await user.save()
+
+ res.status(200).json({
+  success: true,
+  message: "Removed from cart",
+  cart :user.cart
+ })
+   } catch (err) {
+
+      console.log(
+        "Remove Cart Error:",
+        err
+      );
+
+      res.status(500).json({
+        success: false,
+        message:
+          "Internal server error",
+      });
+    }
+};
+const deleteCart =
+  async (req, res) => {
+
+    try {
+
+      const { productId } =
+        req.body;
+
+      await userModel
+        .findByIdAndUpdate(
+          req.user.id,
+          {
+            $pull: {
+              cart: {
+                productId:
+                  Number(productId),
+              },
+            },
+          }
+        );
+
+      res.status(200).json({
+        success: true,
+        message:
+          "Item removed",
+      });
+
+    } catch (err) {
+
+      console.log(err);
+
+      res.status(500).json({
+        success: false,
+        message:
+          "Internal server error",
+      });
+    }
+};
 module.exports = {
   addToCart,
   goToCart,
   removeFromCart,
+  deleteCart
 };

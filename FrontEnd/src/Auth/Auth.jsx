@@ -4,16 +4,19 @@ import { toast } from 'react-hot-toast'
 import BASE_URL from "../config/config"
 import Login from './pages/Login'
 import Register from './pages/Register'
-import ForgetPassword from './pages/ForgetPassword'
 import './Auth.css'
 import GoogleAuth from './components/GoogleAuth'
 import PageForward from './components/PageForward'
+import { useSearch } from '../context/SearchContext'
+import ForgetPassword from './pages/ForgetPassword/ForgetPassword'
+
 const AuthPage = () => {
   const navigate = useNavigate()
 
   // Auth mode state
-  const [authMode, setAuthMode] = useState('login') // 'login', 'register', 'forgotPassword'
-
+  const [authMode, setAuthMode] = useState('login') // 'login', 'register'
+  const { token, setToken } = useSearch()
+  
   // Form state
   const [formData, setFormData] = useState({
     name: "",
@@ -27,7 +30,6 @@ const AuthPage = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [passwordStrength, setPasswordStrength] = useState(0)
-  const [forgotEmailSent, setForgotEmailSent] = useState(false)
 
   // Handle input changes
   const handleChange = (e) => {
@@ -67,7 +69,6 @@ const AuthPage = () => {
       confirmPassword: ""
     })
     setPasswordStrength(0)
-    setForgotEmailSent(false)
     setShowPassword(false)
     setShowConfirmPassword(false)
   }
@@ -93,23 +94,21 @@ const AuthPage = () => {
       const result = await response.json()
 
       if (result.success) {
-       const userProfile = {
+        const userProfile = {
           id: result.user.id,
           name: result.user.name,
           email: result.user.email,
           picture: result.user.picture || "",
           address: result.user.address || "",
-          cart:result.user.cart || ""
+          cart: result.user.cart || []
         }
 
         localStorage.setItem("loggedInUser", JSON.stringify(userProfile))
         localStorage.setItem("jwtToken", result.token)
-
-        toast.success(result.message || "Login successful!")
-
+        setToken(result.token)
         setTimeout(() => {
           navigate("/")
-        }, 1000)
+        }, 1500)
       } else {
         toast.error(result.message || "Login failed")
       }
@@ -155,16 +154,14 @@ const AuthPage = () => {
           email: result.user.email,
           picture: result.user.picture || "",
           address: result.user.address || "",
-          cart:result.user.cart || ""
+          cart: result.user.cart || []
         }
         localStorage.setItem("loggedInUser", JSON.stringify(userProfile))
         localStorage.setItem("jwtToken", result.token)
-
-        toast.success("Registration successful!")
-
+        setToken(result.token)
         setTimeout(() => {
-           navigate("/")
-        }, 1000)
+          navigate("/")
+        }, 1500)
       } else {
         const details = result.error?.details?.[0]?.message
         toast.error(details || result.message || "Registration failed")
@@ -175,141 +172,64 @@ const AuthPage = () => {
       setIsLoading(false)
     }
   }
-
-  // Handle Forgot Password
-  const handleForgotPassword = async (e) => {
-    e.preventDefault()
-    const { email } = formData
-
-    if (!email) {
-      return toast.error("Please enter your email address")
-    }
-
-    setIsLoading(true)
+  // Handle Google Auth
+  const handleGoogleAuth = async (credentialResponse) => {
+    setIsLoading(true);
 
     try {
-      const response = await fetch(`${BASE_URL}/auth/forgot-password`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
-      })
-
-      const result = await response.json()
-
-      if (result.success) {
-        setForgotEmailSent(true)
-        toast.success("Password reset link sent!")
-
-        setTimeout(() => {
-          setAuthMode('login')
-          resetForm()
-        }, 3000)
-      } else {
-        toast.error(result.message || "Failed to send reset link")
-      }
-    } catch (err) {
-      toast.error("Something went wrong")
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  
-const handleGoogleAuth = async (
-  credentialResponse
-) => {
-  setIsLoading(true);
-
-  try {
-    const response = await fetch(
-      `${BASE_URL}/auth/google`,
-      {
+      const response = await fetch(`${BASE_URL}/auth/google`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          credential:
-            credentialResponse.credential,
+          credential: credentialResponse.credential,
         }),
+      });
+      const result = await response.json();
+
+      if (result.success) {
+        const userProfile = {
+          id: result.user._id,
+          name: result.user.name,
+          email: result.user.email,
+          picture: result.user.picture || "",
+          address: result.user.address || "",
+          cart: result.user.cart || [],
+        };
+
+        localStorage.setItem("loggedInUser", JSON.stringify(userProfile));
+        localStorage.setItem("jwtToken", result.token);
+        setToken(result.token);
+        setTimeout(() => {
+          navigate("/");
+        }, 1500);
+      } else {
+        toast.error(result.message || "Authentication failed");
       }
-    );
-console.log(credentialResponse);
-    const result = await response.json();
-
-    if (result.success) {
-      const userProfile = {
-        id: result.user._id,
-        name: result.user.name,
-        email: result.user.email,
-        picture:
-          result.user.picture || "",
-        address:
-          result.user.address || "",
-        cart:
-          result.user.cart || [],
-      };
-
-      localStorage.setItem(
-        "loggedInUser",
-        JSON.stringify(userProfile)
-      );
-
-      localStorage.setItem(
-        "jwtToken",
-        result.token
-      );
-
-      toast.success(
-        "Authentication successful!"
-      );
-
-      navigate("/");
-
-    } else {
-      toast.error(
-        result.message ||
-        "Authentication failed"
-      );
+    } catch (err) {
+      console.log(err);
+      toast.error("Something went wrong");
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-  } catch (err) {
-    console.log(err);
+  useEffect(() => {
+    const initializeGoogle = () => {
+      if (!window.google) return;
 
-    toast.error(
-      "Something went wrong"
-    );
+      window.google.accounts.id.initialize({
+        client_id: "544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com",
+        callback: handleGoogleAuth,
+        ux_mode: "popup",
+      });
 
-  } finally {
-    setIsLoading(false);
-  }
-};
-useEffect(() => {
+      const googleBtn = document.getElementById("googleBtn");
 
-  const initializeGoogle = () => {
-
-    if (!window.google) return;
-
-    window.google.accounts.id.initialize({
-      client_id: "544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com",
-
-      callback: handleGoogleAuth,
-
-      ux_mode: "popup",
-    });
-
-    const googleBtn =
-      document.getElementById(
-        "googleBtn"
-      );
-
-    if (googleBtn) {
-
-      googleBtn.innerHTML = "";
-
-      window.google.accounts.id.renderButton(
-        googleBtn,
-        {
+      if (googleBtn) {
+        googleBtn.innerHTML = "";
+        window.google.accounts.id.renderButton(googleBtn, {
           theme: "outline",
           size: "large",
           width: 320,
@@ -317,43 +237,26 @@ useEffect(() => {
           shape: "pill",
           text: "continue_with",
           logo_alignment: "left",
-        }
-      );
-      window.google.accounts.id.cancel();
+        });
+        window.google.accounts.id.cancel();
+      }
+    };
+
+    const existingScript = document.getElementById("google-script");
+
+    if (!existingScript) {
+      const script = document.createElement("script");
+      script.src = "https://accounts.google.com/gsi/client";
+      script.async = true;
+      script.defer = true;
+      script.id = "google-script";
+      script.onload = initializeGoogle;
+      document.body.appendChild(script);
+    } else {
+      initializeGoogle();
     }
-  };
+  }, []);
 
-  const existingScript =
-    document.getElementById(
-      "google-script"
-    );
-
-  if (!existingScript) {
-
-    const script =
-      document.createElement(
-        "script"
-      );
-
-    script.src =
-      "https://accounts.google.com/gsi/client";
-
-    script.async = true;
-    script.defer = true;
-    script.id = "google-script";
-
-    script.onload =
-      initializeGoogle;
-
-    document.body.appendChild(
-      script
-    );
-
-  } else {
-    initializeGoogle();
-  }
-
-}, []);
   // Check if already logged in
   useEffect(() => {
     const token = localStorage.getItem("jwtToken")
@@ -373,58 +276,53 @@ useEffect(() => {
     return colors[passwordStrength] || 'transparent'
   }
 
-
   return (
     <div>
       <div className='container'>
-<Login
-  authMode={authMode}
-  formData={formData}
-  handleChange={handleChange}
-  handleLogin={handleLogin}
-  isLoading={isLoading}
-  showPassword={showPassword}
-  setShowPassword={setShowPassword}
-  switchMode={switchMode}
-/>
+        <Login
+          authMode={authMode}
+          formData={formData}
+          handleChange={handleChange}
+          handleLogin={handleLogin}
+          isLoading={isLoading}
+          showPassword={showPassword}
+          setShowPassword={setShowPassword}
+          switchMode={switchMode}
+        />
 
-<Register
+        <Register
+          authMode={authMode}
+          formData={formData}
+          handleChange={handleChange}
+          handleRegister={handleRegister}
+          isLoading={isLoading}
+          showPassword={showPassword}
+          setShowPassword={setShowPassword}
+          showConfirmPassword={showConfirmPassword}
+          setShowConfirmPassword={setShowConfirmPassword}
+          passwordStrength={passwordStrength}
+          getPasswordStrengthText={getPasswordStrengthText}
+          getPasswordStrengthColor={getPasswordStrengthColor}
+        />
+        <ForgetPassword
   authMode={authMode}
   formData={formData}
-  handleChange={handleChange}
-  handleRegister={handleRegister}
   isLoading={isLoading}
-  showPassword={showPassword}
-  setShowPassword={setShowPassword}
-  showConfirmPassword={showConfirmPassword}
-  setShowConfirmPassword={setShowConfirmPassword}
-  passwordStrength={passwordStrength}
-  getPasswordStrengthText={getPasswordStrengthText}
-  getPasswordStrengthColor={getPasswordStrengthColor}
-/>
-        {/* Forgot Password Form */}
-<ForgetPassword
-  authMode={authMode}
-  formData={formData}
-  handleChange={handleChange}
-  handleForgotPassword={handleForgotPassword}
-  isLoading={isLoading}
-  forgotEmailSent={forgotEmailSent}
   setAuthMode={setAuthMode}
   resetForm={resetForm}
 />
       
-      
         {/* Toggle between Login and Register */}
-<PageForward
-  authMode={authMode}
-  switchMode={switchMode}
-/>
+        <PageForward
+          authMode={authMode}
+          switchMode={switchMode}
+        />
+        
         {/* Google Auth Button */}
-    <GoogleAuth
-  authMode={authMode}
-  isLoading={isLoading}
-/>
+        <GoogleAuth
+          authMode={authMode}
+          isLoading={isLoading}
+        />
       </div>
     </div>
   )

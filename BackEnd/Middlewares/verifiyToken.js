@@ -5,7 +5,6 @@ const authenticateToken = async (req, res, next) => {
   try {
 
     const authHeader = req.headers.authorization;
-
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
 
       return res.status(401).json({
@@ -23,7 +22,6 @@ const authenticateToken = async (req, res, next) => {
     );
 
     req.user = decoded;
-
     next();
 
   } catch (error) {

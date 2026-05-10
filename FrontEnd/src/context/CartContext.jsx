@@ -92,7 +92,7 @@ export const CartProvider = ({ children }) => {
       setLoading(true);
 
       const res = await fetch(
-        `${BASE_URL}/cart/details`,
+        `${BASE_URL}/user/cart`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -170,7 +170,7 @@ export const CartProvider = ({ children }) => {
     try {
 
       const res = await fetch(
-        `${BASE_URL}/cart/add`,
+        `${BASE_URL}/user/cart/add`,
         {
           method: "POST",
 
@@ -233,7 +233,7 @@ export const CartProvider = ({ children }) => {
     try {
 
       const res = await fetch(
-        `${BASE_URL}/cart/add`,
+        `${BASE_URL}/user/cart/add`,
         {
           method: "POST",
 
@@ -290,7 +290,7 @@ export const CartProvider = ({ children }) => {
     try {
 
       const res = await fetch(
-        `${BASE_URL}/cart/remove`,
+        `${BASE_URL}/user/cart/remove`,
         {
           method: "POST",
 
@@ -317,6 +317,9 @@ export const CartProvider = ({ children }) => {
       }
 
       await fetchCart();
+      toast.success(
+  `Removed ${item.title}`
+);
 
     } catch (err) {
 
@@ -333,7 +336,60 @@ export const CartProvider = ({ children }) => {
     }
 
   };
+const deleteCart = async (item) => {
 
+  if (!isLogged) return;
+
+  try {
+
+    const res = await fetch(
+      `${BASE_URL}/user/cart/delete`,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "application/json",
+
+          Authorization:
+            `Bearer ${token}`
+        },
+
+        body: JSON.stringify({
+          productId: item.id
+        })
+      }
+    );
+
+    const data =
+      await res.json();
+
+    if (!res.ok) {
+
+      throw new Error(
+        data.message ||
+        "Failed to delete item"
+      );
+    }
+
+    await fetchCart();
+    toast.success(
+      `${item.title} removed from cart`
+    );
+
+  } catch (err) {
+
+    console.error(
+      "Error deleting item:",
+      err
+    );
+
+    toast.error(
+      err.message ||
+      "Failed to delete item"
+    );
+  }
+};
   return (
 
     <CartContext.Provider
@@ -346,7 +402,8 @@ export const CartProvider = ({ children }) => {
         fetchCart,
         newCart,
         addWithQuantity,
-        removeCart
+        removeCart,
+        deleteCart,
       }}
     >
 

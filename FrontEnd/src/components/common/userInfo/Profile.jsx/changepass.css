@@ -1,0 +1,312 @@
+
+.change-password-container{
+  width:100%;
+  min-height:100vh;
+
+  padding:20px;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  background:
+  linear-gradient(
+    135deg,
+    #f9fbff,
+    #eef2ff,
+    #f5f7ff
+  );
+
+  position:relative;
+  overflow:hidden;
+}
+
+/* Blur Effects */
+
+.change-password-container::before{
+  content:"";
+  position:absolute;
+
+  width:260px;
+  height:260px;
+
+  background:#7c4dff18;
+
+  border-radius:50%;
+
+  top:-60px;
+  left:-60px;
+
+  filter:blur(70px);
+}
+
+.change-password-container::after{
+  content:"";
+  position:absolute;
+
+  width:240px;
+  height:240px;
+
+  background:#00bcd418;
+
+  border-radius:50%;
+
+  bottom:-60px;
+  right:-60px;
+
+  filter:blur(70px);
+}
+
+/* =========================
+   CARD
+========================= */
+
+.password-card{
+  width:100%;
+  max-width:430px;
+
+  background:
+  rgba(255,255,255,0.75);
+
+  backdrop-filter:blur(18px);
+
+  border:
+  1px solid rgba(255,255,255,0.9);
+
+  border-radius:24px;
+
+  padding:24px 22px;
+
+  box-shadow:
+  0 15px 40px rgba(15,23,42,0.06);
+
+  position:relative;
+  z-index:2;
+
+  animation:
+  fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn{
+
+  from{
+    opacity:0;
+    transform:
+    translateY(15px);
+  }
+
+  to{
+    opacity:1;
+    transform:
+    translateY(0px);
+  }
+}
+
+/* =========================
+   TOP
+========================= */
+
+.password-top{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+.icon-box{
+  width:58px;
+  height:58px;
+
+  margin:auto;
+  margin-bottom:12px;
+
+  border-radius:18px;
+
+  background:
+  linear-gradient(
+    135deg,
+    #5b8cff,
+    #7c4dff
+  );
+
+  color:#fff;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  font-size:1.3rem;
+
+  box-shadow:
+  0 10px 25px rgba(92,140,255,0.25);
+}
+
+.password-top h2{
+  font-size:1.5rem;
+  color:#111827;
+  margin-bottom:5px;
+}
+
+.password-top p{
+  color:#6b7280;
+  font-size:0.88rem;
+  line-height:1.5;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.password-form{
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+}
+
+/* =========================
+   INPUT GROUP
+========================= */
+
+.input-group{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.input-group label{
+  font-size:0.85rem;
+  font-weight:600;
+  color:#374151;
+}
+
+/* =========================
+   INPUT BOX
+========================= */
+
+.password-input-box{
+  width:100%;
+  height:48px;
+
+  border-radius:14px;
+
+  background:
+  rgba(255,255,255,0.9);
+
+  border:
+  1px solid #dbe4ff;
+
+  display:flex;
+  align-items:center;
+
+  padding:0 14px;
+
+  transition:0.3s ease;
+}
+
+.password-input-box:focus-within{
+  border-color:#7c4dff;
+
+  box-shadow:
+  0 0 0 3px rgba(124,77,255,0.08);
+}
+
+.password-input-box input{
+  flex:1;
+  height:100%;
+
+  border:none;
+  outline:none;
+
+  background:transparent;
+
+  font-size:0.9rem;
+
+  color:#111827;
+}
+
+.password-input-box input::placeholder{
+  color:#9ca3af;
+}
+
+.password-input-box button{
+  border:none;
+  background:none;
+
+  cursor:pointer;
+
+  color:#6b7280;
+
+  font-size:0.95rem;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+.update-password-btn{
+  width:100%;
+  height:48px;
+
+  margin-top:5px;
+
+  border:none;
+  outline:none;
+
+  border-radius:14px;
+
+  background:
+  linear-gradient(
+    135deg,
+    #5b8cff,
+    #7c4dff
+  );
+
+  color:#fff;
+
+  font-size:0.92rem;
+  font-weight:700;
+
+  cursor:pointer;
+
+  transition:0.3s ease;
+
+  box-shadow:
+  0 12px 28px rgba(92,140,255,0.25);
+}
+
+.update-password-btn:hover{
+  transform:
+  translateY(-2px);
+
+  box-shadow:
+  0 16px 35px rgba(92,140,255,0.3);
+}
+
+.update-password-btn:disabled{
+  opacity:0.7;
+  cursor:not-allowed;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:500px){
+
+  .change-password-container{
+    padding:15px;
+  }
+
+  .password-card{
+    padding:20px 16px;
+    border-radius:20px;
+  }
+
+  .password-top h2{
+    font-size:1.35rem;
+  }
+
+}
+

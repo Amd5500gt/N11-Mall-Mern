@@ -9,47 +9,61 @@ import OpenPrev from './pages/Product/OpenPrev';
 import Products from './pages/Product/Products';
 import AddCart from './pages/Product/AddCart';
 import Payments from './PayPage';
-import ErrorPage from './ErrorPage';
+import ErrorPage from './components/ui/ErrorPage';
 import Layout from './context/Layout';
-import useCart  from './context/CartContext';
+import useCart from './context/CartContext';
 import AuthLayout from './context/AuthLayout';
 import { Toaster } from 'react-hot-toast';
-import ProfilePage from './userInfo/ProfilePage';
+import ProfilePage from './components/common/userInfo/Profile.jsx/ProfilePage';
 import AuthPage from './Auth/Auth';
-import Payment from './userInfo/Payment';
+import Payment from './pages/payments/Payment';
 import OrderHistory from './pages/Order/OrderHistory';
-import AddressForm from './userInfo/address/Addresses';
+import AddressPage from './components/common/userInfo/address/AddressPage';
 import { useContext } from 'react';
+import AddressForm from './components/common/userInfo/addressForm/AddressForm';
+import ChangePassword from './components/common/userInfo/Profile.jsx/ChangePassword';
 const App = () => {
   const { cartCount, total, addedItems } = useContext(useCart);
-// Add this useEffect in your AddCart component
-useEffect(() => {
-  // Save cart items to localStorage for order history
-  if (addedItems.length > 0) {
-    localStorage.setItem('cartItems', JSON.stringify(addedItems));
-  }
-}, [addedItems]);
+
+  useEffect(() => {
+    if (addedItems.length > 0) {
+      localStorage.setItem('cartItems', JSON.stringify(addedItems));
+    }
+  }, [addedItems]);
   return (
     <div>
       <Routes>
 
-        {/* ✅ Public Layout */}
+        {/* Layout */}
         <Route element={<Layout cartCount={cartCount} />}>
 
-          {/* 🔓 Public Routes */}
+          {/*  Public Routes */}
           <Route path='/' element={<Products />} />
-          <Route path='/auth' element={<AuthPage/>} />
+          <Route path='/auth' element={<AuthPage />} />
           <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />} />
 
-          {/* 🔒 Protected Routes */}
+          {/* Protected Routes */}
           <Route element={<AuthLayout />}>
-          <Route path='/user/profile' element={<ProfilePage />} />
-          <Route path='/product/:id' element={<OpenPrev />} />
-            <Route path='/cart' element={<AddCart />} />
-<Route path="/cart/payment" element={<Payment />} />
-<Route path="/user/orders" element={<OrderHistory />} />
-<Route path="/user/addresses" element={<AddressForm />} />
+            <Route path='/product/:id' element={<OpenPrev />} />
+     
+            {/*Cart Routes */}   
+            <Route path='/cart' >
+            <Route path='checkout' element={<AddCart />} />
+            <Route path="checkout/payment" element={<Payment />} />
+            </Route>
+
+            {/*User Routes */}   
+            <Route path='/user'>   
+            <Route path='profile' element={<ProfilePage />} />
+            <Route path="profile/password" element={<ChangePassword />} />
+
+            <Route path="orders" element={<OrderHistory />} />
+            <Route path="addresses" element={<AddressPage />} />
+            <Route path="addresses/add" element={<AddressForm />} />
+
+            </Route>
+
           </Route>
 
           {/* ❌ Catch all */}
@@ -57,12 +71,9 @@ useEffect(() => {
 
         </Route>
 
-        {/* 💳 Payment */}
-        <Route path='/cart/payment' element={<Payments total={total} />} />
-
       </Routes>
 
-      {/* 🔥 Styled Toaster */}
+      {/* Toaster */}
       <Toaster
         position="bottom-center"
         reverseOrder={false}

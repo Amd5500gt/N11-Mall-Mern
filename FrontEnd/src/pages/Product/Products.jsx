@@ -10,10 +10,12 @@ import toast from 'react-hot-toast';
 import { useCart } from '../../context/CartContext';
 import BASE_URL from '../../config/config';
 import '../pages.css';
+import Spinner from '../../components/ui/Spinner';
 const Products = () => {
+  const[skip,setSkip] = useState(0)
   const [addedItemId, setAddedItemId] = useState(null);
   const [wishlist, setWishlist] = useState([]);
-  const {searchTerm,setSearchTerm,data,setData,filterData,setFilterData,loading,setLoading,skip,setSkip,total,setTotal,limit} = useSearch();
+  const {searchTerm,setSearchTerm,data,setData,filterData,setFilterData,loading,setLoading,total,setTotal,limit} = useSearch();
   const { newCart, removeCart, addedItems } = useCart();
   const visibleData = Array.isArray(filterData)
   ? filterData.slice(skip, skip + limit)
@@ -264,7 +266,7 @@ const handleAddToCart = async (item) => {
                       disabled={item.stock === 0}
                     >
                       {addedItemId === item.id ? (
-                        <><BsFillCartCheckFill /><span>Added!</span></>
+                        <><BsFillCartCheckFill /><span> <Spinner/> </span></>
                       ) : (
                         <><FaCartPlus /><span>Add to Cart</span></>
                       )}

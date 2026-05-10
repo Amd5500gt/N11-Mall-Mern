@@ -49,7 +49,7 @@ const RegisterUser = async (req, res) => {
         message: "Email already exists",
       });
     }
-
+ 
     // Hash Password
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -154,15 +154,13 @@ const GoogleUser = async (req, res) => {
         message: "Google credential is required",
       });
     }
-
+   
     // Verify Google Token
     const ticket = await client.verifyIdToken({
       idToken: credential,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
-console.log(process.env.GOOGLE_CLIENT_ID)
     const payload = ticket.getPayload();
-
     const {
       name,
       email,

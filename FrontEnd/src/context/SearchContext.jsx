@@ -1,114 +1,191 @@
 import React, {
   createContext,
+  useContext,
   useEffect,
   useState,
-  useContext,
 } from "react";
 
 import toast from "react-hot-toast";
+
 import BASE_URL from "../config/config";
+import { useNavigate } from "react-router-dom";
 
-const SearchContext = createContext();
+const SearchContext =
+  createContext();
 
-export const SearchProvider = ({ children }) => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+export const SearchProvider =
+({ children }) => {
+ 
+  /* PRODUCTS */
+  const navigate = useNavigate()
+  const [data, setData] =
+    useState([]);
 
-  const [skip, setSkip] = useState(0);
-  const [filterData, setFilterData] = useState([]);
-  const [total, setTotal] = useState(0);
+  const [filterData,
+    setFilterData] =
+    useState([]);
+
+  const [loading,
+    setLoading] =
+    useState(true);
+
+  const [total, setTotal] =
+    useState(0);
 
   const limit = 12;
 
-  const [searchTerm, setSearchTerm] = useState("");
+  /* SEARCH */
 
-  const [token, setToken] = useState(
-    localStorage.getItem("jwtToken")
-  );
+  const [searchTerm,
+    setSearchTerm] =
+    useState("");
+
+  /* AUTH */
+
+  const [token, setToken] =
+    useState(
+      localStorage.getItem(
+        "jwtToken"
+      ) || null
+    );
 
   const isLogged = !!token;
 
-  // User Data
-  const [userData, setUserData] = useState({
-    name: "",
-    email: "",
-    picture: "",
-    address: "",
-    cart: [],
-  });
+  /* USER */
 
-  // Fetch Products
+  const [userData,
+    setUserData] =
+    useState({
+      name: "",
+      email: "",
+      picture: "",
+      address: [],
+      cart: [],
+    });
+
+  /* FETCH PRODUCTS */
+
   useEffect(() => {
-    setLoading(true);
 
-    const fetchProducts = async () => {
-      try {
-        const url = token
-          ? `${BASE_URL}/products`
-          : `${BASE_URL}/products/demo`;
+    const fetchProducts =
+      async () => {
 
-        const response = await fetch(url, {
-          headers: token
-            ? {
-              Authorization: `Bearer ${token}`,
-            }
-            : {},
-        });
+        setLoading(true);
 
-        if (!response.ok) {
-          throw new Error("API Error");
+        try {
+
+          const url = token
+            ? `${BASE_URL}/products`
+            : `${BASE_URL}/products/demo`;
+
+          const response =
+            await fetch(url, {
+              headers: token
+                ? {
+                    Authorization:
+                      `Bearer ${token}`,
+                  }
+                : {},
+            });
+
+          if (!response.ok) {
+            throw new Error(
+              "Failed to fetch products"
+            );
+          }
+
+          const json =
+            await response.json();
+
+          setData(
+            json.products || []
+          );
+
+          setFilterData(
+            json.products || []
+          );
+
+          setTotal(
+            json.total || 0
+          );
+
+        } catch (err) {
+
+          console.log(err);
+
+          setData([]);
+
+          setFilterData([]);
+
+          setTotal(0);
+
+        } finally {
+
+          setLoading(false);
         }
-
-        const json = await response.json();
-
-        setData(json.products || []);
-        setFilterData(json.products || []);
-        setTotal(json.total || 0);
-      } catch (err) {
-        console.log(err);
-
-        setData([]);
-        setFilterData([]);
-        setTotal(0);
-      } finally {
-        setLoading(false);
-      }
-    };
+      };
 
     fetchProducts();
+
   }, [token]);
 
-  // Sync Token
+  /* SYNC TOKEN */
+
   useEffect(() => {
-    const handleStorage = () => {
-      setToken(localStorage.getItem("jwtToken"));
-    };
 
-    window.addEventListener("storage", handleStorage);
+    const handleStorage =
+      () => {
 
-    return () =>
+        setToken(
+          localStorage.getItem(
+            "jwtToken"
+          )
+        );
+      };
+
+    window.addEventListener(
+      "storage",
+      handleStorage
+    );
+
+    return () => {
+
       window.removeEventListener(
         "storage",
         handleStorage
       );
+    };
+
   }, []);
 
-  // Load User
+  /* LOAD USER */
+
   useEffect(() => {
-    if (token) {
-      const user = JSON.parse(
-        localStorage.getItem("loggedInUser")
-      );
+
+    if (!token) return;
+
+    try {
+
+      const user =
+        JSON.parse(
+          localStorage.getItem(
+            "loggedInUser"
+          )
+        );
 
       if (user) {
-        setUserData(user);
-        console.log(userData)
 
-        if ( 
+        setUserData(user);
+
+        const welcomeShown =
           localStorage.getItem(
             "welcomeToastShown"
-          ) !== "true"
+          );
+
+        if (
+          welcomeShown !== "true"
         ) {
+
           toast.success(
             `Welcome back, ${user.name}!`
           );
@@ -119,82 +196,121 @@ export const SearchProvider = ({ children }) => {
           );
         }
       }
+
+    } catch (err) {
+
+      console.log(err);
     }
+
   }, [token]);
 
-  // Search Filter
+  /* SEARCH FILTER */
+
   useEffect(() => {
-    if (!searchTerm.trim()) {
+
+    if (
+      !searchTerm.trim()
+    ) {
+
       setFilterData(data);
+
       return;
     }
 
-    const filtered = data.filter((item) =>
-      item.title
-        ?.toLowerCase()
-        .includes(searchTerm.toLowerCase())
-    );
+    const filtered =
+      data.filter((item) =>
+        item.title
+          ?.toLowerCase()
+          .includes(
+            searchTerm.toLowerCase()
+          )
+      );
 
     setFilterData(filtered);
+
   }, [searchTerm, data]);
 
-  // Logout
-  const handleLogout = () => {
-    localStorage.removeItem("jwtToken");
-    localStorage.removeItem("loggedInUser");
-    localStorage.removeItem("welcomeToastShown");
+  /* LOGOUT */
 
-    setToken(null);
+  const handleLogout =
+    () => {
 
-    setUserData({
-      name: "",
-      email: "",
-      picture: "",
-      address: "",
-      cart: [],
-    });
+      localStorage.removeItem(
+        "jwtToken"
+      );
 
-    toast.success("Logged out successfully");
-  };
+      localStorage.removeItem(
+        "loggedInUser"
+      );
+
+      localStorage.removeItem(
+        "welcomeToastShown"
+      );
+
+      setToken(null);
+
+      setUserData({
+        name: "",
+        email: "",
+        picture: "",
+        address: [],
+        cart: [],
+      });
+
+      toast.success(
+        "Logged out successfully"
+      );
+     setTimeout(() => {
+      navigate("/auth")
+     }, 1500);
+      
+    };
 
   return (
+
     <SearchContext.Provider
       value={{
-        // Search
+
+        /* SEARCH */
+
         searchTerm,
         setSearchTerm,
 
-        // Products
+        /* PRODUCTS */
+
         data,
         filterData,
         total,
         loading,
-        skip,
         limit,
 
         setData,
-        setLoading,
-        setSkip,
         setFilterData,
         setTotal,
+        setLoading,
 
-        // Auth
+        /* AUTH */
+
         token,
         setToken,
         isLogged,
 
-        // User
+        /* USER */
+
         userData,
         setUserData,
 
-        // Logout
+        /* LOGOUT */
+
         handleLogout,
       }}
     >
+
       {children}
+
     </SearchContext.Provider>
   );
 };
 
-export const useSearch = () =>
-  useContext(SearchContext);
+export const useSearch =
+  () => useContext(SearchContext);

@@ -2,21 +2,17 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaCashRegister, FaSpinner, FaCheckCircle } from 'react-icons/fa';
-import AddressForm from './address/AddressForm';
 import './Payment.css';
+import { useAddress } from '../../context/AddressContext';
 
 const Payment = () => {
+
   const [step, setStep] = useState(1); // 1: Address, 2: Payment, 3: Success
-  const [address, setAddress] = useState(null);
+  const{ userAddress} = useAddress()
+
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
   const totalAmount = localStorage.getItem("total");
-
-  const handleAddressSubmit = (addressData) => {
-    setAddress(addressData);
-    setStep(2);
-  };
 
   const handleCOD = () => {
     setLoading(true);
@@ -28,7 +24,7 @@ const Payment = () => {
       date: new Date().toISOString(),
       items: JSON.parse(localStorage.getItem('cartItems') || '[]'),
       total: totalAmount,
-      address: address,
+      address: userAddress,
       paymentMethod: 'Cash on Delivery',
       status: 'Pending',
       deliveryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString()
@@ -50,19 +46,92 @@ const Payment = () => {
   };
 
   const handleGoToOrders = () => {
-    navigate('/orders');
+    navigate('/user/orders');
   };
 
-  if (step === 1) {
-    return (
-      <div className="payment-container">
-        <div className="payment-card">
-          <h2 className="payment-title">Delivery Address</h2>
-          <AddressForm onSubmit={handleAddressSubmit} />
-        </div>
+if (step === 1) {
+
+  return (
+
+    <div className="payment-container">
+
+      <div className="payment-card">
+
+        <h2 className="payment-title">
+          Select Delivery Address
+        </h2>
+
+        {userAddress?.name ? (
+
+          <div className="delivery-address-summary">
+
+            <h3>Saved Address</h3>
+
+            <p>
+              <strong>
+                {userAddress.name}
+              </strong>
+            </p>
+
+            <p>
+              {userAddress.addressLine1}
+            </p>
+
+            <p>
+              {userAddress.city},
+              {" "}
+              {userAddress.state}
+              {" - "}
+              {userAddress.pincode}
+            </p>
+
+            <p>
+              Phone:
+              {" "}
+              {userAddress.phone}
+            </p>
+
+            <button
+              className="place-order-btn"
+
+              onClick={() => {
+                setStep(2);
+              }}
+            >
+              Deliver Here
+            </button>
+
+          </div>
+
+        ) : (
+
+          <div>
+
+            <p>
+              No saved address found
+            </p>
+
+            <button
+              className="place-order-btn"
+
+              onClick={() =>
+                navigate(
+                  "/user/address/add"
+                )
+              }
+            >
+              Add Address
+            </button>
+
+          </div>
+
+        )}
+
       </div>
-    );
-  }
+
+    </div>
+  );
+}
 
   if (step === 2) {
     return (
@@ -72,11 +141,10 @@ const Payment = () => {
           
           <div className="delivery-address-summary">
             <h3>Delivery Address</h3>
-            <p><strong>{address.fullName}</strong></p>
-            <p>{address.addressLine1}</p>
-            {address.addressLine2 && <p>{address.addressLine2}</p>}
-            <p>{address.city}, {address.state} - {address.pincode}</p>
-            <p>Phone: {address.phone}</p>
+            <p><strong>{userAddress.name}</strong></p>
+            <p>{userAddress.addressLine1}</p>
+            <p>{userAddress.city}, {userAddress.state} - {userAddress.pincode}</p>
+            <p>Phone: {userAddress.phone}</p>
           </div>
 
           <div className="payment-methods">

@@ -21,12 +21,17 @@ const Header = ({ cartCount }) => {
   const [value, setValue] = useState("");
   const [addresses, setAddresses] = useState([]);
 
-  const { 
+  const {
     setSearchTerm, token, isLogged,
-    userData, handleLogout 
+    userData, handleLogout
   } = useSearch();
-  const {name,email,picture} = userData
+  const { name, email, picture } = userData
   const navigate = useNavigate();
+  useEffect(() => {
+
+    setIsProfileDropdownOpen(false);
+
+  }, [token]);
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
@@ -65,6 +70,7 @@ const Header = ({ cartCount }) => {
   ];
 
   const handleSearch = () => {
+    navigate("/")
     if (!value.trim()) return;
     setSearchTerm(value.trim().toLowerCase());
   };
@@ -72,13 +78,12 @@ const Header = ({ cartCount }) => {
   const handleLogin = () => {
     navigate("/auth");
   };
-// Inside Header component, after handleLogout and other functions
 
-const handleShowOrders = () => {
-  navigate('/user/orders');
-};
+  const handleShowOrders = () => {
+    navigate('/user/orders');
+  };
 
-// Then inside the ProfileDropdown component:
+  // Then inside the ProfileDropdown component:
 
   return (
     <>
@@ -87,13 +92,9 @@ const handleShowOrders = () => {
           {/* Logo */}
           <Link className="logo" to="/" onClick={() => setIsMobileMenuOpen(false)}>
             <div className="logo-icon">
-              <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M16 2L19.5 12.5L30 16L19.5 19.5L16 30L12.5 19.5L2 16L12.5 12.5L16 2Z" fill="currentColor" fillOpacity="0.9" />
-                <circle cx="16" cy="16" r="4" fill="white" />
-                <path d="M10 12L13 14L16 11L19 14L22 12" stroke="white" strokeWidth="1.5" strokeLinecap="round" fill="none" />
-              </svg>
+             <img src="logo.png" alt="app-logo" width={35} />
             </div>
-            <span className="logo-text">N11<span className="logo-highlight">Mall</span></span>
+            <span className="logo-text">Nex<span className="logo-highlight">Xcart</span></span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -114,10 +115,13 @@ const handleShowOrders = () => {
           <div className="search-box">
             <input
               value={value}
-              onChange={(e) => setValue(e.target.value)}
+              onChange={(e) => {
+                setValue(e.target.value)
+              }
+              }
               className="search-input"
               type="text"
-              placeholder="Search products..."
+              placeholder="Search..."
               onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
             />
             <button onClick={handleSearch} className="search-btn">🔍</button>
@@ -125,16 +129,28 @@ const handleShowOrders = () => {
 
           {isLogged ? (
             <>
-         <Cart cartCount={cartCount} animate = {animate}/>
+              <Cart cartCount={cartCount} animate={animate} />
 
               <div className="user-section">
                 <button
                   ref={profileBtnRef}
                   className="profile-btn"
-                  onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
+                  onClick={() =>
+                    setIsProfileDropdownOpen(
+                      (prev) => !prev
+                    )
+                  }
                 >
-                  {userData?.picture ? (
-                    <img src={picture} alt="Profile" className="profile-avatar" />
+                  {userData?.picture?.trim() ? (
+                    <img
+                      src={userData.picture}
+                      alt="Profile"
+                      className="nx-header-avatar"
+                      referrerPolicy="no-referrer"
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                      }}
+                    />
                   ) : (
                     <FaUserCircle size={28} />
                   )}
@@ -146,15 +162,15 @@ const handleShowOrders = () => {
 
                 {isProfileDropdownOpen && (
                   <ProfileDropdown
-  dropdownRef={dropdownRef}
-  userName={name}
-  userEmail={email}
-  userData={userData}
-  addressesCount={addresses.length}
-  onClose={() => setIsProfileDropdownOpen(false)}
-  onShowOrders={handleShowOrders}   // <-- pass the new prop
-  onLogout={handleLogout}
-/>
+                    dropdownRef={dropdownRef}
+                    userName={name}
+                    userEmail={email}
+                    userData={userData}
+                    addressesCount={addresses.length}
+                    onClose={() => setIsProfileDropdownOpen(false)}
+                    onShowOrders={handleShowOrders}   // <-- pass the new prop
+                    onLogout={handleLogout}
+                  />
                 )}
               </div>
             </>
@@ -164,9 +180,9 @@ const handleShowOrders = () => {
         </div>
       </header>
 
-  
 
-  
+
+
     </>
   );
 };

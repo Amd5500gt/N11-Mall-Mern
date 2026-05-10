@@ -5,15 +5,18 @@ import { CartProvider } from './context/CartContext.jsx'  // Change Cart to Cart
 import { SearchProvider } from './context/SearchContext.jsx'  // Change Cartcontext to SearchProvider
 import { GoogleOAuthProvider }
 from "@react-oauth/google";
+import { AddressProvider } from './context/AddressContext.jsx'
 
 createRoot(document.getElementById('root')).render(
     <BrowserRouter>
     <GoogleOAuthProvider
   clientId="544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com"  >
       <SearchProvider>
+            <AddressProvider>
             <CartProvider>  {/* Change Cart to CartProvider */}
                 <App />
             </CartProvider>
+            </AddressProvider>
         </SearchProvider>
         </GoogleOAuthProvider>
     </BrowserRouter>

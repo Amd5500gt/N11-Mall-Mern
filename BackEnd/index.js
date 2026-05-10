@@ -9,7 +9,7 @@ const cors = require("cors");
 
 const authRouter = require("./Routers/authRouter");
 const productRouter = require("./Routers/productRouter");
-const cartRouter = require("./Routers/cartRouter");
+const userRouter = require("./Routers/userRouter");
 
 connectDB();
 
@@ -47,7 +47,7 @@ app.use(
 // Routes
 app.use("/auth", authRouter);
 app.use("/products", productRouter);
-app.use("/cart", cartRouter);
+app.use("/user", userRouter);
 
 // Test Route
 app.get("/", (req, res) => {

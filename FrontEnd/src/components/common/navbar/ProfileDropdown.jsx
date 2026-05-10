@@ -1,47 +1,158 @@
-import React from 'react';
-import { FiUser, FiMapPin, FiPackage, FiLogOut, FiSettings } from 'react-icons/fi';
-import { Link, useNavigate } from 'react-router-dom'; // if using Link, otherwise use navigate
+
+import React from "react";
+import {
+  FiUser,
+  FiMapPin,
+  FiPackage,
+  FiLogOut,
+  FiChevronRight,
+} from "react-icons/fi";
+
+import { useNavigate } from "react-router-dom";
+
+import "./ProfileDropdown.css";
 
 const ProfileDropdown = ({
   dropdownRef,
   userName,
   userEmail,
   userData,
-  addressesCount,
   onClose,
-  onShowOrders,   // <-- new prop
-  onLogout
+  onShowOrders,
+  onLogout,
 }) => {
 
-  const navigation = useNavigate()
-  return (
-    <div className="profile-dropdown" ref={dropdownRef}>
-      <div className="dropdown-header">
-        <div className="dropdown-user-info">
-       <div>
-        <strong>{userName}</strong>
-        </div>   
+  const navigate = useNavigate();
 
-          <span>{userEmail}</span>
+  return (
+
+    <div
+      className="nx-profile-dropdown"
+      ref={dropdownRef}
+    >
+
+      {/* TOP */}
+      <div className="nx-profile-top">
+
+        <div className="nx-profile-avatar">
+
+          {userData?.picture?.trim() ? (
+            <img
+              src={userData.picture}
+              alt="Profile"
+              referrerPolicy="no-referrer"
+            />
+          ) : (
+            <FiUser />
+          )}
+
         </div>
+
+        <div className="nx-profile-user">
+
+          <h3>
+            {userName || "User"}
+          </h3>
+
+          <p>
+            {userEmail}
+          </p>
+
+        </div>
+
       </div>
-      <div className="dropdown-divider"></div>
-      <ul className="dropdown-menu-list">
-        <li onClick={() => { onClose(); navigation("/user/profile")}}>
-          <FiUser /> My Profile
-        </li>
-        <li onClick={() => { onClose(); navigation("/user/addresses") }}>
-          <FiMapPin /> My Addresses
-        </li>
-        <li onClick={() => { onShowOrders(); onClose(); }}>   {/* new item */}
-          <FiPackage /> My Orders
-        </li>
-        <li onClick={onLogout}>
-          <FiLogOut /> Logout
-        </li>
-      </ul>
+
+      {/* MENU */}
+      <div className="nx-profile-menu">
+
+        <button
+          className="nx-profile-item"
+          onClick={() => {
+            onClose();
+            navigate("/user/profile");
+          }}
+        >
+          <div className="nx-profile-left">
+            <span className="nx-icon">
+              <FiUser />
+            </span>
+
+            <span>
+              My Profile
+            </span>
+          </div>
+
+          <FiChevronRight />
+        </button>
+
+        <button
+          className="nx-profile-item"
+          onClick={() => {
+            onClose();
+            navigate("/user/addresses");
+          }}
+        >
+          <div className="nx-profile-left">
+            <span className="nx-icon">
+              <FiMapPin />
+            </span>
+
+            <span>
+              My Addresses
+            </span>
+          </div>
+
+          <FiChevronRight />
+        </button>
+
+        <button
+          className="nx-profile-item"
+          onClick={() => {
+            onShowOrders();
+            onClose();
+          }}
+        >
+          <div className="nx-profile-left">
+            <span className="nx-icon">
+              <FiPackage />
+            </span>
+
+            <span>
+              My Orders
+            </span>
+          </div>
+
+          <FiChevronRight />
+        </button>
+
+        <button
+          className="
+          nx-profile-item
+          logout-btn-item
+          "
+          onClick={onLogout}
+        >
+          <div className="nx-profile-left">
+            <span className="
+            nx-icon
+            logout-icon
+            ">
+              <FiLogOut />
+            </span>
+
+            <span>
+              Logout
+            </span>
+          </div>
+
+          <FiChevronRight />
+        </button>
+
+      </div>
+
     </div>
   );
 };
 
 export default ProfileDropdown;
+

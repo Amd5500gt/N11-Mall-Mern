@@ -1,6 +1,7 @@
 import React from 'react'
 import { FaEyeSlash, FaEye } from 'react-icons/fa'
 import { LiaSpinnerSolid } from "react-icons/lia"
+import ForgetPassword from './ForgetPassword/ForgetPassword';
 
 const Login = ({
   authMode,
@@ -14,7 +15,6 @@ const Login = ({
 }) => {
 
   if(authMode !== "login") return null;
-
   return (
     <form onSubmit={handleLogin} className="auth-form">
 
@@ -59,17 +59,17 @@ const Login = ({
         </div>
       </div>
 
-      <div className="forgot-password-link">
+   <div className="forgot-password-link">
 
-        <button
-          type="button"
-          className="text-btn"
-          onClick={() => switchMode('forgotPassword')}
-        >
-          Forgot Password?
-        </button>
+  <button
+    type="button"
+    className="text-btn"
+    onClick={() => switchMode("forgotPassword")}
+  >
+    Forgot Password?
+  </button>
 
-      </div>
+</div>
 
       <button
         type="submit"

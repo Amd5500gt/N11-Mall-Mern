@@ -3,11 +3,12 @@ import { useParams, Link } from 'react-router-dom';
 import Loader from '../../components/ui/Loader';
 import { FaCartPlus, FaCheck, FaMinus, FaPlus, FaHeart, FaShare, FaTruck, FaShieldAlt, FaStar, FaStarHalfAlt, FaRegStar } from 'react-icons/fa';
 import { BsFillCartCheckFill, BsStar, BsStarHalf, BsStarFill, BsLightningCharge } from "react-icons/bs";
-import ErrorPage from '../../ErrorPage';
+import ErrorPage from '../../components/ui/ErrorPage';
 import '../pages.css';
 import { useCart } from '../../context/CartContext';
- import BASE_URL from "../../config/config";
+import BASE_URL from "../../config/config";
 import { useSearch } from '../../context/SearchContext';
+import toast from 'react-hot-toast';
 const OpenPrev = () => {
   const { id } = useParams();
   const [item, setItem] = useState({});
@@ -20,8 +21,8 @@ const OpenPrev = () => {
   const [activeTab, setActiveTab] = useState('details');
   const [showToast, setShowToast] = useState(false);
   const [toastProduct, setToastProduct] = useState(null);
-  const{newCart, addWithQuantity} = useCart()
-  const{token}  = useSearch()
+  const { newCart, addWithQuantity } = useCart()
+  const { token } = useSearch()
 
   useEffect(() => {
     let timer = setTimeout(() => {
@@ -30,10 +31,11 @@ const OpenPrev = () => {
     }, 6000);
 
     fetch(`${BASE_URL}/products/${id}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            }}
-          )
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    }
+    )
       .then(res => res.json())
       .then(data => {
         clearTimeout(timer);
@@ -66,11 +68,11 @@ const OpenPrev = () => {
     addWithQuantity(productWithQuantity);
     setIsAdded(true);
     setShowToast(true);
-        setToastProduct(product);
+    setToastProduct(product);
     setTimeout(() => {
       setIsAdded(false);
     }, 500);
-      setTimeout(() => { setShowToast(false); setToastProduct(null); }, 3000);
+    setTimeout(() => { setShowToast(false); setToastProduct(null); }, 3000);
   };
 
   const formatPrice = (price) => {
@@ -85,7 +87,26 @@ const OpenPrev = () => {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-    
+     }
+       const handleShare = async() =>{
+        const shareData = {
+          title : item.title,
+          text: `Check out this product ${item.title}`,
+          url: window.location.href,
+         };
+      try{
+        if(navigator.share){
+          await navigator.share(shareData);
+        }
+        else{
+          await navigator.clipboard.writeText(window.location.href);
+
+        }
+      }
+       catch(err){
+        console.log(err)
+       }
+
     return (
       <div className="stars">
         {[...Array(fullStars)].map((_, i) => (
@@ -118,7 +139,7 @@ const OpenPrev = () => {
           <div className="product-gallery">
             <div className="main-image-wrapper">
               <img src={activeImage} alt={item.title} className="main-image" />
-              <button 
+              <button
                 className={`wishlist-btn ${isWishlisted ? 'active' : ''}`}
                 onClick={() => setIsWishlisted(!isWishlisted)}
               >
@@ -127,17 +148,17 @@ const OpenPrev = () => {
             </div>
             {item.images && item.images.length > 1 && (
               <div className="thumbnail-list">
-                <img 
-                  src={item.thumbnail} 
-                  alt="thumbnail" 
+                <img
+                  src={item.thumbnail}
+                  alt="thumbnail"
                   className={`thumbnail ${activeImage === item.thumbnail ? 'active' : ''}`}
                   onClick={() => setActiveImage(item.thumbnail)}
                 />
                 {item.images.slice(0, 3).map((img, idx) => (
-                  <img 
+                  <img
                     key={idx}
-                    src={img} 
-                    alt={`product ${idx}`} 
+                    src={img}
+                    alt={`product ${idx}`}
                     className={`thumbnail ${activeImage === img ? 'active' : ''}`}
                     onClick={() => setActiveImage(img)}
                   />
@@ -204,7 +225,7 @@ const OpenPrev = () => {
 
             {/* Action Buttons */}
             <div className="action-buttons">
-              <button 
+              <button
                 className={`add-to-cart-btn ${isAdded ? 'added' : ''}`}
                 onClick={() => handleAddToCart(item)}
                 disabled={item.stock === 0}
@@ -215,7 +236,10 @@ const OpenPrev = () => {
                   <><FaCartPlus /> Add to Cart</>
                 )}
               </button>
-              <button className="share-btn">
+              <button
+                className="share-btn"
+                onClick={handleShare}
+              >
                 <FaShare /> Share
               </button>
             </div>
@@ -310,23 +334,23 @@ const OpenPrev = () => {
           </div>
         </div>
       </div>
-            {/* Toast */}
-            {showToast && toastProduct && (
-              <div className="toast-notification">
-                <div className="toast-content">
-                  <div className="toast-image">
-                    <img src={toastProduct.thumbnail} alt={toastProduct.title} />
-                  </div>
-                  <div className="toast-details">
-                    <div className="toast-title">{toastProduct.title}</div>
-                    <div className="toast-message">
-                      <BsFillCartCheckFill className="toast-icon" />
-                      Added to cart
-                    </div>
-                  </div>
-                </div>
+      {/* Toast */}
+      {showToast && toastProduct && (
+        <div className="toast-notification">
+          <div className="toast-content">
+            <div className="toast-image">
+              <img src={toastProduct.thumbnail} alt={toastProduct.title} />
+            </div>
+            <div className="toast-details">
+              <div className="toast-title">{toastProduct.title}</div>
+              <div className="toast-message">
+                <BsFillCartCheckFill className="toast-icon" />
+                Added to cart
               </div>
-            )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -15,7 +15,7 @@ const AddCart = () => {
   const [animateRemove, setAnimateRemove] = useState(null);
   
   // Get everything from context instead of props
-  const { addedItems, newCart, removeCart, total } = useContext(useCart)
+  const { addedItems, newCart, removeCart, total, deleteCart } = useContext(useCart)
 
   let totalPrice = (total * 20).toFixed(2);
   const totalAmount = (totalPrice * 1.03).toFixed(2);
@@ -23,18 +23,11 @@ const AddCart = () => {
   const handleCheckoutItem = () => {
     setLoader(true);
     setTimeout(() => {
-      navigate("/cart/payment");
+      navigate("/cart/checkout/payment");
       localStorage.setItem("total", totalAmount);
     }, 2000);
   };
 
-  const handleRemove = async (item) => {
-    setAnimateRemove(item.id);
-    setTimeout(async () => {
-      await removeCart(item);
-      setAnimateRemove(null);
-    }, 300);
-  };
 
   if (addedItems.length === 0) {
     return <EmptyCart />;
@@ -96,7 +89,7 @@ const AddCart = () => {
                     ₹{(item.price * 20 * item.quantity).toFixed(2)}
                   </div>
                   <button 
-                    onClick={() => handleRemove(item)} 
+                    onClick={() =>  deleteCart(item)} 
                     className="remove-item-btn"
                   >
                     <FaTrash />
@@ -143,6 +136,7 @@ const AddCart = () => {
           </div>
         </div>
       </div>
+      
     </div>
   );
 };

@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const addressSchema = new mongoose.Schema(
   {
-    fullName: {
+    name: {
       type: String,
       trim: true,
       default: "",
@@ -14,12 +14,6 @@ const addressSchema = new mongoose.Schema(
     },
 
     addressLine1: {
-      type: String,
-      trim: true,
-      default: "",
-    },
-
-    addressLine2: {
       type: String,
       trim: true,
       default: "",
@@ -40,13 +34,7 @@ const addressSchema = new mongoose.Schema(
     pincode: {
       type: String,
       default: "",
-    },
-
-    landmark: {
-      type: String,
-      trim: true,
-      default: "",
-    },
+    }
   },
   { _id: false }
 );
@@ -69,6 +57,16 @@ const userSchema = new mongoose.Schema(
 
     password: {
       type: String,
+      default: null,
+    },
+
+    passwordResetOTP: {
+      type: String,
+      default: null,
+    },
+
+    passwordResetOTPExpire: {
+      type: Date,
       default: null,
     },
 
