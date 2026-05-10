@@ -1,7 +1,6 @@
-const crypto = require("crypto")
 const nodemailer = require("nodemailer")
 const userModel = require("../Models/userModel")
-
+const bcrypt = require("bcrypt")
 const otpGenerate = async (req, res) => {
 
     try {
@@ -33,132 +32,210 @@ const otpGenerate = async (req, res) => {
             }
         });
 
-        await transporter.sendMail({
-            from:process.env.EMAIL_USER,
-            to: email,
-            subject: "Password Reset",
-            html: ` 
+      await transporter.sendMail({
+
+  from: process.env.EMAIL_USER,
+
+  to: email,
+
+  subject: `Your NexXcart OTP is ${otp}`,
+
+  text:
+  `Your NexXcart OTP is ${otp}.
+   This OTP is valid for 5 minutes.`,
+
+  html: `
+
+<div
+  style="
+    background:#f6fff9;
+    padding:30px 15px;
+    font-family:
+    Inter,
+    Arial,
+    sans-serif;
+  "
+>
+
+  <!-- PREVIEW TEXT -->
+
   <div
     style="
-      background:#f4f7fb;
-      padding:40px 20px;
-      font-family:Arial,sans-serif;
+      display:none;
+      max-height:0;
+      overflow:hidden;
     "
   >
 
+    Your NexXcart OTP is ${otp}
+
+  </div>
+
+  <!-- CARD -->
+
+  <div
+    style="
+      max-width:460px;
+      margin:auto;
+      background:#ffffff;
+
+      border-radius:18px;
+
+      overflow:hidden;
+
+      border:1px solid #dcfce7;
+
+      box-shadow:
+      0 4px 18px
+      rgba(34,197,94,0.08);
+    "
+  >
+
+    <!-- HEADER -->
+
     <div
       style="
-        max-width:500px;
-        margin:auto;
-        background:#ffffff;
-        border-radius:20px;
-        overflow:hidden;
-        box-shadow:0 10px 30px rgba(0,0,0,0.08);
+        background:
+        linear-gradient(
+          135deg,
+          #22c55e,
+          #4ade80
+        );
+
+        padding:22px;
+        text-align:center;
       "
     >
 
-      <!-- HEADER -->
+      <h1
+        style="
+          color:white;
+
+          margin:0;
+
+          font-size:24px;
+
+          font-weight:700;
+
+          letter-spacing:0.5px;
+        "
+      >
+
+        NexXcart
+
+      </h1>
+
+    </div>
+
+    <!-- BODY -->
+
+    <div
+      style="
+        padding:30px 22px;
+        text-align:center;
+      "
+    >
+
+      <h2
+        style="
+          margin:0 0 10px;
+
+          color:#14532d;
+
+          font-size:20px;
+
+          font-weight:700;
+        "
+      >
+
+        Password Reset
+
+      </h2>
+
+      <p
+        style="
+          color:#4b5563;
+
+          font-size:13px;
+
+          line-height:1.7;
+
+          margin-bottom:22px;
+        "
+      >
+
+        Use this OTP to reset your password.
+        This code will expire in 5 minutes.
+
+      </p>
+
+      <!-- OTP BOX -->
+
       <div
         style="
-          background:linear-gradient(135deg,#6366f1,#8b5cf6);
-          padding:30px;
-          text-align:center;
+          display:inline-block;
+
+          background:#f0fdf4;
+
+          border:1.5px dashed #22c55e;
+
+          padding:14px 30px;
+
+          border-radius:14px;
+
+          margin-bottom:20px;
         "
       >
 
         <h1
           style="
-            color:white;
             margin:0;
-            font-size:32px;
+
+            color:#16a34a;
+
+            font-size:34px;
+
+            letter-spacing:6px;
+
             font-weight:800;
-            letter-spacing:1px;
           "
         >
-          NexXcart
+
+          ${otp}
+
         </h1>
 
       </div>
 
-      <!-- BODY -->
-      <div
+      <p
         style="
-          padding:35px 30px;
-          text-align:center;
+          color:#9ca3af;
+
+          font-size:11px;
+
+          line-height:1.6;
+
+          margin-top:10px;
         "
       >
 
-        <h2
-          style="
-            margin:0 0 15px;
-            color:#111827;
-            font-size:24px;
-          "
-        >
-          Password Reset OTP
-        </h2>
+        If you didn’t request a password reset,
+        you can safely ignore this email.
 
-        <p
-          style="
-            color:#6b7280;
-            font-size:15px;
-            line-height:1.6;
-            margin-bottom:25px;
-          "
-        >
-          Use the OTP below to reset your password.
-          This OTP is valid for 5 minutes.
-        </p>
-
-        <!-- OTP BOX -->
-        <div
-          style="
-            display:inline-block;
-            background:#eef2ff;
-            border:2px dashed #6366f1;
-            padding:18px 40px;
-            border-radius:16px;
-            margin-bottom:25px;
-          "
-        >
-
-          <h1
-            style="
-              margin:0;
-              color:#6366f1;
-              font-size:42px;
-              letter-spacing:8px;
-              font-weight:800;
-            "
-          >
-            ${otp}
-          </h1>
-
-        </div>
-
-        <p
-          style="
-            color:#9ca3af;
-            font-size:13px;
-            margin-top:10px;
-          "
-        >
-          If you didn't request this password reset,
-          you can safely ignore this email.
-        </p>
-
-      </div>
+      </p>
 
     </div>
 
   </div>
 
-`
-        })
+</div>
+
+  `
+})
 
         res.status(200).json({
             success: true,
-            message: "OTP send successfully"
+            message: "OTP sent successfully"
         })
 
     } catch (err) {
@@ -194,7 +271,7 @@ const verifyOTP = async (req, res) => {
         // check expire
 
         if (user.passwordResetOTPExpire < Date.now()) {
-            return status(400).json({
+            return res.status(400).json({
                 success: false,
                 message: "OTP expired"
             })
@@ -215,7 +292,7 @@ const verifyOTP = async (req, res) => {
 }
 
 
-const resetPassowrd = async (req, res) => {
+const resetPassword = async (req, res) => {
 
     try {
         const { email, newPassword } = req.body;
@@ -227,7 +304,11 @@ const resetPassowrd = async (req, res) => {
                 message: "User not found"
             });
         }
-        user.password = newPassword
+        
+       const hashedPassword =
+await bcrypt.hash(newPassword, 10)
+
+user.password = hashedPassword
 
         //clear otp
         user.passwordResetOTP = null;
@@ -248,4 +329,4 @@ const resetPassowrd = async (req, res) => {
     }
 }
 
-module.exports = { otpGenerate, verifyOTP, resetPassowrd }
+module.exports = { otpGenerate, verifyOTP, resetPassword }

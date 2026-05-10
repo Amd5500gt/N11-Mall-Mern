@@ -1,6 +1,6 @@
 const Router = require("express").Router()
 
-const { otpGenerate, verifyOTP, resetPassowrd } = require("../Controllors/ResetPassAPIs")
+const { otpGenerate, verifyOTP, resetPassowrd, resetPassword } = require("../Controllors/ResetPassAPIs")
 const { LoginUser, RegisterUser, GoogleUser } = require("../Controllors/userAPIs")
 const { LoginUserValidation, RegisterUserValidation } = require("../Middlewares/authValidator")
 
@@ -18,7 +18,7 @@ Router.post("/register",RegisterUserValidation,RegisterUser)
 
 Router.post("/send-request",otpGenerate)
 Router.post("/verify-otp", verifyOTP)
-Router.post("/reset-password", resetPassowrd)
+Router.post("/reset-password", resetPassword)
 
 
 
