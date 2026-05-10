@@ -437,15 +437,36 @@
 }
 
 .product-brand {
-  display: inline-block;
-  font-size: 0.65rem;
-  font-weight: 500;
-  color: rgba(13, 13, 13, 0.45);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  margin-bottom: 0.85rem;
-}
 
+  display: inline-block;
+
+  font-size:
+  clamp(
+    0.45rem,
+    1vw,
+    0.65rem
+  );
+
+  font-weight: 500;
+
+  color:
+  rgba(13,13,13,0.45);
+
+  letter-spacing: 0.12em;
+
+  text-transform: uppercase;
+
+  margin-bottom: 0.85rem;
+
+  max-width: 100%;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+}
 /* Rating */
 .product-rating {
   display: flex;
