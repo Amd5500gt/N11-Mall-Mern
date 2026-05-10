@@ -3,6 +3,7 @@ const Router = require("express").Router()
 const { otpGenerate, verifyOTP, resetPassowrd, resetPassword } = require("../Controllors/ResetPassAPIs")
 const { LoginUser, RegisterUser, GoogleUser } = require("../Controllors/userAPIs")
 const { LoginUserValidation, RegisterUserValidation } = require("../Middlewares/authValidator")
+const loginLimiter = require("../Middlewares/rateLimit")
 
 // Testing
 Router.get("/login",(req,res)=>{
@@ -10,15 +11,15 @@ Router.get("/login",(req,res)=>{
 })
 
 // Login/Register
-Router.post("/google",GoogleUser)
-Router.post("/login",LoginUserValidation,LoginUser)
-Router.post("/register",RegisterUserValidation,RegisterUser)
+Router.post("/google",loginLimiter, GoogleUser)
+Router.post("/login",loginLimiter,LoginUserValidation,LoginUser)
+Router.post("/register",loginLimiter,RegisterUserValidation,RegisterUser)
 
 // Password Reset
 
-Router.post("/send-request",otpGenerate)
-Router.post("/verify-otp", verifyOTP)
-Router.post("/reset-password", resetPassword)
+Router.post("/send-request",loginLimiter,otpGenerate)
+Router.post("/verify-otp",loginLimiter, verifyOTP)
+Router.post("/reset-password",loginLimiter, resetPassword)
 
 
 
