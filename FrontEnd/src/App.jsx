@@ -6,7 +6,6 @@ import './css/main.css';
 import OpenPrev from './pages/Product/OpenPrev';
 import Products from './pages/Product/Products';
 import AddCart from './pages/Product/AddCart';
-import Payments from './PayPage';
 import ErrorPage from './components/ui/ErrorPage';
 import Layout from './context/Layout';
 import useCart from './context/CartContext';
