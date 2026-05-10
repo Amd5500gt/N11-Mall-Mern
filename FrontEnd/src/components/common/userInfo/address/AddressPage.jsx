@@ -1,12 +1,8 @@
 import React, {useState} from "react";
-
-import {
-  useSearch
-} from "../../../../context/SearchContext";
-
 import toast from "react-hot-toast";
 import AddressForm from "../addressForm/AddressForm";
 import "./AddressPage.css";
+import { useAddress } from "../../../../context/AddressContext";
 
 const Addresses = () => {
 
