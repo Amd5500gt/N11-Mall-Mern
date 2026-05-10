@@ -1,29 +1,18 @@
-import React, {
-  useEffect,
-  useState
-} from "react";
+import React, {useState} from "react";
 
 import {
   useSearch
 } from "../../../../context/SearchContext";
 
 import toast from "react-hot-toast";
-
 import AddressForm from "../addressForm/AddressForm";
-
-import BASE_URL from "../../../../config/config";
-
 import "./AddressPage.css";
-import { useAddress } from "../../../../context/AddressContext";
 
 const Addresses = () => {
 
  const  {userAddress,setUserAddress} = useAddress()
   const [showForm, setShowForm] =
   useState(false);
-
-  const { token } = useSearch();
-
   const handleAddressSubmit =
   (newAddress) => {
 
@@ -271,7 +260,25 @@ const Addresses = () => {
 
   )
 }
+{/* FORM */}
 
+{
+  showForm && (
+
+    <div className="
+    address-form-section
+    ">
+
+      <AddressForm
+        onSubmit={
+          handleAddressSubmit
+        }
+      />
+
+    </div>
+
+  )
+}
     </div>
   );
 };
