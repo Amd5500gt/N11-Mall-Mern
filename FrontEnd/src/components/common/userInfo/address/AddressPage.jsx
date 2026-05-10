@@ -11,14 +11,8 @@ const Addresses = () => {
   useState(false);
   const handleAddressSubmit =
   (newAddress) => {
-
     setUserAddress(newAddress);
-
     setShowForm(false);
-
-    toast.success(
-      "Address saved successfully"
-    );
   };
 
   return (
