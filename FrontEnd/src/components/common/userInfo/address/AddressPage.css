@@ -3,17 +3,7 @@
 ========================= */
 
 .address-page-container{
-  width:100%;
-  min-height:100vh;
-  padding:40px 20px;
-  background:
-  
-  linear-gradient(
-    135deg,
-    #f8fbff,
-    #eef4ff,
-    #f5f7ff
-  );
+
   display:flex;
   flex-direction:column;
   gap:35px;
@@ -23,30 +13,6 @@
 }
 
 /* Animated background blur */
-
-.address-page-container::before{
-  content:"";
-  position:absolute;
-  width:450px;
-  height:450px;
-  background:#7c4dff25;
-  border-radius:50%;
-  top:-120px;
-  right:-100px;
-  filter:blur(90px);
-}
-
-.address-page-container::after{
-  content:"";
-  position:absolute;
-  max-width:350px;
-  height:350px;
-  background:#00bcd425;
-  border-radius:50%;
-  bottom:-120px;
-  left:-100px;
-  filter:blur(90px);
-}
 
 /* =========================
    HEADER
@@ -348,7 +314,7 @@
 @media(max-width:768px){
 
   .address-page-container{
-    padding:25px 55px;
+    padding:25px 35px;
   }
 
   .address-page-header h1{

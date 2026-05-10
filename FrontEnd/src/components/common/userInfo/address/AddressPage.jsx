@@ -99,132 +99,139 @@ const Addresses = () => {
 
       {/* ADDRESS CARD */}
 
-      {
-        userAddress?.name ? (
+    {
+  !showForm && (
+
+    userAddress?.name ? (
+
+      <div className="
+      address-wrapper
+      ">
+
+        <div className="
+        address-model-box
+        ">
 
           <div className="
-          address-wrapper
+          glow-effect
+          "></div>
+
+          <div className="
+          address-top
           ">
 
+            <span className="
+            address-badge
+            ">
+
+              Default Address
+
+            </span>
+
+          </div>
+
+          <div className="
+          address-content
+          ">
+
+            {/* LEFT */}
+
             <div className="
-            address-model-box
+            left-side
             ">
 
               <div className="
-              glow-effect
-              "></div>
-
-              <div className="
-              address-top
+              address-field
               ">
 
-                <span className="
-                address-badge
-                ">
-                  Default Address
+                <label>
+                  Full Name
+                </label>
+
+                <span>
+                  {userAddress.name}
                 </span>
 
               </div>
 
               <div className="
-              address-content
+              address-field
               ">
 
-                <div className="
-                left-side
-                ">
+                <label>
+                  Phone
+                </label>
 
-                  <div className="
-                  address-field
-                  ">
+                <span>
+                  {userAddress.phone}
+                </span>
 
-                    <label>
-                      Full Name
-                    </label>
+              </div>
 
-                    <span>
-                      {userAddress.name}
-                    </span>
+              <div className="
+              address-field
+              ">
 
-                  </div>
+                <label>
+                  Pincode
+                </label>
 
-                  <div className="
-                  address-field
-                  ">
+                <span>
+                  {userAddress.pincode}
+                </span>
 
-                    <label>
-                      Phone
-                    </label>
+              </div>
 
-                    <span>
-                      {userAddress.phone}
-                    </span>
+            </div>
 
-                  </div>
+            {/* RIGHT */}
 
-                  <div className="
-                  address-field
-                  ">
+            <div className="
+            right-side
+            ">
 
-                    <label>
-                      Pincode
-                    </label>
+              <div className="
+              address-field
+              ">
 
-                    <span>
-                      {userAddress.pincode}
-                    </span>
+                <label>
+                  Address
+                </label>
 
-                  </div>
+                <span>
+                  {
+                    userAddress
+                    .addressLine1
+                  }
+                </span>
 
-                </div>
+              </div>
 
-                <div className="
-                right-side
-                ">
+              <div className="
+              address-field
+              ">
 
-                  <div className="
-                  address-field
-                  ">
+                <label>
+                  City
+                </label>
 
-                    <label>
-                      Address
-                    </label>
+                <span>
+                  {userAddress.city}
+                </span>
 
-                    <span>
-                      {userAddress.addressLine1}
-                    </span>
+              </div>
 
-                  </div>
+              <div className="
+              address-field
+              ">
 
-                  <div className="
-                  address-field
-                  ">
+                <label>
+                  State
+                </label>
 
-                    <label>
-                      City
-                    </label>
-
-                    <span>
-                      {userAddress.city}
-                    </span>
-
-                  </div>
-
-                  <div className="
-                  address-field
-                  ">
-
-                    <label>
-                      State
-                    </label>
-
-                    <span>
-                      {userAddress.state}
-                    </span>
-
-                  </div>
-
-                </div>
+                <span>
+                  {userAddress.state}
+                </span>
 
               </div>
 
@@ -232,51 +239,38 @@ const Addresses = () => {
 
           </div>
 
-        ) : (
+        </div>
 
-          <div className="
-          no-address-box
-          ">
+      </div>
 
-            <div className="
-            empty-icon
-            ">
-              📍
-            </div>
+    ) : (
 
-            <h3>
-              No Address Found
-            </h3>
+      <div className="
+      no-address-box
+      ">
 
-            <p>
-              Add your first delivery
-              address to continue
-            </p>
+        <div className="
+        empty-icon
+        ">
+          📍
+        </div>
 
-          </div>
+        <h3>
+          No Address Found
+        </h3>
 
-        )
-      }
+        <p>
+          Add your first
+          delivery address
+          to continue
+        </p>
 
-      {/* FORM */}
+      </div>
 
-      {
-        showForm && (
+    )
 
-          <div className="
-          address-form-section
-          ">
-
-            <AddressForm
-              onSubmit={
-                handleAddressSubmit
-              }
-            />
-
-          </div>
-
-        )
-      }
+  )
+}
 
     </div>
   );
