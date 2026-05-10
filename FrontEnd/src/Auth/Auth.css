@@ -67,44 +67,15 @@
 .container {
   /* Layout */
   width: min(100% - 2rem, 460px);
-  margin: clamp(2rem, 8vh, 5rem) auto;
+  margin: clamp(1rem, 8vh, 2rem) auto;
   padding: clamp(1.5rem, 5vw, 2rem) clamp(1.25rem, 4vw, 3rem);
-  
-  /* Visual */
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-radius: var(--radius-xl);
-  border: 1px solid var(--clr-gray-400);
-  
-  /* Shadow */
-  box-shadow: 
-    var(--shadow-lg),
-    inset 0 1px 1px rgba(255, 255, 255, 0.1);
-  
-  /* Animation */
-  animation: containerFloatIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-  
+
   /* Misc */
   position: relative;
   z-index: var(--z-base);
   overflow: hidden;
 }
 
-/* Subtle gradient overlay */
-.container::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(167, 139, 250, 0.1) 0%,
-    rgba(236, 72, 153, 0.05) 50%,
-    rgba(251, 191, 36, 0.05) 100%
-  );
-  pointer-events: none;
-  z-index: -1;
-}
 
 /* ============================================
    Typography
@@ -149,23 +120,25 @@
    ============================================ */
 .container input {
   width: 100%;
-  padding: 0.75rem 0;
+  padding: 0.75rem 1rem ;
   font-size: var(--font-md);
   color: var(--clr-gray-100);
   background: transparent;
-  border: none;
-  border-bottom: 2px solid var(--clr-gray-300);
+  border: none !important;
+  border-bottom: 2px solid var(--clr-gray-300) !important;
   outline: none;
   transition: all var(--transition-base);
 }
 
 .container input:focus {
-  border-bottom-color: var(--clr-purple-light);
+  border-bottom-color: var(--clr-purple-light) !important;
   padding-left: var(--space-sm);
 }
-
+.container input:hover{
+  border: none !important;
+}
 .container input:hover:not(:focus):not(:disabled) {
-  border-bottom-color: rgba(167, 139, 250, 0.6);
+  border-bottom-color: rgba(167, 139, 250, 0.6) !important;
 }
 
 .container input::placeholder {
@@ -600,13 +573,7 @@
   .container {
     backdrop-filter: blur(30px) saturate(180%);
     -webkit-backdrop-filter: blur(30px) saturate(180%);
-  }
-  
-  .container:hover {
-    box-shadow: 
-      var(--shadow-lg),
-      0 0 40px rgba(167, 139, 250, 0.1),
-      inset 0 1px 1px rgba(255, 255, 255, 0.15);
+    margin:10px auto;
   }
 }
 

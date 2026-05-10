@@ -1024,24 +1024,6 @@ html {
   gap: 16px;
 }
 
-.contact-form input,
-.contact-form textarea {
-  padding: 12px 16px;
-  border-radius: 16px;
-  border: 1.5px solid #ffc0cb;
-  outline: none;
-  font-family: inherit;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.9);
-}
-
-.contact-form input:focus,
-.contact-form textarea:focus {
-  border-color: #ff4d8d;
-  box-shadow: 0 0 0 3px rgba(255, 77, 141, 0.1);
-  transform: translateY(-2px);
-}
 
 .contact-form textarea {
   min-height: 100px;
