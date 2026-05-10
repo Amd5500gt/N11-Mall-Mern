@@ -1713,7 +1713,7 @@ html {
 
   backdrop-filter:blur(4px);
 
-  z-index:999999;
+  z-index:9999;
 
   display:flex;
   justify-content:center;

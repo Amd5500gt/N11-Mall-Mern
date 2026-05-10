@@ -78,6 +78,7 @@ const App = () => {
         toastOptions={{
           duration: 2500,
           style: {
+            zIndex:"99999",
             background: '#1e293b',   // dark modern bg
             color: '#fff',
             borderRadius: '10px',
