@@ -163,13 +163,6 @@ body.dark-mode .logo-text {
   background-clip: text;
 }
 
-.logo-highlight {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
 /* ==================== SEARCH ==================== */
 .search-box {
   position: relative;
