@@ -23,14 +23,7 @@ import "./changepass.css";
 const ChangePassword =
 () => {
 
-  /* PASSWORD VISIBILITY */
-
-  const [
-
-    showOldPassword,
-    setShowOldPassword
-
-  ] = useState(false);
+  /* VISIBILITY */
 
   const [
 
@@ -59,13 +52,12 @@ const ChangePassword =
     setFormData
   ] = useState({
 
-    oldPassword:"",
     newPassword:"",
     confirmPassword:""
 
   });
 
-  /* INPUT CHANGE */
+  /* INPUT */
 
   const handleChange =
   (e) => {
@@ -91,8 +83,6 @@ const ChangePassword =
     /* VALIDATION */
 
     if (
-
-      !formData.oldPassword ||
 
       !formData.newPassword ||
 
@@ -140,9 +130,6 @@ const ChangePassword =
         "/user/change-password",
         {
 
-          oldPassword:
-          formData.oldPassword,
-
           newPassword:
           formData.newPassword
 
@@ -164,11 +151,20 @@ const ChangePassword =
 
       setFormData({
 
-        oldPassword:"",
         newPassword:"",
         confirmPassword:""
 
       });
+
+      /* REDIRECT */
+
+      setTimeout(() => {
+
+        window.location.replace(
+          "/profile"
+        );
+
+      }, 1200);
 
     }
 
@@ -218,14 +214,14 @@ const ChangePassword =
 
           <h2>
 
-            Change Password
+            Create New Password
 
           </h2>
 
           <p>
 
-            Secure your account
-            with a strong password
+            Enter a secure password
+            for your account
 
           </p>
 
@@ -243,75 +239,6 @@ const ChangePassword =
           }
 
         >
-
-          {/* OLD PASSWORD */}
-
-          <div className=
-          "input-group">
-
-            <label>
-
-              Current Password
-
-            </label>
-
-            <div className=
-            "password-input-box">
-
-              <input
-
-                type={
-                  showOldPassword
-                  ? "text"
-                  : "password"
-                }
-
-                name=
-                "oldPassword"
-
-                autoComplete=
-                "current-password"
-
-                placeholder=
-                "Enter current password"
-
-                value={
-                  formData.oldPassword
-                }
-
-                onChange={
-                  handleChange
-                }
-
-              />
-
-              <button
-
-                type="button"
-
-                onClick={() =>
-
-                  setShowOldPassword(
-                    !showOldPassword
-                  )
-
-                }
-
-              >
-
-                {
-                  showOldPassword
-
-                  ? <FaEyeSlash />
-
-                  : <FaEye />
-                }
-
-              </button>
-
-            </div>
-
-          </div>
 
           {/* NEW PASSWORD */}
 
@@ -369,11 +296,13 @@ const ChangePassword =
               >
 
                 {
+
                   showNewPassword
 
                   ? <FaEyeSlash />
 
                   : <FaEye />
+
                 }
 
               </button>
@@ -404,11 +333,11 @@ const ChangePassword =
                   : "password"
                 }
 
-                name=
-                "confirmPassword"
-
                 autoComplete=
                 "new-password"
+
+                name=
+                "confirmPassword"
 
                 placeholder=
                 "Confirm new password"
@@ -438,11 +367,13 @@ const ChangePassword =
               >
 
                 {
+
                   showConfirmPassword
 
                   ? <FaEyeSlash />
 
                   : <FaEye />
+
                 }
 
               </button>
@@ -451,7 +382,7 @@ const ChangePassword =
 
           </div>
 
-          {/* SUBMIT */}
+          {/* BUTTON */}
 
           <button
 
@@ -465,11 +396,13 @@ const ChangePassword =
           >
 
             {
+
               loading
 
               ? "Updating..."
 
               : "Update Password"
+
             }
 
           </button>
