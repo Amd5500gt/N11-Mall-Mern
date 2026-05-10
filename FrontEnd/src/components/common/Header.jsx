@@ -8,6 +8,7 @@ import { FaUserCircle, FaMoon, FaSun, FaChevronDown } from 'react-icons/fa';
 import ProfileDropdown from './navbar/ProfileDropdown';
 import '../components.css';
 import Cart from './navbar/Cart';
+import logo from '../../assets/images/logo.png'
 
 const Header = ({ cartCount }) => {
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
@@ -92,7 +93,7 @@ const Header = ({ cartCount }) => {
           {/* Logo */}
           <Link className="logo" to="/" onClick={() => setIsMobileMenuOpen(false)}>
             <div className="logo-icon">
-             <img src="logo.png" alt="app-logo" width={35} />
+             <img src={logo} alt="app-logo"  className="nxc-header-logo" />
             </div>
             <span className="logo-text">Nex<span className="logo-highlight">Xcart</span></span>
           </Link>
