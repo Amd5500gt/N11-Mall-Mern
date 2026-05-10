@@ -53,7 +53,7 @@ const{token} = useSearch()
                   className="nxc-header-logo"
                 />
               </div>
-              <span className="footer-logo-text">N11<span className="logo-highlight">Mall</span></span>
+              <span className="footer-logo-text">Nex<span className="logo-highlight">Xcart</span></span>
             </Link>
             <p className="footer-description">
               Best deals, best prices, every day 💸
@@ -142,7 +142,7 @@ const{token} = useSearch()
             ))}
           </div>
           <div className="footer-copyright">
-            <p>© {currentYear} N11 Mall. All rights reserved.</p>
+            <p>© {currentYear} NexXcart. All rights reserved.</p>
           </div>
         </div>
       </div>
