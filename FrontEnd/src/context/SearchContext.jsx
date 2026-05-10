@@ -132,11 +132,6 @@ export const SearchProvider =
 
     const fetchProducts =
     async () => {
-
-      apiRequest(
-
-        async () => {
-
           setLoading(true);
 
           try {
@@ -202,13 +197,7 @@ export const SearchProvider =
             setLoading(false);
 
           }
-
         }
-
-      );
-
-    };
-
     fetchProducts();
 
   }, [token]);
