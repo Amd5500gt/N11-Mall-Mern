@@ -8,12 +8,12 @@ const AddressContext = createContext()
 export const AddressProvider = ({children}) => {
 
     const [userAddress, setUserAddress] = useState({});
-    const { token } = useSearch()
+    const { token ,apiRequest } = useSearch()
 
     useEffect(() => {
         const fetchAddress = async () => {
                 try {
-               
+               apiRequest()
                     const res =await fetch(`${BASE_URL}/user/address`, {
                                 headers: {
                                     "Content-Type":

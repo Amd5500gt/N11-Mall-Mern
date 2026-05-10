@@ -15,6 +15,7 @@ createRoot(document.getElementById('root')).render(
             <AddressProvider>
             <CartProvider>  {/* Change Cart to CartProvider */}
                 <App />
+                
             </CartProvider>
             </AddressProvider>
         </SearchProvider>

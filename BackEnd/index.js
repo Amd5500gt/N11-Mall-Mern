@@ -1,6 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
+const compression = require("compression")
+
 
 
 const connectDB = require("./Models/db");
@@ -12,7 +14,7 @@ const productRouter = require("./Routers/productRouter");
 const userRouter = require("./Routers/userRouter");
 
 connectDB();
-
+app.use(compression())
 app.use(express.json());
 
 // Allowed Frontend URLs

@@ -1,149 +1,249 @@
-import React, {
+import React,{
   createContext,
   useState,
   useContext,
   useCallback,
   useEffect
-} from "react";
+}
+from "react";
 
-import { useSearch } from "./SearchContext";
+import {
+  useSearch
+}
+from "./SearchContext";
+
 import toast from "react-hot-toast";
+
 import BASE_URL from "../config/config";
 
-// Create Context
-const CartContext = createContext();
+/* CONTEXT */
 
-// Custom Hook
+const CartContext =
+createContext();
+
+/* HOOK */
+
 export const useCart = () => {
 
-  const context = useContext(CartContext);
+  const context =
+  useContext(CartContext);
 
   if (!context) {
+
     throw new Error(
       "useCart must be used within CartProvider"
     );
+
   }
 
   return context;
 
 };
 
-// Provider
-export const CartProvider = ({ children }) => {
+/* PROVIDER */
 
-  const [loading, setLoading] = useState(false);
+export const CartProvider =
+({ children }) => {
+
+  const [loading,
+    setLoading] =
+    useState(false);
 
   const {
+
     token,
     isLogged,
+
     userData,
-    setUserData
+    setUserData,
+
+    apiRequest
+
   } = useSearch();
 
-  // Cart State
-  const [addedItems, setAddedItems] = useState(
+  /* CART */
+
+  const [
+    addedItems,
+    setAddedItems
+  ] = useState(
     userData?.cart || []
   );
 
-  // Sync Cart From SearchContext
+  /* SYNC CART */
+
   useEffect(() => {
-    setAddedItems(userData?.cart || []);
+
+    setAddedItems(
+      userData?.cart || []
+    );
+
   }, [userData]);
 
-  // Cart Count
-  const cartCount = Array.isArray(addedItems)
-    ? addedItems.reduce((count, item) => {
-        return count + (item.quantity || 0);
-      }, 0)
-    : 0;
+  /* CART COUNT */
 
-  // Total Price
+  const cartCount =
+  Array.isArray(addedItems)
+
+  ? addedItems.reduce(
+      (count,item) => {
+
+        return (
+          count +
+          (item.quantity || 0)
+        );
+
+      }, 0
+    )
+
+  : 0;
+
+  /* TOTAL */
+
   const total = Number(
+
     (
       Array.isArray(addedItems)
-        ? addedItems.reduce((value, item) => {
+
+      ? addedItems.reduce(
+          (value,item) => {
+
             return (
+
               value +
+
               (item.price || 0) *
+
               (item.quantity || 0)
+
             );
-          }, 0)
-        : 0
+
+          }, 0
+        )
+
+      : 0
+
     ).toFixed(2)
+
   );
 
-  // Fetch Cart
-  const fetchCart = useCallback(async () => {
+  /* FETCH CART */
 
-    if (!isLogged || !token) {
+  const fetchCart =
+  useCallback(async () => {
+
+    if (
+      !isLogged ||
+      !token
+    ) {
 
       setAddedItems([]);
 
       setUserData((prev) => ({
         ...prev,
-        cart: []
+        cart:[]
       }));
 
       return;
+
     }
 
-    try {
+    apiRequest(
 
-      setLoading(true);
+      async () => {
 
-      const res = await fetch(
-        `${BASE_URL}/user/cart`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
+        try {
+
+          setLoading(true);
+
+          const res =
+          await fetch(
+            `${BASE_URL}/user/cart`,
+            {
+
+              headers:{
+                "Content-Type":
+                "application/json",
+
+                Authorization:
+                `Bearer ${token}`
+              }
+
+            }
+          );
+
+          if (!res.ok) {
+
+            throw new Error(
+              "Failed to fetch cart"
+            );
+
           }
-        }
-      );
 
-      if (!res.ok) {
-        throw new Error("Failed to fetch cart");
+          const data =
+          await res.json();
+
+          setAddedItems(
+            data.cart || []
+          );
+
+          /* SYNC */
+
+          setUserData((prev) => ({
+            ...prev,
+            cart:data.cart || []
+          }));
+
+        }
+
+        catch (err) {
+
+          console.error(
+            "Error fetching cart:",
+            err
+          );
+
+          setAddedItems([]);
+
+        }
+
+        finally {
+
+          setLoading(false);
+
+        }
+
       }
 
-      const data = await res.json();
+    );
 
-      setAddedItems(data.cart || []);
+  }, [
+    token,
+    isLogged,
+    setUserData,
+    apiRequest
+  ]);
 
-      // Sync SearchContext
-      setUserData((prev) => ({
-        ...prev,
-        cart: data.cart || []
-      }));
+  /* LOAD CART */
 
-    } catch (err) {
+  useEffect(() => {
 
-      console.error(
-        "Error fetching cart:",
-        err
-      );
+    if (
+      isLogged &&
+      token
+    ) {
 
-      setAddedItems([]);
-
-    } finally {
-
-      setLoading(false);
+      fetchCart();
 
     }
 
-  }, [token, isLogged, setUserData]);
-
-  // Load Cart
-  useEffect(() => {
-
-    if (isLogged && token) {
-      fetchCart();
-    } else {
+    else {
 
       setAddedItems([]);
 
       setUserData((prev) => ({
         ...prev,
-        cart: []
+        cart:[]
       }));
 
     }
@@ -155,8 +255,10 @@ export const CartProvider = ({ children }) => {
     setUserData
   ]);
 
-  // Add To Cart
-  const newCart = async (item) => {
+  /* ADD TO CART */
+
+  const newCart =
+  async (item) => {
 
     if (!isLogged) {
 
@@ -165,61 +267,84 @@ export const CartProvider = ({ children }) => {
       );
 
       return;
+
     }
 
-    try {
+    apiRequest(
 
-      const res = await fetch(
-        `${BASE_URL}/user/cart/add`,
-        {
-          method: "POST",
+      async () => {
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
+        try {
 
-          body: JSON.stringify({
-            productId: item.id
-          })
+          const res =
+          await fetch(
+            `${BASE_URL}/user/cart/add`,
+            {
+
+              method:"POST",
+
+              headers:{
+                "Content-Type":
+                "application/json",
+
+                Authorization:
+                `Bearer ${token}`
+              },
+
+              body:JSON.stringify({
+                productId:item.id
+              })
+
+            }
+          );
+
+          const data =
+          await res.json();
+
+          if (!res.ok) {
+
+            throw new Error(
+
+              data.message ||
+
+              "Failed to add to cart"
+
+            );
+
+          }
+
+          await fetchCart();
+
+          toast.success(
+            `Added ${item.title}`
+          );
+
         }
-      );
 
-      const data = await res.json();
+        catch (err) {
 
-      if (!res.ok) {
+          console.error(
+            "Error adding to cart:",
+            err
+          );
 
-        throw new Error(
-          data.message ||
-          "Failed to add to cart"
-        );
+          toast.error(
+            err.message ||
+            "Failed to add to cart"
+          );
+
+        }
 
       }
 
-      await fetchCart();
-
-      toast.success(
-        `Added ${item.title} to cart`
-      );
-
-    } catch (err) {
-
-      console.error(
-        "Error adding to cart:",
-        err
-      );
-
-      toast.error(
-        err.message ||
-        "Failed to add to cart"
-      );
-
-    }
+    );
 
   };
 
-  // Add With Quantity
-  const addWithQuantity = async (item) => {
+  /* ADD WITH QUANTITY */
+
+  const addWithQuantity =
+  async (item) => {
 
     if (!isLogged) {
 
@@ -228,182 +353,259 @@ export const CartProvider = ({ children }) => {
       );
 
       return;
+
     }
 
-    try {
+    apiRequest(
 
-      const res = await fetch(
-        `${BASE_URL}/user/cart/add`,
-        {
-          method: "POST",
+      async () => {
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
+        try {
 
-          body: JSON.stringify({
-            productId: item.id,
-            quantity: item.quantity || 1
-          })
+          const res =
+          await fetch(
+            `${BASE_URL}/user/cart/add`,
+            {
+
+              method:"POST",
+
+              headers:{
+                "Content-Type":
+                "application/json",
+
+                Authorization:
+                `Bearer ${token}`
+              },
+
+              body:JSON.stringify({
+                productId:item.id,
+                quantity:
+                item.quantity || 1
+              })
+
+            }
+          );
+
+          const data =
+          await res.json();
+
+          if (!res.ok) {
+
+            throw new Error(
+
+              data.message ||
+
+              "Failed to add to cart"
+
+            );
+
+          }
+
+          await fetchCart();
+
+          toast.success(
+            `Added ${item.title}`
+          );
+
         }
-      );
 
-      const data = await res.json();
+        catch (err) {
 
-      if (!res.ok) {
+          console.error(
+            "Error adding to cart:",
+            err
+          );
 
-        throw new Error(
-          data.message ||
-          "Failed to add to cart"
-        );
+          toast.error(
+            err.message ||
+            "Failed to add to cart"
+          );
+
+        }
 
       }
 
-      await fetchCart();
-
-      toast.success(
-        `Added ${item.title} to cart`
-      );
-
-    } catch (err) {
-
-      console.error(
-        "Error adding to cart:",
-        err
-      );
-
-      toast.error(
-        err.message ||
-        "Failed to add to cart"
-      );
-
-    }
+    );
 
   };
 
-  // Remove Cart
-  const removeCart = async (item) => {
+  /* REMOVE QUANTITY */
+
+  const removeCart =
+  async (item) => {
 
     if (!isLogged) return;
 
-    try {
+    apiRequest(
 
-      const res = await fetch(
-        `${BASE_URL}/user/cart/remove`,
-        {
-          method: "POST",
+      async () => {
 
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
+        try {
 
-          body: JSON.stringify({
-            productId: item.id
-          })
+          const res =
+          await fetch(
+            `${BASE_URL}/user/cart/remove`,
+            {
+
+              method:"POST",
+
+              headers:{
+                "Content-Type":
+                "application/json",
+
+                Authorization:
+                `Bearer ${token}`
+              },
+
+              body:JSON.stringify({
+                productId:item.id
+              })
+
+            }
+          );
+
+          const data =
+          await res.json();
+
+          if (!res.ok) {
+
+            throw new Error(
+
+              data.message ||
+
+              "Failed to remove item"
+
+            );
+
+          }
+
+          await fetchCart();
+
+          toast.success(
+            `Removed ${item.title}`
+          );
+
         }
-      );
 
-      const data = await res.json();
+        catch (err) {
 
-      if (!res.ok) {
+          console.error(
+            "Error removing item:",
+            err
+          );
 
-        throw new Error(
-          data.message ||
-          "Failed to remove from cart"
-        );
+          toast.error(
+            err.message ||
+            "Failed to remove item"
+          );
+
+        }
 
       }
 
-      await fetchCart();
-      toast.success(
-  `Removed ${item.title}`
-);
-
-    } catch (err) {
-
-      console.error(
-        "Error removing from cart:",
-        err
-      );
-
-      toast.error(
-        err.message ||
-        "Failed to remove from cart"
-      );
-
-    }
+    );
 
   };
-const deleteCart = async (item) => {
 
-  if (!isLogged) return;
+  /* DELETE ITEM */
 
-  try {
+  const deleteCart =
+  async (item) => {
 
-    const res = await fetch(
-      `${BASE_URL}/user/cart/delete`,
-      {
-        method: "POST",
+    if (!isLogged) return;
 
-        headers: {
-          "Content-Type":
-            "application/json",
+    apiRequest(
 
-          Authorization:
-            `Bearer ${token}`
-        },
+      async () => {
 
-        body: JSON.stringify({
-          productId: item.id
-        })
+        try {
+
+          const res =
+          await fetch(
+            `${BASE_URL}/user/cart/delete`,
+            {
+
+              method:"POST",
+
+              headers:{
+                "Content-Type":
+                "application/json",
+
+                Authorization:
+                `Bearer ${token}`
+              },
+
+              body:JSON.stringify({
+                productId:item.id
+              })
+
+            }
+          );
+
+          const data =
+          await res.json();
+
+          if (!res.ok) {
+
+            throw new Error(
+
+              data.message ||
+
+              "Failed to delete item"
+
+            );
+
+          }
+
+          await fetchCart();
+
+          toast.success(
+            `${item.title} removed`
+          );
+
+        }
+
+        catch (err) {
+
+          console.error(
+            "Error deleting item:",
+            err
+          );
+
+          toast.error(
+            err.message ||
+            "Failed to delete item"
+          );
+
+        }
+
       }
+
     );
 
-    const data =
-      await res.json();
+  };
 
-    if (!res.ok) {
-
-      throw new Error(
-        data.message ||
-        "Failed to delete item"
-      );
-    }
-
-    await fetchCart();
-    toast.success(
-      `${item.title} removed from cart`
-    );
-
-  } catch (err) {
-
-    console.error(
-      "Error deleting item:",
-      err
-    );
-
-    toast.error(
-      err.message ||
-      "Failed to delete item"
-    );
-  }
-};
   return (
 
     <CartContext.Provider
       value={{
+
         addedItems,
         setAddedItems,
+
         cartCount,
         total,
+
         loading,
+
         fetchCart,
+
         newCart,
         addWithQuantity,
+
         removeCart,
         deleteCart,
+
       }}
     >
 

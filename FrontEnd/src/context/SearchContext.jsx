@@ -1,129 +1,213 @@
-import React, {
+import React,{
   createContext,
   useContext,
   useEffect,
   useState,
-} from "react";
+  useRef
+}
+from "react";
 
 import toast from "react-hot-toast";
 
 import BASE_URL from "../config/config";
-import { useNavigate } from "react-router-dom";
+
+import {
+  useNavigate
+}
+from "react-router-dom";
 
 const SearchContext =
-  createContext();
+createContext();
 
 export const SearchProvider =
 ({ children }) => {
- 
+
+  const navigate =
+  useNavigate();
+
+  /* GLOBAL API */
+
+  const [apiLoading,
+    setApiLoading] =
+    useState(false);
+
+  const requestRunning =
+    useRef(false);
+
   /* PRODUCTS */
-  const navigate = useNavigate()
-  const [data, setData] =
+
+  const [data,setData] =
     useState([]);
 
-  const [filterData,
-    setFilterData] =
-    useState([]);
+  const [
+    filterData,
+    setFilterData
+  ] = useState([]);
 
   const [loading,
     setLoading] =
     useState(true);
 
-  const [total, setTotal] =
+  const [total,
+    setTotal] =
     useState(0);
 
   const limit = 12;
 
   /* SEARCH */
 
-  const [searchTerm,
-    setSearchTerm] =
-    useState("");
+  const [
+    searchTerm,
+    setSearchTerm
+  ] = useState("");
 
   /* AUTH */
 
-  const [token, setToken] =
+  const [token,
+    setToken] =
     useState(
       localStorage.getItem(
         "jwtToken"
       ) || null
     );
 
-  const isLogged = !!token;
+  const isLogged =
+    !!token;
 
   /* USER */
 
-  const [userData,
-    setUserData] =
-    useState({
-      name: "",
-      email: "",
-      picture: "",
-      address: [],
-      cart: [],
-    });
+  const [
+    userData,
+    setUserData
+  ] = useState({
+    name:"",
+    email:"",
+    picture:"",
+    address:[],
+    cart:[]
+  });
+
+  /* API REQUEST */
+
+  const apiRequest =
+  async (callback) => {
+
+    // BLOCK MULTIPLE REQUESTS
+
+    if (
+      requestRunning.current
+    ) return;
+
+    try {
+
+      requestRunning.current =
+        true;
+
+      setApiLoading(true);
+
+      await callback();
+
+    }
+
+    catch (err) {
+
+      console.log(err);
+
+    }
+
+    finally {
+
+      setApiLoading(false);
+
+      requestRunning.current =
+        false;
+
+    }
+
+  };
 
   /* FETCH PRODUCTS */
 
   useEffect(() => {
 
     const fetchProducts =
-      async () => {
+    async () => {
 
-        setLoading(true);
+      apiRequest(
 
-        try {
+        async () => {
 
-          const url = token
-            ? `${BASE_URL}/products`
-            : `${BASE_URL}/products/demo`;
+          setLoading(true);
 
-          const response =
-            await fetch(url, {
-              headers: token
+          try {
+
+            const url =
+              token
+              ? `${BASE_URL}/products`
+              : `${BASE_URL}/products/demo`;
+
+            const response =
+              await fetch(url,{
+
+                headers: token
                 ? {
                     Authorization:
-                      `Bearer ${token}`,
+                    `Bearer ${token}`
                   }
                 : {},
-            });
 
-          if (!response.ok) {
-            throw new Error(
-              "Failed to fetch products"
+              });
+
+            if (
+              !response.ok
+            ) {
+
+              throw new Error(
+                "Failed to fetch products"
+              );
+
+            }
+
+            const json =
+              await response.json();
+
+            setData(
+              json.products || []
             );
+
+            setFilterData(
+              json.products || []
+            );
+
+            setTotal(
+              json.total || 0
+            );
+
           }
 
-          const json =
-            await response.json();
+          catch (err) {
 
-          setData(
-            json.products || []
-          );
+            console.log(err);
 
-          setFilterData(
-            json.products || []
-          );
+            setData([]);
 
-          setTotal(
-            json.total || 0
-          );
+            setFilterData([]);
 
-        } catch (err) {
+            setTotal(0);
 
-          console.log(err);
+          }
 
-          setData([]);
+          finally {
 
-          setFilterData([]);
+            setLoading(false);
 
-          setTotal(0);
+          }
 
-        } finally {
-
-          setLoading(false);
         }
-      };
+
+      );
+
+    };
 
     fetchProducts();
 
@@ -134,14 +218,15 @@ export const SearchProvider =
   useEffect(() => {
 
     const handleStorage =
-      () => {
+    () => {
 
-        setToken(
-          localStorage.getItem(
-            "jwtToken"
-          )
-        );
-      };
+      setToken(
+        localStorage.getItem(
+          "jwtToken"
+        )
+      );
+
+    };
 
     window.addEventListener(
       "storage",
@@ -154,6 +239,7 @@ export const SearchProvider =
         "storage",
         handleStorage
       );
+
     };
 
   }, []);
@@ -167,20 +253,20 @@ export const SearchProvider =
     try {
 
       const user =
-        JSON.parse(
-          localStorage.getItem(
-            "loggedInUser"
-          )
-        );
+      JSON.parse(
+        localStorage.getItem(
+          "loggedInUser"
+        )
+      );
 
       if (user) {
 
         setUserData(user);
 
         const welcomeShown =
-          localStorage.getItem(
-            "welcomeToastShown"
-          );
+        localStorage.getItem(
+          "welcomeToastShown"
+        );
 
         if (
           welcomeShown !== "true"
@@ -194,12 +280,17 @@ export const SearchProvider =
             "welcomeToastShown",
             "true"
           );
+
         }
+
       }
 
-    } catch (err) {
+    }
+
+    catch (err) {
 
       console.log(err);
+
     }
 
   }, [token]);
@@ -215,56 +306,62 @@ export const SearchProvider =
       setFilterData(data);
 
       return;
+
     }
 
     const filtered =
-      data.filter((item) =>
-        item.title
-          ?.toLowerCase()
-          .includes(
-            searchTerm.toLowerCase()
-          )
-      );
+    data.filter((item) =>
+
+      item.title
+      ?.toLowerCase()
+      .includes(
+        searchTerm.toLowerCase()
+      )
+
+    );
 
     setFilterData(filtered);
 
-  }, [searchTerm, data]);
+  }, [searchTerm,data]);
 
   /* LOGOUT */
 
   const handleLogout =
-    () => {
+  () => {
 
-      localStorage.removeItem(
-        "jwtToken"
-      );
+    localStorage.removeItem(
+      "jwtToken"
+    );
 
-      localStorage.removeItem(
-        "loggedInUser"
-      );
+    localStorage.removeItem(
+      "loggedInUser"
+    );
 
-      localStorage.removeItem(
-        "welcomeToastShown"
-      );
+    localStorage.removeItem(
+      "welcomeToastShown"
+    );
 
-      setToken(null);
+    setToken(null);
 
-      setUserData({
-        name: "",
-        email: "",
-        picture: "",
-        address: [],
-        cart: [],
-      });
+    setUserData({
+      name:"",
+      email:"",
+      picture:"",
+      address:[],
+      cart:[]
+    });
 
-      toast.success(
-        "Logged out successfully"
-      );
-     setTimeout(() => {
-      navigate("/auth")
-     }, 1500);
-      
-    };
+    toast.success(
+      "Logged out successfully"
+    );
+
+    setTimeout(() => {
+
+      navigate("/auth");
+
+    }, 1500);
+
+  };
 
   return (
 
@@ -300,6 +397,11 @@ export const SearchProvider =
         userData,
         setUserData,
 
+        /* API */
+
+        apiLoading,
+        apiRequest,
+
         /* LOGOUT */
 
         handleLogout,
@@ -308,9 +410,31 @@ export const SearchProvider =
 
       {children}
 
+      {
+        apiLoading && (
+
+          <div className="nxc-global-loading">
+
+            <div className="nxc-loading-box">
+
+              <div className="nxc-spinner"></div>
+
+              <p>
+                Please wait...
+              </p>
+
+            </div>
+
+          </div>
+
+        )
+      }
+
     </SearchContext.Provider>
+
   );
+
 };
 
 export const useSearch =
-  () => useContext(SearchContext);
+() => useContext(SearchContext);
