@@ -1557,9 +1557,6 @@ img{
 .nxc-header-logo{
   width:35px;
   height:35px;
-
-  object-fit:contain;
-
   display:block;
 
   flex-shrink:0;
