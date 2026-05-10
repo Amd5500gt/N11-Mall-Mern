@@ -134,14 +134,8 @@ body.dark-mode .n11-header.scrolled {
 }
 
 .logo-icon {
-  color: var(--primary);
   display: flex;
   align-items: center;
-}
-
-.logo-icon svg {
-  width: 28px;
-  height: 28px;
 }
 
 .logo-text {
@@ -1214,11 +1208,6 @@ body {
     flex-shrink: 0;
   }
 
-  .logo-icon svg{
-    width: 24px;
-    height: 24px;
-  }
-
   .logo-text{
     font-size: 1.3rem;
     white-space: nowrap;
@@ -1462,12 +1451,6 @@ body {
   .logo{
     max-width: 95px;
   }
-
-  .logo-icon svg{
-    width: 20px;
-    height: 20px;
-  }
-
   /* SEARCH */
 
   .search-box{

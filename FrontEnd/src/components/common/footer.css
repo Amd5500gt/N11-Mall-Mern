@@ -66,18 +66,10 @@
 .logo-icon{
   width:42px;
   height:42px;
-
   border-radius:14px;
-
   display:flex;
   justify-content:center;
   align-items:center;
-
-  color:#16a34a;
-
-  background:#f0fdf4;
-
-  border:1px solid #dcfce7;
 }
 
 .footer-logo-text{
