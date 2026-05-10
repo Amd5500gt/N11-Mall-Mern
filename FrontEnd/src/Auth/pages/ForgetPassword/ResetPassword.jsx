@@ -3,7 +3,6 @@ import BASE_URL from '../../../config/config'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import "./resetpassword.css"
-import './ResetPassword.css'
 import Spinner from '../../../components/ui/Spinner'
 
 const ResetPassword = ({ email }) => {
