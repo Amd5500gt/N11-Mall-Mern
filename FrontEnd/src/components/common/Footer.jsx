@@ -4,13 +4,14 @@ import { FiInstagram, FiGithub, FiTwitter, FiMail, FiMapPin, FiPhone } from 'rea
 import { BsSuitcase2 } from 'react-icons/bs';
 import './footer.css';
 import logo from '../../assets/images/logo.png'
+import { useSearch } from '../../context/SearchContext';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const currentYear = new Date().getFullYear();
   const location = useLocation();
-
+const{token} = useSearch()
   const handleSubscribe = (e) => {
     e.preventDefault();
     if (email) {
@@ -35,6 +36,9 @@ const Footer = () => {
   ];
 
   return (
+    <>
+    {
+      token && (
     <footer className="n11-footer">
       <div className="footer-container">
         {/* Main Footer Content */}
@@ -156,6 +160,8 @@ const Footer = () => {
           </button>
         )}
     </footer>
+      )}
+    </>
   );
 };
 

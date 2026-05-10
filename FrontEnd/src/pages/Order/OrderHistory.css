@@ -285,7 +285,7 @@
 
 @media (max-width: 768px) {
   .orders-container {
-    padding: 1rem;
+    padding: 1rem 3rem;
   }
   
   .order-footer {

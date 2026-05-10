@@ -1,395 +1,487 @@
-import React, {
-    useState
-} from "react";
+import React,{
+  useState
+}
+from "react";
 
 import {
-    FaEye,
-    FaEyeSlash,
-    FaLock
-} from "react-icons/fa";
 
-import toast from "react-hot-toast";
+  FaEye,
+  FaEyeSlash,
+  FaLock
 
-import {
-    useSearch
-} from "../../../../context/SearchContext";
+}
+from "react-icons/fa";
 
-import BASE_URL from "../../../../config/config";
+import toast
+from "react-hot-toast";
+
+import api
+from "../../../../utils/Api";
 
 import "./changepass.css";
 
-const ChangePassword = () => {
+const ChangePassword =
+() => {
 
-    const { token } =
-        useSearch();
+  /* PASSWORD VISIBILITY */
 
-    const [showOldPassword,
-        setShowOldPassword] =
-        useState(false);
+  const [
 
-    const [showNewPassword,
-        setShowNewPassword] =
-        useState(false);
+    showOldPassword,
+    setShowOldPassword
 
-    const [showConfirmPassword,
-        setShowConfirmPassword] =
-        useState(false);
+  ] = useState(false);
 
-    const [loading,
-        setLoading] =
-        useState(false);
+  const [
 
-    const [formData,
-        setFormData] =
-        useState({
+    showNewPassword,
+    setShowNewPassword
 
-            oldPassword: "",
+  ] = useState(false);
 
-            newPassword: "",
+  const [
 
-            confirmPassword: ""
+    showConfirmPassword,
+    setShowConfirmPassword
 
-        });
+  ] = useState(false);
 
-    /* HANDLE CHANGE */
+  /* LOADING */
 
-    const handleChange = (e) => {
+  const [loading,
+    setLoading] =
+    useState(false);
 
-        setFormData({
+  /* FORM */
 
-            ...formData,
+  const [
+    formData,
+    setFormData
+  ] = useState({
 
-            [e.target.name]:
-                e.target.value
+    oldPassword:"",
+    newPassword:"",
+    confirmPassword:""
 
-        });
-    };
+  });
 
-    /* SUBMIT */
+  /* INPUT CHANGE */
 
-    const handleSubmit =
-        async (e) => {
+  const handleChange =
+  (e) => {
 
-            e.preventDefault();
+    setFormData({
 
-            if (
-                !formData.oldPassword ||
-                !formData.newPassword ||
-                !formData.confirmPassword
-            ) {
+      ...formData,
 
-                toast.error(
-                    "All fields are required"
-                );
+      [e.target.name]:
+      e.target.value
 
-                return;
-            }
+    });
 
-            if (
-                formData.newPassword.length < 6
-            ) {
+  };
 
-                toast.error(
-                    "Password must be at least 6 characters"
-                );
+  /* SUBMIT */
 
-                return;
-            }
+  const handleSubmit =
+  async (e) => {
 
-            if (
-                formData.newPassword !==
-                formData.confirmPassword
-            ) {
+    e.preventDefault();
 
-                toast.error(
-                    "Passwords do not match"
-                );
+    /* VALIDATION */
 
-                return;
-            }
+    if (
 
-            try {
+      !formData.oldPassword ||
 
-                setLoading(true);
+      !formData.newPassword ||
 
-                const res =
-                    await fetch(
-                        `${BASE_URL}/user/change-password`,
-                        {
-                            method: "PUT",
+      !formData.confirmPassword
 
-                            headers: {
+    ) {
 
-                                "Content-Type":
-                                    "application/json",
+      return toast.error(
+        "All fields are required"
+      );
 
-                                Authorization:
-                                    `Bearer ${token}`
-                            },
+    }
 
-                            body: JSON.stringify({
+    if (
+      formData.newPassword
+      .length < 6
+    ) {
 
-                                oldPassword:
-                                    formData.oldPassword,
+      return toast.error(
+        "Password must be at least 6 characters"
+      );
 
-                                newPassword:
-                                    formData.newPassword
+    }
 
-                            })
-                        }
-                    );
+    if (
 
-                const data =
-                    await res.json();
+      formData.newPassword !==
 
-                if (!res.ok) {
+      formData.confirmPassword
 
-                    toast.error(
-                        data.message ||
-                        "Failed to change password"
-                    );
+    ) {
 
-                    return;
+      return toast.error(
+        "Passwords do not match"
+      );
+
+    }
+
+    try {
+
+      setLoading(true);
+
+      const res =
+      await api.put(
+        "/user/change-password",
+        {
+
+          oldPassword:
+          formData.oldPassword,
+
+          newPassword:
+          formData.newPassword
+
+        }
+      );
+
+      const data =
+      res.data;
+
+      toast.success(
+
+        data.message ||
+
+        "Password updated"
+
+      );
+
+      /* RESET */
+
+      setFormData({
+
+        oldPassword:"",
+        newPassword:"",
+        confirmPassword:""
+
+      });
+
+    }
+
+    catch (err) {
+
+      console.log(err);
+
+      toast.error(
+
+        err.response?.data?.message ||
+
+        err.message ||
+
+        "Failed to change password"
+
+      );
+
+    }
+
+    finally {
+
+      setLoading(false);
+
+    }
+
+  };
+
+  return (
+
+    <div className=
+    "change-password-container">
+
+      <div className=
+      "password-card">
+
+        {/* TOP */}
+
+        <div className=
+        "password-top">
+
+          <div className=
+          "icon-box">
+
+            <FaLock />
+
+          </div>
+
+          <h2>
+
+            Change Password
+
+          </h2>
+
+          <p>
+
+            Secure your account
+            with a strong password
+
+          </p>
+
+        </div>
+
+        {/* FORM */}
+
+        <form
+
+          className=
+          "password-form"
+
+          onSubmit={
+            handleSubmit
+          }
+
+        >
+
+          {/* OLD PASSWORD */}
+
+          <div className=
+          "input-group">
+
+            <label>
+
+              Current Password
+
+            </label>
+
+            <div className=
+            "password-input-box">
+
+              <input
+
+                type={
+                  showOldPassword
+                  ? "text"
+                  : "password"
                 }
 
-                toast.success(
-                    data.message ||
-                    "Password updated successfully"
-                );
+                name=
+                "oldPassword"
 
-                setFormData({
+                autoComplete=
+                "current-password"
 
-                    oldPassword: "",
+                placeholder=
+                "Enter current password"
 
-                    newPassword: "",
+                value={
+                  formData.oldPassword
+                }
 
-                    confirmPassword: ""
+                onChange={
+                  handleChange
+                }
 
-                });
+              />
 
-            } catch (err) {
+              <button
 
-                console.log(err);
+                type="button"
 
-                toast.error(
-                    "Something went wrong"
-                );
+                onClick={() =>
 
-            } finally {
+                  setShowOldPassword(
+                    !showOldPassword
+                  )
 
-                setLoading(false);
-            }
-        };
+                }
 
-    return (
+              >
 
-        <div className="change-password-container">
+                {
+                  showOldPassword
 
-            <div className=" password-card">
+                  ? <FaEyeSlash />
 
-                <div className=" password-top">
+                  : <FaEye />
+                }
 
-                    <div className="icon-box">
-                        <FaLock />
-                    </div>
-
-                    <h2>
-                        Change Password
-                    </h2>
-
-                    <p>
-                        Secure your account
-                        with a strong password
-                    </p>
-
-                </div>
-
-                <form
-                    className="password-form"
-                    onSubmit={
-                        handleSubmit
-                    }
-                >
-
-                    {/* OLD PASSWORD */}
-
-                    <div className="input-group">
-
-                        <label>
-                            Current Password
-                        </label>
-
-                        <div className="password-input-box">
-
-                            <input
-                                type={
-                                    showOldPassword
-                                        ? "text"
-                                        : "password"
-                                }
-
-                                name="oldPassword"
-                                autoComplete="password"
-                                placeholder="Enter current password"
-
-                                value={
-                                    formData.oldPassword
-                                }
-
-                                onChange={
-                                    handleChange
-                                }
-                            />
-
-                            <button
-                                type="button"
-
-                                onClick={() =>
-                                    setShowOldPassword(
-                                        !showOldPassword
-                                    )
-                                }
-                            >
-
-                                {
-                                    showOldPassword
-                                        ? <FaEyeSlash />
-                                        : <FaEye />
-                                }
-
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                    {/* NEW PASSWORD */}
-
-                    <div className="input-group">
-
-                        <label>
-                            New Password
-                        </label>
-
-                        <div className="password-input-box">
-
-                            <input
-                                type={
-                                    showNewPassword
-                                        ? "text"
-                                        : "password"
-                                }
-                                autoComplete="password"
-                                name="newPassword"
-
-                                placeholder="Enter new password"
-
-                                value={
-                                    formData.newPassword
-                                }
-
-                                onChange={
-                                    handleChange
-                                }
-                            />
-
-                            <button
-                                type="button"
-
-                                onClick={() =>
-                                    setShowNewPassword(
-                                        !showNewPassword
-                                    )
-                                }
-                            >
-
-                                {
-                                    showNewPassword
-                                        ? <FaEyeSlash />
-                                        : <FaEye />
-                                }
-
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                    {/* CONFIRM PASSWORD */}
-
-                    <div className="input-group">
-
-                        <label>
-                            Confirm Password
-                        </label>
-
-                        <div className="password-input-box">
-
-                            <input
-                                type={
-                                    showConfirmPassword
-                                        ? "text"
-                                        : "password"
-                                }
-
-                                name="confirmPassword"
-                                autoComplete="password"
-
-                                placeholder="Confirm new password"
-
-                                value={
-                                    formData.confirmPassword
-                                }
-
-                                onChange={
-                                    handleChange
-                                }
-                            />
-
-                            <button
-                                type="button"
-
-                                onClick={() =>
-                                    setShowConfirmPassword(
-                                        !showConfirmPassword
-                                    )
-                                }
-                            >
-
-                                {
-                                    showConfirmPassword
-                                        ? <FaEyeSlash />
-                                        : <FaEye />
-                                }
-
-                            </button>
-
-                        </div>
-
-                    </div>
-
-                    <button
-                        type="submit"
-
-                        className="update-password-btn"
-
-                        disabled={loading}
-                    >
-
-                        {
-                            loading
-                                ? "Updating..."
-                                : "Update Password"
-                        }
-
-                    </button>
-
-                </form>
+              </button>
 
             </div>
 
-        </div>
-    );
+          </div>
+
+          {/* NEW PASSWORD */}
+
+          <div className=
+          "input-group">
+
+            <label>
+
+              New Password
+
+            </label>
+
+            <div className=
+            "password-input-box">
+
+              <input
+
+                type={
+                  showNewPassword
+                  ? "text"
+                  : "password"
+                }
+
+                autoComplete=
+                "new-password"
+
+                name=
+                "newPassword"
+
+                placeholder=
+                "Enter new password"
+
+                value={
+                  formData.newPassword
+                }
+
+                onChange={
+                  handleChange
+                }
+
+              />
+
+              <button
+
+                type="button"
+
+                onClick={() =>
+
+                  setShowNewPassword(
+                    !showNewPassword
+                  )
+
+                }
+
+              >
+
+                {
+                  showNewPassword
+
+                  ? <FaEyeSlash />
+
+                  : <FaEye />
+                }
+
+              </button>
+
+            </div>
+
+          </div>
+
+          {/* CONFIRM */}
+
+          <div className=
+          "input-group">
+
+            <label>
+
+              Confirm Password
+
+            </label>
+
+            <div className=
+            "password-input-box">
+
+              <input
+
+                type={
+                  showConfirmPassword
+                  ? "text"
+                  : "password"
+                }
+
+                name=
+                "confirmPassword"
+
+                autoComplete=
+                "new-password"
+
+                placeholder=
+                "Confirm new password"
+
+                value={
+                  formData.confirmPassword
+                }
+
+                onChange={
+                  handleChange
+                }
+
+              />
+
+              <button
+
+                type="button"
+
+                onClick={() =>
+
+                  setShowConfirmPassword(
+                    !showConfirmPassword
+                  )
+
+                }
+
+              >
+
+                {
+                  showConfirmPassword
+
+                  ? <FaEyeSlash />
+
+                  : <FaEye />
+                }
+
+              </button>
+
+            </div>
+
+          </div>
+
+          {/* SUBMIT */}
+
+          <button
+
+            type="submit"
+
+            className=
+            "update-password-btn"
+
+            disabled={loading}
+
+          >
+
+            {
+              loading
+
+              ? "Updating..."
+
+              : "Update Password"
+            }
+
+          </button>
+
+        </form>
+
+      </div>
+
+    </div>
+
+  );
+
 };
 
 export default ChangePassword;

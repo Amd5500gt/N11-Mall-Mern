@@ -7,14 +7,16 @@ import React,{
 }
 from "react";
 
+import api
+from "../utils/Api";
+
 import {
   useSearch
 }
 from "./SearchContext";
 
-import toast from "react-hot-toast";
-
-import BASE_URL from "../config/config";
+import toast
+from "react-hot-toast";
 
 /* CONTEXT */
 
@@ -23,7 +25,8 @@ createContext();
 
 /* HOOK */
 
-export const useCart = () => {
+export const useCart =
+() => {
 
   const context =
   useContext(CartContext);
@@ -55,9 +58,7 @@ export const CartProvider =
     isLogged,
 
     userData,
-    setUserData,
-
-    apiRequest
+    setUserData
 
   } = useSearch();
 
@@ -70,7 +71,7 @@ export const CartProvider =
     userData?.cart || []
   );
 
-  /* SYNC CART */
+  /* SYNC */
 
   useEffect(() => {
 
@@ -148,80 +149,52 @@ export const CartProvider =
 
     }
 
-    apiRequest(
+    try {
 
-      async () => {
+      setLoading(true);
 
-        try {
+      const res =
+      await api.get(
+        "/user/cart"
+      );
 
-          setLoading(true);
+      const data =
+      res.data;
 
-          const res =
-          await fetch(
-            `${BASE_URL}/user/cart`,
-            {
+      setAddedItems(
+        data.cart || []
+      );
 
-              headers:{
-                "Content-Type":
-                "application/json",
+      /* SYNC */
 
-                Authorization:
-                `Bearer ${token}`
-              }
+      setUserData((prev) => ({
+        ...prev,
+        cart:data.cart || []
+      }));
 
-            }
-          );
+    }
 
-          if (!res.ok) {
+    catch (err) {
 
-            throw new Error(
-              "Failed to fetch cart"
-            );
+      console.error(
+        "Error fetching cart:",
+        err
+      );
 
-          }
+      setAddedItems([]);
 
-          const data =
-          await res.json();
+    }
 
-          setAddedItems(
-            data.cart || []
-          );
+    finally {
 
-          /* SYNC */
+      setLoading(false);
 
-          setUserData((prev) => ({
-            ...prev,
-            cart:data.cart || []
-          }));
-
-        }
-
-        catch (err) {
-
-          console.error(
-            "Error fetching cart:",
-            err
-          );
-
-          setAddedItems([]);
-
-        }
-
-        finally {
-
-          setLoading(false);
-
-        }
-
-      }
-
-    );
+    }
 
   }, [
     token,
     isLogged,
-    setUserData,
-    apiRequest
+    setUserData
   ]);
 
   /* LOAD CART */
@@ -270,74 +243,41 @@ export const CartProvider =
 
     }
 
-    apiRequest(
+    try {
 
-      async () => {
-
-        try {
-
-          const res =
-          await fetch(
-            `${BASE_URL}/user/cart/add`,
-            {
-
-              method:"POST",
-
-              headers:{
-                "Content-Type":
-                "application/json",
-
-                Authorization:
-                `Bearer ${token}`
-              },
-
-              body:JSON.stringify({
-                productId:item.id
-              })
-
-            }
-          );
-
-          const data =
-          await res.json();
-
-          if (!res.ok) {
-
-            throw new Error(
-
-              data.message ||
-
-              "Failed to add to cart"
-
-            );
-
-          }
-
-          await fetchCart();
-
-          toast.success(
-            `Added ${item.title}`
-          );
-
+      await api.post(
+        "/user/cart/add",
+        {
+          productId:item.id
         }
+      );
 
-        catch (err) {
+      await fetchCart();
 
-          console.error(
-            "Error adding to cart:",
-            err
-          );
+      toast.success(
+        `Added ${item.title}`
+      );
 
-          toast.error(
-            err.message ||
-            "Failed to add to cart"
-          );
+    }
 
-        }
+    catch (err) {
 
-      }
+      console.error(
+        "Error adding to cart:",
+        err
+      );
 
-    );
+      toast.error(
+
+        err.response?.data?.message ||
+
+        err.message ||
+
+        "Failed to add to cart"
+
+      );
+
+    }
 
   };
 
@@ -356,76 +296,43 @@ export const CartProvider =
 
     }
 
-    apiRequest(
+    try {
 
-      async () => {
-
-        try {
-
-          const res =
-          await fetch(
-            `${BASE_URL}/user/cart/add`,
-            {
-
-              method:"POST",
-
-              headers:{
-                "Content-Type":
-                "application/json",
-
-                Authorization:
-                `Bearer ${token}`
-              },
-
-              body:JSON.stringify({
-                productId:item.id,
-                quantity:
-                item.quantity || 1
-              })
-
-            }
-          );
-
-          const data =
-          await res.json();
-
-          if (!res.ok) {
-
-            throw new Error(
-
-              data.message ||
-
-              "Failed to add to cart"
-
-            );
-
-          }
-
-          await fetchCart();
-
-          toast.success(
-            `Added ${item.title}`
-          );
-
+      await api.post(
+        "/user/cart/add",
+        {
+          productId:item.id,
+          quantity:
+          item.quantity || 1
         }
+      );
 
-        catch (err) {
+      await fetchCart();
 
-          console.error(
-            "Error adding to cart:",
-            err
-          );
+      toast.success(
+        `Added ${item.title}`
+      );
 
-          toast.error(
-            err.message ||
-            "Failed to add to cart"
-          );
+    }
 
-        }
+    catch (err) {
 
-      }
+      console.error(
+        "Error adding to cart:",
+        err
+      );
 
-    );
+      toast.error(
+
+        err.response?.data?.message ||
+
+        err.message ||
+
+        "Failed to add to cart"
+
+      );
+
+    }
 
   };
 
@@ -436,74 +343,41 @@ export const CartProvider =
 
     if (!isLogged) return;
 
-    apiRequest(
+    try {
 
-      async () => {
-
-        try {
-
-          const res =
-          await fetch(
-            `${BASE_URL}/user/cart/remove`,
-            {
-
-              method:"POST",
-
-              headers:{
-                "Content-Type":
-                "application/json",
-
-                Authorization:
-                `Bearer ${token}`
-              },
-
-              body:JSON.stringify({
-                productId:item.id
-              })
-
-            }
-          );
-
-          const data =
-          await res.json();
-
-          if (!res.ok) {
-
-            throw new Error(
-
-              data.message ||
-
-              "Failed to remove item"
-
-            );
-
-          }
-
-          await fetchCart();
-
-          toast.success(
-            `Removed ${item.title}`
-          );
-
+      await api.post(
+        "/user/cart/remove",
+        {
+          productId:item.id
         }
+      );
 
-        catch (err) {
+      await fetchCart();
 
-          console.error(
-            "Error removing item:",
-            err
-          );
+      toast.success(
+        `Removed ${item.title}`
+      );
 
-          toast.error(
-            err.message ||
-            "Failed to remove item"
-          );
+    }
 
-        }
+    catch (err) {
 
-      }
+      console.error(
+        "Error removing item:",
+        err
+      );
 
-    );
+      toast.error(
+
+        err.response?.data?.message ||
+
+        err.message ||
+
+        "Failed to remove item"
+
+      );
+
+    }
 
   };
 
@@ -514,74 +388,41 @@ export const CartProvider =
 
     if (!isLogged) return;
 
-    apiRequest(
+    try {
 
-      async () => {
-
-        try {
-
-          const res =
-          await fetch(
-            `${BASE_URL}/user/cart/delete`,
-            {
-
-              method:"POST",
-
-              headers:{
-                "Content-Type":
-                "application/json",
-
-                Authorization:
-                `Bearer ${token}`
-              },
-
-              body:JSON.stringify({
-                productId:item.id
-              })
-
-            }
-          );
-
-          const data =
-          await res.json();
-
-          if (!res.ok) {
-
-            throw new Error(
-
-              data.message ||
-
-              "Failed to delete item"
-
-            );
-
-          }
-
-          await fetchCart();
-
-          toast.success(
-            `${item.title} removed`
-          );
-
+      await api.post(
+        "/user/cart/delete",
+        {
+          productId:item.id
         }
+      );
 
-        catch (err) {
+      await fetchCart();
 
-          console.error(
-            "Error deleting item:",
-            err
-          );
+      toast.success(
+        `${item.title} removed`
+      );
 
-          toast.error(
-            err.message ||
-            "Failed to delete item"
-          );
+    }
 
-        }
+    catch (err) {
 
-      }
+      console.error(
+        "Error deleting item:",
+        err
+      );
 
-    );
+      toast.error(
+
+        err.response?.data?.message ||
+
+        err.message ||
+
+        "Failed to delete item"
+
+      );
+
+    }
 
   };
 

@@ -93,7 +93,7 @@ const Header = ({ cartCount }) => {
           {/* Logo */}
           <Link className="logo" to="/" onClick={() => setIsMobileMenuOpen(false)}>
             <div className="logo-icon">
-             <img src={logo} alt="app-logo"  className="nxc-header-logo" />
+             <img src={logo} alt="app-logo"  />
             </div>
             <span className="logo-text">Nex<span className="logo-highlight">Xcart</span></span>
           </Link>
@@ -180,9 +180,6 @@ const Header = ({ cartCount }) => {
           )}
         </div>
       </header>
-
-
-
 
     </>
   );

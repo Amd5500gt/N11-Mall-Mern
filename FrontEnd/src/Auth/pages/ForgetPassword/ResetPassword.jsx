@@ -1,285 +1,490 @@
-import React, { useState } from 'react'
-import BASE_URL from '../../../config/config'
-import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
-import "./resetpassword.css"
-import Spinner from '../../../components/ui/Spinner'
+import React,{
+  useState
+}
+from "react";
 
-const ResetPassword = ({ email }) => {
+import {
+  useNavigate
+}
+from "react-router-dom";
 
-  const navigate = useNavigate()
+import toast
+from "react-hot-toast";
 
-  const [otp, setOtp] = useState(["", "", "", ""])
-  const [otpVerified, setOtpVerified] = useState(false)
+import api
+from "../../../utils/Api";
 
-  const [newPassword, setNewPassword] = useState("")
-  const [confirmPassword, setConfirmPassword] = useState("")
+import Spinner
+from "../../../components/ui/Spinner";
 
-  const [loading, setLoading] = useState(false)
+import "./resetpassword.css";
 
-  // OTP CHANGE
-  const handleOtpChange = (value, index) => {
+const ResetPassword =
+({ email }) => {
 
-    if (!/^\d*$/.test(value)) return
+  const navigate =
+  useNavigate();
 
-    const updatedOtp = [...otp]
+  /* OTP */
 
-    updatedOtp[index] = value
+  const [otp,
+    setOtp] =
+    useState([
+      "",
+      "",
+      "",
+      ""
+    ]);
 
-    setOtp(updatedOtp)
+  const [
+    otpVerified,
+    setOtpVerified
+  ] = useState(false);
 
-    if (value && index < 3) {
+  /* PASSWORD */
+
+  const [
+    newPassword,
+    setNewPassword
+  ] = useState("");
+
+  const [
+    confirmPassword,
+    setConfirmPassword
+  ] = useState("");
+
+  /* LOADING */
+
+  const [loading,
+    setLoading] =
+    useState(false);
+
+  /* OTP CHANGE */
+
+  const handleOtpChange =
+  (value,index) => {
+
+    if (
+      !/^\d*$/.test(value)
+    ) return;
+
+    const updatedOtp =
+    [...otp];
+
+    updatedOtp[index] =
+    value;
+
+    setOtp(updatedOtp);
+
+    /* NEXT INPUT */
+
+    if (
+      value &&
+      index < 3
+    ) {
 
       document
-        .getElementById(`nxc-otp-${index + 1}`)
-        .focus()
+      .getElementById(
+        `nxc-otp-${index + 1}`
+      )
+      ?.focus();
 
     }
 
-  }
+  };
 
-  // VERIFY OTP
-  const handleVerifyOTP = async () => {
+  /* VERIFY OTP */
+
+  const handleVerifyOTP =
+  async () => {
+
+    const finalOtp =
+    otp.join("");
+
+    if (
+      finalOtp.length < 4
+    ) {
+
+      return toast.error(
+        "Enter valid OTP"
+      );
+
+    }
 
     try {
 
-      setLoading(true)
+      setLoading(true);
 
-      const finalOtp = otp.join("")
-
-      const res = await fetch(
-        `${BASE_URL}/auth/verify-otp`,
+      const res =
+      await api.post(
+        "/auth/verify-otp",
         {
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-            email,
-            otp: finalOtp
-          })
+          email,
+          otp:finalOtp
         }
-      )
+      );
 
-      const data = await res.json()
+      const data =
+      res.data;
 
-      setLoading(false)
+      toast.success(
 
-      if (!res.ok) {
+        data.message ||
 
-        return toast.error(
-          data.message || "Invalid OTP"
-        )
+        "OTP verified"
 
-      }
+      );
 
-      toast.success("OTP verified")
-
-      setOtpVerified(true)
+      setOtpVerified(true);
 
     }
 
     catch (err) {
 
-      setLoading(false)
+      toast.error(
 
-      toast.error(err.message)
+        err.response?.data?.message ||
+
+        err.message ||
+
+        "Invalid OTP"
+
+      );
 
     }
 
-  }
+    finally {
 
-  // RESET PASSWORD
-  const handleSubmit = async (e) => {
+      setLoading(false);
 
-    e.preventDefault()
+    }
+
+  };
+
+  /* RESET PASSWORD */
+
+  const handleSubmit =
+  async (e) => {
+
+    e.preventDefault();
+
+    if (
+      !newPassword ||
+      !confirmPassword
+    ) {
+
+      return toast.error(
+        "All fields are required"
+      );
+
+    }
+
+    if (
+      newPassword !==
+      confirmPassword
+    ) {
+
+      return toast.error(
+        "Passwords do not match"
+      );
+
+    }
+
+    if (
+      newPassword.length < 8
+    ) {
+
+      return toast.error(
+        "Password must be at least 8 characters"
+      );
+
+    }
 
     try {
 
-      if (newPassword !== confirmPassword) {
+      setLoading(true);
 
-        return toast.error(
-          "Passwords do not match"
-        )
-
-      }
-
-      setLoading(true)
-
-      const res = await fetch(
-        `${BASE_URL}/auth/reset-password`,
+      const res =
+      await api.post(
+        "/auth/reset-password",
         {
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-            email,
-            newPassword
-          })
+          email,
+          newPassword
         }
-      )
+      );
 
-      const data = await res.json()
+      const data =
+      res.data;
 
-      setLoading(false)
+      toast.success(
 
-      if (!res.ok) {
+        data.message ||
 
-        return toast.error(
-          data.message || "Reset failed"
-        )
+        "Password updated"
 
-      }
-
-      toast.success(data.message)
+      );
 
       setTimeout(() => {
 
-        navigate("/auth")
+        navigate("/auth");
 
-      }, 1500)
+      }, 1500);
 
     }
 
     catch (err) {
 
-      setLoading(false)
+      toast.error(
 
-      toast.error(err.message)
+        err.response?.data?.message ||
+
+        err.message ||
+
+        "Reset failed"
+
+      );
 
     }
 
-  }
+    finally {
+
+      setLoading(false);
+
+    }
+
+  };
+
+  /* LOADING */
 
   if (loading) {
 
-  return <Spinner />
+    return <Spinner />;
 
-}
+  }
+
   return (
 
-    <div className="nxc-reset-wrapper">
+    <div className=
+    "nxc-reset-wrapper">
 
-      <div className="nxc-reset-card">
+      <div className=
+      "nxc-reset-card">
 
-        <div className="nxc-reset-logo">
+        {/* LOGO */}
+
+        <div className=
+        "nxc-reset-logo">
+
           NexXcart
+
         </div>
 
-        <h1 className="nxc-reset-title">
+        {/* TITLE */}
+
+        <h1 className=
+        "nxc-reset-title">
+
           Reset Password
+
         </h1>
 
-        {!otpVerified && (
+        {/* OTP */}
 
-          <>
+        {
+          !otpVerified && (
 
-            <p className="nxc-reset-subtitle">
-              Enter your 4 digit OTP
-            </p>
+            <>
 
-            <div className="nxc-otp-wrapper">
+              <p className=
+              "nxc-reset-subtitle">
 
-              {otp.map((digit, index) => (
+                Enter your 4 digit OTP
+
+              </p>
+
+              <div className=
+              "nxc-otp-wrapper">
+
+                {
+                  otp.map(
+                    (digit,index) => (
+
+                      <input
+
+                        key={index}
+
+                        id=
+                        {`nxc-otp-${index}`}
+
+                        type="text"
+
+                        maxLength="1"
+
+                        value={digit}
+
+                        className=
+                        "nxc-otp-input"
+
+                        onChange={(e) =>
+
+                          handleOtpChange(
+                            e.target.value,
+                            index
+                          )
+
+                        }
+
+                      />
+
+                    )
+                  )
+                }
+
+              </div>
+
+              <button
+
+                type="button"
+
+                className=
+                "nxc-reset-btn"
+
+                onClick={
+                  handleVerifyOTP
+                }
+
+                disabled={loading}
+
+              >
+
+                Verify OTP
+
+              </button>
+
+            </>
+
+          )
+        }
+
+        {/* PASSWORD FORM */}
+
+        {
+          otpVerified && (
+
+            <form
+              onSubmit={
+                handleSubmit
+              }
+            >
+
+              {/* NEW PASSWORD */}
+
+              <div className=
+              "nxc-input-group">
+
+                <label>
+
+                  New Password
+
+                </label>
 
                 <input
-                  key={index}
-                  id={`nxc-otp-${index}`}
-                  type="text"
-                  maxLength="1"
-                  value={digit}
-                  className="nxc-otp-input"
-                  onChange={(e) =>
-                    handleOtpChange(
-                      e.target.value,
-                      index
-                    )
+
+                  type="password"
+
+                  placeholder=
+                  "Enter new password"
+
+                  autoComplete=
+                  "new-password"
+
+                  value={
+                    newPassword
                   }
+
+                  className=
+                  "nxc-reset-input"
+
+                  onChange={(e) =>
+
+                    setNewPassword(
+                      e.target.value
+                    )
+
+                  }
+
                 />
 
-              ))}
+              </div>
 
-            </div>
+              {/* CONFIRM */}
 
-            <button
-              type="button"
-              className="nxc-reset-btn"
-              onClick={handleVerifyOTP}
-              disabled={loading}
-            >
+              <div className=
+              "nxc-input-group">
 
-               Verify OTP
-            </button>
+                <label>
 
-          </>
+                  Confirm Password
 
-        )}
+                </label>
 
-        {otpVerified && (
+                <input
 
-          <form onSubmit={handleSubmit}>
+                  type="password"
 
-            <div className="nxc-input-group">
+                  placeholder=
+                  "Confirm password"
 
-              <label>
-                New Password
-              </label>
+                  autoComplete=
+                  "new-password"
 
-              <input
-                type="password"
-                placeholder="Enter new password"
-                autoComplete="new-password"
-                value={newPassword}
-                className="nxc-reset-input"
-                onChange={(e) =>
-                  setNewPassword(e.target.value)
-                }
-              />
+                  value={
+                    confirmPassword
+                  }
 
-            </div>
+                  className=
+                  "nxc-reset-input"
 
-            <div className="nxc-input-group">
+                  onChange={(e) =>
 
-              <label>
-                Confirm Password
-              </label>
+                    setConfirmPassword(
+                      e.target.value
+                    )
 
-              <input
-                type="password"
-                placeholder="Confirm password"
-                autoComplete="new-password"
-                value={confirmPassword}
-                className="nxc-reset-input"
-                onChange={(e) =>
-                  setConfirmPassword(e.target.value)
-                }
-              />
+                  }
 
-            </div>
+                />
 
-            <button
-              type="submit"
-              className="nxc-reset-btn"
-              disabled={loading}
-            >
+              </div>
 
-            Update Password
-            </button>
+              {/* SUBMIT */}
 
-          </form>
+              <button
 
-        )}
+                type="submit"
+
+                className=
+                "nxc-reset-btn"
+
+                disabled={loading}
+
+              >
+
+                Update Password
+
+              </button>
+
+            </form>
+
+          )
+        }
 
       </div>
 
     </div>
 
-  )
-}
+  );
 
-export default ResetPassword
+};
+
+export default ResetPassword;

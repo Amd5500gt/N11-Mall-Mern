@@ -1,157 +1,250 @@
-import React, { useState } from 'react'
-import BASE_URL from '../../../config/config'
-import toast from 'react-hot-toast'
+import React,{
+  useState
+}
+from "react";
 
-import Spinner from '../../../components/ui/Spinner'
-import ResetPassword from './ResetPassword'
+import toast
+from "react-hot-toast";
+
+import api
+from "../../../utils/Api";
+
+import Spinner
+from "../../../components/ui/Spinner";
+
+import ResetPassword
+from "./ResetPassword";
 
 const ForgetPassword = ({
+
   authMode,
   setAuthMode,
+
   resetForm
+
 }) => {
 
-  // SHOW ONLY WHEN MODE IS forgotPassword
-  if (authMode !== "forgotPassword") return null
+  /* SHOW ONLY */
 
-  // STATES
-  const [email, setEmail] = useState("")
-  const [loading, setLoading] = useState(false)
+  if (
+    authMode !==
+    "forgotPassword"
+  ) return null;
 
-  // SHOW RESET PASSWORD COMPONENT
-  const [showResetPassword, setShowResetPassword] =
-    useState(false)
+  /* STATES */
 
-  // SEND OTP
-  const handleForgotPassword = async (e) => {
+  const [email,
+    setEmail] =
+    useState("");
 
-    e.preventDefault()
+  const [loading,
+    setLoading] =
+    useState(false);
+
+  const [
+
+    showResetPassword,
+
+    setShowResetPassword
+
+  ] = useState(false);
+
+  /* SEND OTP */
+
+  const handleForgotPassword =
+  async (e) => {
+
+    e.preventDefault();
+
+    if (!email) {
+
+      return toast.error(
+        "Email is required"
+      );
+
+    }
 
     try {
 
-      setLoading(true)
+      setLoading(true);
 
-      const res = await fetch(
-        `${BASE_URL}/auth/send-request`,
+      const res =
+      await api.post(
+        "/auth/send-request",
         {
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-            email
-          })
+          email
         }
-      )
+      );
 
-      const data = await res.json()
+      const data =
+      res.data;
 
-      setLoading(false)
+      toast.success(
 
-      // ERROR
-      if (!res.ok) {
+        data.message ||
 
-        return toast.error(
-          data.message || "OTP send failed"
-        )
+        "OTP sent successfully"
 
-      }
+      );
 
-      // SUCCESS
-      toast.success(data.message)
+      /* OPEN RESET PAGE */
 
-      // OPEN RESET PASSWORD COMPONENT
-      setShowResetPassword(true)
+      setShowResetPassword(
+        true
+      );
 
     }
 
     catch (err) {
 
-      setLoading(false)
-
       toast.error(
-        err.message || "Something went wrong"
-      )
+
+        err.response?.data?.message ||
+
+        err.message ||
+
+        "OTP send failed"
+
+      );
 
     }
 
-  }
+    finally {
 
-  // RENDER RESET PASSWORD COMPONENT
+      setLoading(false);
+
+    }
+
+  };
+
+  /* RESET PAGE */
+
   if (showResetPassword) {
 
     return (
+
       <ResetPassword
         email={email}
       />
-    )
+
+    );
 
   }
 
   return (
 
     <form
-      onSubmit={handleForgotPassword}
+      onSubmit={
+        handleForgotPassword
+      }
+
       className="auth-form"
     >
 
-      <h1 data-text="Forgot Password">
+      <h1
+        data-text=
+        "Forgot Password"
+      >
+
         Forgot Password
+
       </h1>
 
-      <p className="forgot-password-text">
-        Enter your email address to receive OTP.
+      <p className=
+      "forgot-password-text">
+
+        Enter your email
+        to receive OTP.
+
       </p>
 
-      <div className='form-group'>
+      {/* EMAIL */}
+
+      <div className=
+      "form-group">
 
         <input
+
           type="email"
+
           name="email"
-          placeholder="Enter your email..."
+
+          placeholder=
+          "Enter your email..."
+
           autoFocus
+
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+
+          onChange={(e) =>
+            setEmail(
+              e.target.value
+            )
+          }
+
           disabled={loading}
+
         />
 
       </div>
 
+      {/* SUBMIT */}
+
       <button
+
         type="submit"
+
         disabled={loading}
-        className={loading ? 'loading' : ''}
+
+        className={
+          loading
+          ? "loading"
+          : ""
+        }
       >
 
-        {loading ? (
-          <>
+        {
+          loading
+
+          ? (
             <Spinner />
-          </>
-        ) : (
-          'Send OTP'
-        )}
+          )
+
+          : (
+            "Send OTP"
+          )
+        }
 
       </button>
 
+      {/* BACK */}
+
       <button
+
         type="button"
-        className="back-to-login-btn"
+
+        className=
+        "back-to-login-btn"
+
         onClick={() => {
 
-          setAuthMode('login')
+          setAuthMode(
+            "login"
+          );
 
-          resetForm()
+          resetForm();
 
         }}
       >
+
         Back to Login
+
       </button>
 
     </form>
 
-  )
-}
+  );
 
-export default ForgetPassword
+};
+
+export default ForgetPassword;

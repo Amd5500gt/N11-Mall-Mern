@@ -24,12 +24,6 @@ const Addresses = () => {
 
   const { token } = useSearch();
 
-  /* FETCH ADDRESS */
-
-
-
-  /* HANDLE FORM SUBMIT */
-
   const handleAddressSubmit =
   (newAddress) => {
 

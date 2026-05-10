@@ -6,9 +6,9 @@ import { BsFillCartCheckFill, BsStar, BsStarHalf, BsStarFill, BsLightningCharge 
 import ErrorPage from '../../components/ui/ErrorPage';
 import '../pages.css';
 import { useCart } from '../../context/CartContext';
-import BASE_URL from "../../config/config";
 import { useSearch } from '../../context/SearchContext';
 import toast from 'react-hot-toast';
+import api from "../../utils/Api"
 const OpenPrev = () => {
   const { id } = useParams();
   const [item, setItem] = useState({});
@@ -24,33 +24,71 @@ const OpenPrev = () => {
   const { newCart, addWithQuantity } = useCart()
   const { token } = useSearch()
 
-  useEffect(() => {
-    let timer = setTimeout(() => {
-      setError(true);
-      setLoading(false);
-    }, 6000);
+useEffect(() => {
 
-    fetch(`${BASE_URL}/products/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      }
+  let timer =
+  setTimeout(() => {
+
+    setError(true);
+
+    setLoading(false);
+
+  }, 6000);
+
+  const fetchProduct =
+  async () => {
+
+    try {
+
+      setLoading(true);
+
+      setError(false);
+
+      const res =
+      await api.get(
+        `/products/${id}`
+      );
+
+      clearTimeout(timer);
+
+      const data =
+      res.data;
+
+      setItem(data);
+
+      setActiveImage(
+        data.thumbnail
+      );
+
     }
-    )
-      .then(res => res.json())
-      .then(data => {
-        clearTimeout(timer);
-        setItem(data);
-        setActiveImage(data.thumbnail);
-        setLoading(false);
-      })
-      .catch((err) => {
-        clearTimeout(timer);
-        setError(true);
-        setLoading(false);
-        console.log(err);
-      });
-  }, [id]);
 
+    catch (err) {
+
+      clearTimeout(timer);
+
+      setError(true);
+
+      console.log(err);
+
+    }
+
+    finally {
+
+      setLoading(false);
+
+    }
+
+  };
+
+  fetchProduct();
+
+  return () => {
+
+    clearTimeout(timer);
+
+  };
+
+}, [id]);
   const increaseQuantity = () => {
     if (quantity < item.stock) {
       setQuantity(quantity + 1);

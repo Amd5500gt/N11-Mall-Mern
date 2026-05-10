@@ -1,185 +1,265 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useSearch } from "../../../../context/SearchContext";
+import React,{
+  useEffect,
+  useState
+}
+from "react";
 
 import {
+  useNavigate
+}
+from "react-router-dom";
+
+import {
+  useSearch
+}
+from "../../../../context/SearchContext";
+
+import {
+
   FiUser,
   FiMail,
   FiCheckCircle,
+
   FiLock,
   FiLogOut,
-  FiChevronRight,
-} from "react-icons/fi";
+
+  FiChevronRight
+
+}
+from "react-icons/fi";
+
+import toast
+from "react-hot-toast";
+
+import api
+from "../../../../utils/Api";
+
+import CustomAlert
+from "../../../ui/CustomAlert";
+
+import ResetPassword
+from "../../../../Auth/pages/ForgetPassword/ResetPassword";
 
 import "./ProfilePage.css";
 
-import BASE_URL from "../../../../config/config";
+const ProfilePage =
+() => {
 
-import toast from "react-hot-toast";
+  /* ALERT */
 
-import CustomAlert from "../../../ui/CustomAlert";
+  const [alert,
+    setAlert] =
+    useState(false);
 
-import ResetPassword from "../../../../Auth/pages/ForgetPassword/ResetPassword";
-
-const ProfilePage = () => {
-
-  const [alert, setAlert] =
-    useState(false)
+  /* RESET PAGE */
 
   const [
+
     showResetPassword,
+
     setShowResetPassword
-  ] = useState(false)
 
-  const [loading, setLoading] =
-    useState(false)
+  ] = useState(false);
 
-  const navigate = useNavigate();
+  /* LOADING */
+
+  const [loading,
+    setLoading] =
+    useState(false);
+
+  /* IMAGE */
+
+  const [
+
+    imageError,
+    setImageError
+
+  ] = useState(false);
+
+  const navigate =
+  useNavigate();
 
   const {
+
     userData,
     isLogged,
-    handleLogout,
+
+    handleLogout
+
   } = useSearch();
 
-  // NOT LOGGED
+  /* NOT LOGGED */
 
-  if (!isLogged) {
+  useEffect(() => {
 
-    navigate("/auth");
+    if (!isLogged) {
 
-    return null;
+      navigate("/auth");
 
-  }
+    }
 
-  // SEND OTP
+  }, [isLogged,navigate]);
 
-  const resetPassword = async () => {
+  /* SEND OTP */
 
-    setLoading(true)
+  const resetPassword =
+  async () => {
 
-    const email = userData?.email
+    const email =
+    userData?.email;
 
     try {
 
-      const res = await fetch(
-        `${BASE_URL}/auth/send-request`,
+      setLoading(true);
+
+      const res =
+      await api.post(
+        "/auth/send-request",
         {
-          method: "POST",
-
-          headers: {
-            "Content-Type":
-            "application/json"
-          },
-
-          body: JSON.stringify({
-            email
-          })
+          email
         }
-      )
+      );
 
-      const data = await res.json()
+      const data =
+      res.data;
 
-      if (data.success) {
+      toast.success(
 
-        toast.success(data.message)
+        data.message ||
 
-      }
+        "OTP sent successfully"
 
-      else {
-
-        toast.error(
-          data.message
-        )
-
-      }
+      );
 
     }
 
     catch (err) {
 
-      toast.error(err.message)
+      toast.error(
+
+        err.response?.data?.message ||
+
+        err.message ||
+
+        "Failed to send OTP"
+
+      );
 
     }
 
     finally {
 
-      setLoading(false)
+      setLoading(false);
 
     }
 
-  }
+  };
 
-  // CHANGE PASSWORD
+  /* CHANGE PASSWORD */
 
-  const handleChangePassword = () => {
+  const handleChangePassword =
+  () => {
 
-    setAlert(true)
+    setAlert(true);
 
-  }
+  };
 
-  // LOGOUT
+  /* LOGOUT */
 
-  const handleUserLogout = () => {
+  const handleUserLogout =
+  () => {
 
-    handleLogout()
+    handleLogout();
 
-  }
+  };
 
-  // SEND OTP WHEN PAGE SHOWS
+  /* SEND OTP */
 
   useEffect(() => {
 
-    if (showResetPassword) {
+    if (
+      showResetPassword
+    ) {
 
-      resetPassword()
+      resetPassword();
 
     }
 
-  }, [showResetPassword])
+  }, [showResetPassword]);
 
-  // SHOW RESET PASSWORD PAGE
+  /* RESET PAGE */
 
   if (showResetPassword) {
 
     return (
 
       <ResetPassword
-        email={userData?.email}
+        email={
+          userData?.email
+        }
       />
 
-    )
+    );
 
   }
 
   return (
 
-    <div className="profile-page">
+    <div className=
+    "profile-page">
 
-      {/* TOP CARD */}
+      {/* HERO */}
 
-      <div className="profile-hero">
+      <div className=
+      "profile-hero">
 
-        <div className="profile-avatar-wrapper">
+        {/* AVATAR */}
+
+        <div className=
+        "profile-avatar-wrapper">
 
           {
-            userData?.picture?.trim()
+            userData?.picture
+            ?.trim()
+
+            && !imageError
+
             ? (
 
               <img
-                src={userData.picture}
+
+                src={
+                  userData.picture
+                }
+
                 alt="Profile"
-                className="profile-avatar"
-                referrerPolicy="no-referrer"
+
+                className=
+                "profile-avatar"
+
+                referrerPolicy=
+                "no-referrer"
+
+                onError={() => {
+
+                  setImageError(
+                    true
+                  );
+
+                }}
+
               />
 
             )
 
             : (
 
-              <div className="profile-fallback">
+              <div className=
+              "profile-fallback">
 
-                <FiUser size={42} />
+                <FiUser
+                  size={42}
+                />
 
               </div>
 
@@ -188,17 +268,25 @@ const ProfilePage = () => {
 
         </div>
 
-        <div className="profile-hero-content">
+        {/* CONTENT */}
+
+        <div className=
+        "profile-hero-content">
 
           <h1>
+
             {userData?.name}
+
           </h1>
 
           <p>
+
             {userData?.email}
+
           </p>
 
-          <span className="status-badge">
+          <span className=
+          "status-badge">
 
             <FiCheckCircle />
 
@@ -210,25 +298,31 @@ const ProfilePage = () => {
 
       </div>
 
-      {/* INFO SECTION */}
+      {/* INFO */}
 
-      <div className="profile-section">
+      <div className=
+      "profile-section">
 
-        <h2 className="section-title">
+        <h2 className=
+        "section-title">
 
           Account Information
 
         </h2>
 
-        <div className="profile-list">
+        <div className=
+        "profile-list">
 
           {/* NAME */}
 
-          <div className="profile-row">
+          <div className=
+          "profile-row">
 
-            <div className="profile-row-left">
+            <div className=
+            "profile-row-left">
 
-              <div className="profile-icon">
+              <div className=
+              "profile-icon">
 
                 <FiUser />
 
@@ -237,11 +331,15 @@ const ProfilePage = () => {
               <div>
 
                 <span>
+
                   Full Name
+
                 </span>
 
                 <h4>
+
                   {userData?.name}
+
                 </h4>
 
               </div>
@@ -254,11 +352,14 @@ const ProfilePage = () => {
 
           {/* EMAIL */}
 
-          <div className="profile-row">
+          <div className=
+          "profile-row">
 
-            <div className="profile-row-left">
+            <div className=
+            "profile-row-left">
 
-              <div className="profile-icon">
+              <div className=
+              "profile-icon">
 
                 <FiMail />
 
@@ -267,11 +368,15 @@ const ProfilePage = () => {
               <div>
 
                 <span>
+
                   Email Address
+
                 </span>
 
                 <h4>
+
                   {userData?.email}
+
                 </h4>
 
               </div>
@@ -288,27 +393,39 @@ const ProfilePage = () => {
 
       {/* ACTIONS */}
 
-      <div className="profile-section">
+      <div className=
+      "profile-section">
 
-        <h2 className="section-title">
+        <h2 className=
+        "section-title">
 
           Security & Actions
 
         </h2>
 
-        <div className="profile-list">
+        <div className=
+        "profile-list">
 
           {/* CHANGE PASSWORD */}
 
           <button
-            className="action-btn"
-            onClick={handleChangePassword}
+
+            className=
+            "action-btn"
+
+            onClick={
+              handleChangePassword
+            }
+
             disabled={loading}
+
           >
 
-            <div className="profile-row-left">
+            <div className=
+            "profile-row-left">
 
-              <div className="profile-icon">
+              <div className=
+              "profile-icon">
 
                 <FiLock />
 
@@ -320,7 +437,9 @@ const ProfilePage = () => {
 
                   {
                     loading
+
                     ? "Sending OTP..."
+
                     : "Change Password"
                   }
 
@@ -337,13 +456,21 @@ const ProfilePage = () => {
           {/* LOGOUT */}
 
           <button
-            className="action-btn logout"
-            onClick={handleUserLogout}
+
+            className=
+            "action-btn logout"
+
+            onClick={
+              handleUserLogout
+            }
+
           >
 
-            <div className="profile-row-left">
+            <div className=
+            "profile-row-left">
 
-              <div className="profile-icon logout-icon">
+              <div className=
+              "profile-icon logout-icon">
 
                 <FiLogOut />
 
@@ -352,11 +479,15 @@ const ProfilePage = () => {
               <div>
 
                 <span>
+
                   Account
+
                 </span>
 
                 <h4>
+
                   Logout
+
                 </h4>
 
               </div>
@@ -380,19 +511,23 @@ const ProfilePage = () => {
 
             type="warning"
 
-            message="An OTP will be sent to your email"
+            message=
+            "An OTP will be sent to your email"
 
             onClose={() => {
 
-              setAlert(false)
+              setAlert(false);
 
             }}
 
             onShowPage={() => {
 
-              setShowResetPassword(true)
+              setShowResetPassword(
+                true
+              );
 
             }}
+
           />
 
         )
@@ -400,8 +535,8 @@ const ProfilePage = () => {
 
     </div>
 
-  )
+  );
 
-}
+};
 
-export default ProfilePage
+export default ProfilePage;

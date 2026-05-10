@@ -1,221 +1,179 @@
-import React,{
+import React, {
   createContext,
   useContext,
   useEffect,
   useState,
-  useRef
-}
-from "react";
+} from "react";
 
 import toast from "react-hot-toast";
 
 import BASE_URL from "../config/config";
-
-import {
-  useNavigate
-}
-from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const SearchContext =
-createContext();
+  createContext();
 
 export const SearchProvider =
 ({ children }) => {
-
-  const navigate =
-  useNavigate();
-
-  /* GLOBAL API */
-
-  const [apiLoading,
-    setApiLoading] =
-    useState(false);
-
-  const requestRunning =
-    useRef(false);
-
+ 
   /* PRODUCTS */
-
-  const [data,setData] =
+  const navigate = useNavigate()
+  const [data, setData] =
     useState([]);
-
-  const [
-    filterData,
-    setFilterData
-  ] = useState([]);
+ const[apiLoading,setApiLoading]= useState(false)
+  const [filterData,
+    setFilterData] =
+    useState([]);
 
   const [loading,
     setLoading] =
     useState(true);
 
-  const [total,
-    setTotal] =
+  const [total, setTotal] =
     useState(0);
 
   const limit = 12;
 
   /* SEARCH */
 
-  const [
-    searchTerm,
-    setSearchTerm
-  ] = useState("");
+  const [searchTerm,
+    setSearchTerm] =
+    useState("");
 
   /* AUTH */
 
-  const [token,
-    setToken] =
+  const [token, setToken] =
     useState(
       localStorage.getItem(
         "jwtToken"
       ) || null
     );
 
-  const isLogged =
-    !!token;
+  const isLogged = !!token;
 
   /* USER */
 
-  const [
-    userData,
-    setUserData
-  ] = useState({
-    name:"",
-    email:"",
-    picture:"",
-    address:[],
-    cart:[]
-  });
-
-  /* API REQUEST */
-
-  const apiRequest =
-  async (callback) => {
-
-    // BLOCK MULTIPLE REQUESTS
-
-    if (
-      requestRunning.current
-    ) return;
-
-    try {
-
-      requestRunning.current =
-        true;
-
-      setApiLoading(true);
-
-      await callback();
-
-    }
-
-    catch (err) {
-
-      console.log(err);
-
-    }
-
-    finally {
-
-      setApiLoading(false);
-
-      requestRunning.current =
-        false;
-
-    }
-
-  };
+  const [userData,
+    setUserData] =
+    useState({
+      name: "",
+      email: "",
+      picture: "",
+      address: [],
+      cart: [],
+    });
 
   /* FETCH PRODUCTS */
 
   useEffect(() => {
 
     const fetchProducts =
-    async () => {
-          setLoading(true);
+      async () => {
 
-          try {
+        setLoading(true);
 
-            const url =
-              token
-              ? `${BASE_URL}/products`
-              : `${BASE_URL}/products/demo`;
+        try {
 
-            const response =
-              await fetch(url,{
+          const url = token
+            ? `${BASE_URL}/products`
+            : `${BASE_URL}/products/demo`;
 
-                headers: token
+          const response =
+            await fetch(url, {
+              headers: token
                 ? {
                     Authorization:
-                    `Bearer ${token}`
+                      `Bearer ${token}`,
                   }
                 : {},
+            });
 
-              });
-
-            if (
-              !response.ok
-            ) {
-
-              throw new Error(
-                "Failed to fetch products"
-              );
-
-            }
-
-            const json =
-              await response.json();
-
-            setData(
-              json.products || []
+          if (!response.ok) {
+            throw new Error(
+              "Failed to fetch products"
             );
-
-            setFilterData(
-              json.products || []
-            );
-
-            setTotal(
-              json.total || 0
-            );
-
           }
 
-          catch (err) {
+          const json =
+            await response.json();
 
-            console.log(err);
+          setData(
+            json.products || []
+          );
 
-            setData([]);
+          setFilterData(
+            json.products || []
+          );
 
-            setFilterData([]);
+          setTotal(
+            json.total || 0
+          );
 
-            setTotal(0);
+        } catch (err) {
 
-          }
+          console.log(err);
 
-          finally {
+          setData([]);
 
-            setLoading(false);
+          setFilterData([]);
 
-          }
+          setTotal(0);
+
+        } finally {
+
+          setLoading(false);
         }
+      };
+
     fetchProducts();
 
   }, [token]);
+useEffect(() => {
 
+  const start = () =>
+    setApiLoading(true)
+
+  const end = () =>
+    setApiLoading(false)
+
+  window.addEventListener(
+    "api-loading-start",
+    start
+  )
+
+  window.addEventListener(
+    "api-loading-end",
+    end
+  )
+
+  return () => {
+
+    window.removeEventListener(
+      "api-loading-start",
+      start
+    )
+
+    window.removeEventListener(
+      "api-loading-end",
+      end
+    )
+
+  }
+
+}, [])
   /* SYNC TOKEN */
 
   useEffect(() => {
 
     const handleStorage =
-    () => {
+      () => {
 
-      setToken(
-        localStorage.getItem(
-          "jwtToken"
-        )
-      );
-
-    };
+        setToken(
+          localStorage.getItem(
+            "jwtToken"
+          )
+        );
+      };
 
     window.addEventListener(
       "storage",
@@ -228,7 +186,6 @@ export const SearchProvider =
         "storage",
         handleStorage
       );
-
     };
 
   }, []);
@@ -242,44 +199,42 @@ export const SearchProvider =
     try {
 
       const user =
-      JSON.parse(
-        localStorage.getItem(
-          "loggedInUser"
-        )
-      );
+        JSON.parse(
+          localStorage.getItem(
+            "loggedInUser"
+          )
+        );
 
       if (user) {
 
         setUserData(user);
 
         const welcomeShown =
-        localStorage.getItem(
-          "welcomeToastShown"
-        );
+          localStorage.getItem(
+            "welcomeToastShown"
+          );
 
         if (
           welcomeShown !== "true"
         ) {
-
-          toast.success(
+        
+          setTimeout(() => {
+              toast.success(
             `Welcome back, ${user.name}!`
           );
+          }, 1500);
+        
 
           localStorage.setItem(
             "welcomeToastShown",
             "true"
           );
-
         }
-
       }
 
-    }
-
-    catch (err) {
+    } catch (err) {
 
       console.log(err);
-
     }
 
   }, [token]);
@@ -295,62 +250,56 @@ export const SearchProvider =
       setFilterData(data);
 
       return;
-
     }
 
     const filtered =
-    data.filter((item) =>
-
-      item.title
-      ?.toLowerCase()
-      .includes(
-        searchTerm.toLowerCase()
-      )
-
-    );
+      data.filter((item) =>
+        item.title
+          ?.toLowerCase()
+          .includes(
+            searchTerm.toLowerCase()
+          )
+      );
 
     setFilterData(filtered);
 
-  }, [searchTerm,data]);
+  }, [searchTerm, data]);
 
   /* LOGOUT */
 
   const handleLogout =
-  () => {
+    () => {
 
-    localStorage.removeItem(
-      "jwtToken"
-    );
+      localStorage.removeItem(
+        "jwtToken"
+      );
 
-    localStorage.removeItem(
-      "loggedInUser"
-    );
+      localStorage.removeItem(
+        "loggedInUser"
+      );
 
-    localStorage.removeItem(
-      "welcomeToastShown"
-    );
+      localStorage.removeItem(
+        "welcomeToastShown"
+      );
 
-    setToken(null);
+      setToken(null);
 
-    setUserData({
-      name:"",
-      email:"",
-      picture:"",
-      address:[],
-      cart:[]
-    });
+      setUserData({
+        name: "",
+        email: "",
+        picture: "",
+        address: [],
+        cart: [],
+      });
 
-    toast.success(
-      "Logged out successfully"
-    );
-
-    setTimeout(() => {
-
-      navigate("/auth");
-
-    }, 1500);
-
-  };
+      toast.success(
+        "Logged out successfully"
+      );
+     setTimeout(() => {
+      navigate("/auth")
+     }, 1500);
+      
+    };
 
   return (
 
@@ -381,15 +330,12 @@ export const SearchProvider =
         setToken,
         isLogged,
 
+        apiLoading,
+        setApiLoading,
         /* USER */
 
         userData,
         setUserData,
-
-        /* API */
-
-        apiLoading,
-        apiRequest,
 
         /* LOGOUT */
 
@@ -398,32 +344,29 @@ export const SearchProvider =
     >
 
       {children}
-
       {
-        apiLoading && (
+  apiLoading && (
 
-          <div className="nxc-global-loading">
+    <div className="nxc-global-loading">
 
-            <div className="nxc-loading-box">
+      <div className="nxc-loading-box">
 
-              <div className="nxc-spinner"></div>
+        <div className="nxc-spinner"></div>
 
-              <p>
-                Please wait...
-              </p>
+        <p>
+          Please wait...
+        </p>
 
-            </div>
+      </div>
 
-          </div>
+    </div>
 
-        )
-      }
+  )
+}
 
     </SearchContext.Provider>
-
   );
-
 };
 
 export const useSearch =
-() => useContext(SearchContext);
+  () => useContext(SearchContext);

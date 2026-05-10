@@ -1,69 +1,106 @@
-import {createContext,useContext,useEffect,useState} from "react";
-import toast from "react-hot-toast";
-import BASE_URL from "../config/config";
-import { useSearch } from "./SearchContext";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState
+}
+from "react";
 
+import toast
+from "react-hot-toast";
 
-const AddressContext = createContext()
-export const AddressProvider = ({children}) => {
+import api
+from "../utils/Api";
 
-    const [userAddress, setUserAddress] = useState({});
-    const { token ,apiRequest } = useSearch()
+import {
+  useSearch
+}
+from "./SearchContext";
 
-    useEffect(() => {
-        const fetchAddress = async () => {
-                try {
-               apiRequest()
-                    const res =await fetch(`${BASE_URL}/user/address`, {
-                                headers: {
-                                    "Content-Type":
-                                        "application/json",
+/* CONTEXT */
 
-                                    Authorization:
-                                        `Bearer ${token}`
-                                }
-                            }
-                        );
+const AddressContext =
+createContext();
 
-                    const data =
-                        await res.json();
+/* PROVIDER */
 
-                    if (!res.ok) {
+export const AddressProvider =
+({ children }) => {
 
-                        toast.error(
-                            data.message ||
-                            "Failed to fetch address"
-                        );
+  const [
+    userAddress,
+    setUserAddress
+  ] = useState({});
 
-                        return;
-                    }
+  const {
+    token
+  } = useSearch();
 
-                    setUserAddress(
-                        data.address || {}
-                    );
+  /* FETCH ADDRESS */
 
-                } catch (err) {
+  useEffect(() => {
 
-                    console.log(err);
+    const fetchAddress =
+    async () => {
 
-                    toast.error(
-                        "Something went wrong"
-                    );
-                }
-            };
+      try {
 
-        if (token) {
-            fetchAddress();
-        }
+        const res =
+        await api.get(
+          "/user/address"
+        );
 
-    }, [token]);
+        const data =
+        res.data;
 
+        setUserAddress(
+
+          data.address || {}
+
+        );
+
+      }
+
+      catch (err) {
+
+        console.log(err);
+
+        toast.error(
+
+          err.response?.data?.message ||
+
+          err.message ||
+
+          "Failed to fetch address"
+
+        );
+
+      }
+
+    };
+
+    if (token) {
+
+      fetchAddress();
+
+    }
+
+    else {
+
+      setUserAddress({});
+
+    }
+
+  }, [token]);
 
   return (
 
     <AddressContext.Provider
       value={{
-         userAddress,setUserAddress
+
+        userAddress,
+        setUserAddress
+
       }}
     >
 
@@ -75,6 +112,7 @@ export const AddressProvider = ({children}) => {
 
 };
 
+/* HOOK */
 
-export const useAddress = () =>
-  useContext(AddressContext);
+export const useAddress =
+() => useContext(AddressContext);

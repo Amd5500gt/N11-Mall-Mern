@@ -1,47 +1,71 @@
-import React, {
+import React,{
   useState,
   useRef,
-} from "react";
+  useEffect
+}
+from "react";
 
 import "./AddressForm.css";
 
-import BASE_URL from "../../../../config/config";
+import toast
+from "react-hot-toast";
 
-import toast from "react-hot-toast";
+import api
+from "../../../../utils/Api";
 
-import { useSearch } from "../../../../context/SearchContext";
+const AddressForm =
+({ onSubmit }) => {
 
-const AddressForm = ({ onSubmit }) => {
+  /* DEBOUNCE */
 
-  const { token } = useSearch();
+  const debounceRef =
+  useRef(null);
 
-  const debounceRef = useRef(null);
+  /* FORM */
 
-  const [formData, setFormData] =
-    useState({
-      name: "",
-      phone: "",
-      addressLine1: "",
-      city: "",
-      state: "",
-      pincode: "",
-    });
+  const [
+    formData,
+    setFormData
+  ] = useState({
 
-  const [errors, setErrors] =
+    name:"",
+    phone:"",
+    addressLine1:"",
+    city:"",
+    state:"",
+    pincode:"",
+
+  });
+
+  /* ERRORS */
+
+  const [errors,
+    setErrors] =
     useState({});
 
-  const [suggestions, setSuggestions] =
-    useState([]);
+  /* SUGGESTIONS */
 
-  /* VALIDATION */
+  const [
 
-  const validateForm = () => {
+    suggestions,
+    setSuggestions
+
+  ] = useState([]);
+
+  /* VALIDATE */
+
+  const validateForm =
+  () => {
 
     const newErrors = {};
 
-    if (!formData.name.trim()) {
+    if (
+      !formData.name.trim()
+    ) {
+
       newErrors.name =
-        "Full name is required";
+      "Full name is required";
+
     }
 
     if (
@@ -49,25 +73,38 @@ const AddressForm = ({ onSubmit }) => {
         formData.phone
       )
     ) {
+
       newErrors.phone =
-        "Enter valid 10-digit number";
+      "Enter valid 10-digit number";
+
     }
 
     if (
-      !formData.addressLine1.trim()
+      !formData.addressLine1
+      .trim()
     ) {
+
       newErrors.addressLine1 =
-        "Address is required";
+      "Address is required";
+
     }
 
-    if (!formData.city.trim()) {
+    if (
+      !formData.city.trim()
+    ) {
+
       newErrors.city =
-        "City is required";
+      "City is required";
+
     }
 
-    if (!formData.state.trim()) {
+    if (
+      !formData.state.trim()
+    ) {
+
       newErrors.state =
-        "State is required";
+      "State is required";
+
     }
 
     if (
@@ -75,330 +112,549 @@ const AddressForm = ({ onSubmit }) => {
         formData.pincode
       )
     ) {
+
       newErrors.pincode =
-        "Enter valid pincode";
+      "Enter valid pincode";
+
     }
 
     setErrors(newErrors);
 
     return (
-      Object.keys(newErrors)
-        .length === 0
+      Object.keys(
+        newErrors
+      ).length === 0
     );
+
   };
 
   /* SUBMIT */
 
   const handleSubmit =
-    async (e) => {
+  async (e) => {
 
-      e.preventDefault();
+    e.preventDefault();
 
-      if (!validateForm()) return;
+    if (
+      !validateForm()
+    ) return;
 
-      try {
+    try {
 
-        const res = await fetch(
-          `${BASE_URL}/user/address/update`,
-          {
-            method: "POST",
+      const res =
+      await api.post(
+        "/user/address/update",
+        formData
+      );
 
-            headers: {
-              "Content-Type":
-                "application/json",
+      const data =
+      res.data;
 
-              Authorization:
-                `Bearer ${token}`,
-            },
+      toast.success(
 
-            body: JSON.stringify(
-              formData
-            ),
-          }
+        data.message ||
+
+        "Address Saved"
+
+      );
+
+      /* CALLBACK */
+
+      if (onSubmit) {
+
+        onSubmit(
+          data.address
         );
 
-        const data =
-          await res.json();
-
-        if (!res.ok) {
-
-          toast.error(
-            data.message ||
-              "Failed to save address"
-          );
-
-          return;
-        }
-
-        toast.success(
-          "Address Saved Successfully"
-        );
-
-        if (onSubmit) {
-          onSubmit(data.address);
-        }
-
-        setFormData({
-          name: "",
-          phone: "",
-          addressLine1: "",
-          city: "",
-          state: "",
-          pincode: "",
-        });
-
-        setSuggestions([]);
-
-        setErrors({});
-
-      } catch (err) {
-
-        console.log(err);
-
-        toast.error(
-          "Something went wrong"
-        );
       }
-    };
 
-  /* INPUT CHANGE */
+      /* RESET */
 
-  const handleChange = (e) => {
+      setFormData({
 
-    const { name, value } =
-      e.target;
+        name:"",
+        phone:"",
+        addressLine1:"",
+        city:"",
+        state:"",
+        pincode:"",
+
+      });
+
+      setSuggestions([]);
+
+      setErrors({});
+
+    }
+
+    catch (err) {
+
+      console.log(err);
+
+      toast.error(
+
+        err.response?.data?.message ||
+
+        err.message ||
+
+        "Failed to save address"
+
+      );
+
+    }
+
+  };
+
+  /* INPUT */
+
+  const handleChange =
+  (e) => {
+
+    const {
+      name,
+      value
+    } = e.target;
 
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]:value
     }));
+
+    /* CLEAR ERROR */
 
     if (errors[name]) {
 
       setErrors((prev) => ({
         ...prev,
-        [name]: "",
+        [name]:""
       }));
+
     }
+
   };
 
-  /* ADDRESS SEARCH */
+  /* SEARCH ADDRESS */
 
   const handleAddressSearch =
-    (value) => {
+  (value) => {
 
-      handleChange({
-        target: {
-          name: "addressLine1",
-          value,
-        },
-      });
+    handleChange({
 
-      if (debounceRef.current) {
+      target:{
+
+        name:"addressLine1",
+        value
+
+      }
+
+    });
+
+    /* CLEAR OLD */
+
+    if (
+      debounceRef.current
+    ) {
+
+      clearTimeout(
+        debounceRef.current
+      );
+
+    }
+
+    /* SHORT VALUE */
+
+    if (
+      value.length < 3
+    ) {
+
+      setSuggestions([]);
+
+      return;
+
+    }
+
+    debounceRef.current =
+    setTimeout(
+
+      async () => {
+
+        try {
+
+          const res =
+          await fetch(
+
+            `https://nominatim.openstreetmap.org/search?format=json&q=${value}&countrycodes=in&limit=5`,
+
+            {
+
+              headers:{
+                Accept:
+                "application/json"
+              }
+
+            }
+
+          );
+
+          const data =
+          await res.json();
+
+          setSuggestions(
+            data || []
+          );
+
+        }
+
+        catch (err) {
+
+          console.log(err);
+
+          setSuggestions([]);
+
+        }
+
+      },
+
+      400
+
+    );
+
+  };
+
+  /* CLEANUP */
+
+  useEffect(() => {
+
+    return () => {
+
+      if (
+        debounceRef.current
+      ) {
+
         clearTimeout(
           debounceRef.current
         );
+
       }
 
-      if (value.length < 3) {
-        setSuggestions([]);
-        return;
-      }
-
-      debounceRef.current =
-        setTimeout(
-          async () => {
-
-            try {
-
-              const res =
-                await fetch(
-                  `https://nominatim.openstreetmap.org/search?format=json&q=${value}&countrycodes=in&limit=5`,
-                  {
-                    headers: {
-                      Accept:
-                        "application/json",
-                    },
-                  }
-                );
-
-              const data =
-                await res.json();
-
-              setSuggestions(data);
-
-            } catch (err) {
-
-              console.log(err);
-
-              setSuggestions([]);
-            }
-
-          },
-          400
-        );
     };
+
+  }, []);
 
   return (
 
     <form
-      onSubmit={handleSubmit}
-      className="address-form"
+
+      onSubmit={
+        handleSubmit
+      }
+
+      className=
+      "address-form"
+
     >
 
       {/* NAME */}
 
-      <div className="form-group">
+      <div className=
+      "form-group">
 
-        <label>Full Name *</label>
+        <label>
+
+          Full Name *
+
+        </label>
 
         <input
+
           type="text"
+
           name="name"
-          value={formData.name}
-          onChange={handleChange}
-          placeholder="Enter full name"
-          autoComplete="name"
+
+          value={
+            formData.name
+          }
+
+          onChange={
+            handleChange
+          }
+
+          placeholder=
+          "Enter full name"
+
+          autoComplete=
+          "name"
+
         />
 
-        {errors.name && (
-          <span className="error">
-            {errors.name}
-          </span>
-        )}
+        {
+          errors.name && (
+
+            <span className=
+            "error">
+
+              {errors.name}
+
+            </span>
+
+          )
+        }
 
       </div>
 
       {/* PHONE */}
 
-      <div className="form-group">
+      <div className=
+      "form-group">
 
         <label>
+
           Phone Number *
+
         </label>
 
         <input
+
           type="tel"
+
           name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          placeholder="Enter mobile number"
-          autoComplete="tel"
+
+          value={
+            formData.phone
+          }
+
+          onChange={
+            handleChange
+          }
+
+          placeholder=
+          "Enter mobile number"
+
+          autoComplete=
+          "tel"
+
         />
 
-        {errors.phone && (
-          <span className="error">
-            {errors.phone}
-          </span>
-        )}
+        {
+          errors.phone && (
+
+            <span className=
+            "error">
+
+              {errors.phone}
+
+            </span>
+
+          )
+        }
 
       </div>
 
       {/* ADDRESS */}
 
-      <div className="form-group">
+      <div className=
+      "form-group">
 
-        <label>Address Line *</label>
+        <label>
+
+          Address Line *
+
+        </label>
 
         <input
+
           type="text"
+
           name="addressLine1"
-          value={formData.addressLine1}
+
+          value={
+            formData.addressLine1
+          }
+
           onChange={(e) =>
+
             handleAddressSearch(
               e.target.value
             )
+
           }
-          placeholder="House No, Building"
-          autoComplete="new-password"
+
+          placeholder=
+          "House No, Building"
+
+          autoComplete=
+          "new-password"
+
         />
 
-        {suggestions.length > 0 && (
+        {/* SUGGESTIONS */}
 
-          <div className="address-suggestions">
+        {
+          suggestions.length > 0 && (
 
-            {suggestions.map(
-              (item) => (
+            <div className=
+            "address-suggestions">
 
-                <div
-                  key={item.place_id}
+              {
+                suggestions.map(
+                  (item) => (
 
-                  className="suggestion-item"
+                    <div
 
-                  onClick={() => {
+                      key={
+                        item.place_id
+                      }
 
-                    setFormData(
-                      (prev) => ({
-                        ...prev,
-                        addressLine1:
-                          item.display_name,
-                      })
-                    );
+                      className=
+                      "suggestion-item"
 
-                    setSuggestions([]);
-                  }}
-                >
-                  {item.display_name}
-                </div>
+                      onClick={() => {
 
-              )
-            )}
+                        setFormData(
+                          (prev) => ({
+                            ...prev,
 
-          </div>
+                            addressLine1:
+                            item.display_name
+                          })
+                        );
 
-        )}
+                        setSuggestions([]);
 
-        {errors.addressLine1 && (
-          <span className="error">
-            {errors.addressLine1}
-          </span>
-        )}
+                      }}
+
+                    >
+
+                      {
+                        item.display_name
+                      }
+
+                    </div>
+
+                  )
+                )
+              }
+
+            </div>
+
+          )
+        }
+
+        {
+          errors.addressLine1 && (
+
+            <span className=
+            "error">
+
+              {
+                errors.addressLine1
+              }
+
+            </span>
+
+          )
+        }
 
       </div>
 
-      {/* CITY + STATE */}
+      {/* CITY STATE */}
 
-      <div className="form-row">
+      <div className=
+      "form-row">
 
-        <div className="form-group">
+        {/* CITY */}
 
-          <label>City *</label>
+        <div className=
+        "form-group">
+
+          <label>
+
+            City *
+
+          </label>
 
           <input
+
             type="text"
+
             name="city"
-            value={formData.city}
-            onChange={handleChange}
-            placeholder="City"
-            autoComplete="address-level2"
+
+            value={
+              formData.city
+            }
+
+            onChange={
+              handleChange
+            }
+
+            placeholder=
+            "City"
+
+            autoComplete=
+            "address-level2"
+
           />
 
-          {errors.city && (
-            <span className="error">
-              {errors.city}
-            </span>
-          )}
+          {
+            errors.city && (
+
+              <span className=
+              "error">
+
+                {errors.city}
+
+              </span>
+
+            )
+          }
 
         </div>
 
-        <div className="form-group">
+        {/* STATE */}
 
-          <label>State *</label>
+        <div className=
+        "form-group">
+
+          <label>
+
+            State *
+
+          </label>
 
           <input
+
             type="text"
+
             name="state"
-            value={formData.state}
-            onChange={handleChange}
-            placeholder="State"
-            autoComplete="address-level1"
+
+            value={
+              formData.state
+            }
+
+            onChange={
+              handleChange
+            }
+
+            placeholder=
+            "State"
+
+            autoComplete=
+            "address-level1"
+
           />
 
-          {errors.state && (
-            <span className="error">
-              {errors.state}
-            </span>
-          )}
+          {
+            errors.state && (
+
+              <span className=
+              "error">
+
+                {errors.state}
+
+              </span>
+
+            )
+          }
 
         </div>
 
@@ -406,39 +662,73 @@ const AddressForm = ({ onSubmit }) => {
 
       {/* PINCODE */}
 
-      <div className="form-group">
+      <div className=
+      "form-group">
 
-        <label>Pincode *</label>
+        <label>
+
+          Pincode *
+
+        </label>
 
         <input
+
           type="text"
+
           name="pincode"
-          value={formData.pincode}
-          onChange={handleChange}
-          placeholder="Pincode"
+
+          value={
+            formData.pincode
+          }
+
+          onChange={
+            handleChange
+          }
+
+          placeholder=
+          "Pincode"
+
           maxLength={6}
-          autoComplete="postal-code"
+
+          autoComplete=
+          "postal-code"
+
         />
 
-        {errors.pincode && (
-          <span className="error">
-            {errors.pincode}
-          </span>
-        )}
+        {
+          errors.pincode && (
+
+            <span className=
+            "error">
+
+              {errors.pincode}
+
+            </span>
+
+          )
+        }
 
       </div>
 
       {/* BUTTON */}
 
       <button
+
         type="submit"
-        className="submit-address-btn"
+
+        className=
+        "submit-address-btn"
+
       >
+
         Save Address
+
       </button>
 
     </form>
+
   );
+
 };
 
 export default AddressForm;
