@@ -19,7 +19,7 @@ const otpGenerate = async (req, res) => {
         const otp = Math.floor(1000 + Math.random() * 9000).toString()
         user.passwordResetOTP = otp;
 
-        user.passwordResetOTPExpire = Date.now() + 5 * 60 * 1000;
+        user.passwordResetOTPExpire = Date.now() + 1 * 60 * 1000;
         await user.save()
 
 
@@ -42,7 +42,7 @@ const otpGenerate = async (req, res) => {
 
   text:
   `Your NexXcart OTP is ${otp}.
-   This OTP is valid for 5 minutes.`,
+   This OTP is valid for 1 minutes.`,
 
   html: `
 
@@ -165,7 +165,7 @@ const otpGenerate = async (req, res) => {
       >
 
         Use this OTP to reset your password.
-        This code will expire in 5 minutes.
+        This code will expire in 1 minutes.
 
       </p>
 
