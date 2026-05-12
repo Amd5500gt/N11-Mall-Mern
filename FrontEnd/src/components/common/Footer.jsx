@@ -7,6 +7,7 @@ import logo from '../../assets/images/logo.png';
 import { useSearch } from '../../context/SearchContext';
 import toast from 'react-hot-toast';
 import api from '../../utils/Api';
+import InstallPWAButton from '../../InstallPWAButton';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
@@ -26,26 +27,40 @@ const Footer = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setIsSubmitted(true);
-      setEmail('');
-      setTimeout(() => setIsSubmitted(false), 3000);
-    }
-  };
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-   const newsletterSubscribe = async(email) =>{
-    try{
-      const { data} =  await api.post("/user/subscribe",{email});
-      setTimeout(() => {
-          toast.success(  data.message )
-          
-      }, 500);
+const handleSubscribe = async (e) => {
+
+  e.preventDefault();
+
+  if (
+    !email ||
+    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  ) {
+
+    toast.error("Enter valid email");
+
+    return;
+
+  }
+
+  try {
+
+    const { data } =
+      await api.post(
+        "/user/subscribe",
+        { email }
+      );
+
+    toast.success(data.message);
+
+    setIsSubmitted(true);
+
+    setEmail('');
+
     } catch(err){
       toast.error(err.message)
     }
@@ -181,6 +196,7 @@ const Footer = () => {
           <FiArrowUp size={20} />
         </button>
       )}
+      <InstallPWAButton />
     </footer>
   );
 };
