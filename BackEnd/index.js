@@ -3,7 +3,7 @@ const express = require("express");
 const app = express();
 const compression = require("compression")
 
-
+const helmet = require("helmet")
 
 const connectDB = require("./Models/db");
 
@@ -17,7 +17,7 @@ connectDB();
 app.set("trust proxy", 1);
 app.use(compression())
 app.use(express.json());
-
+app.use(helmet())
 // Allowed Frontend URLs
 const allowedOrigins = [
   "http://localhost:5173",

@@ -103,7 +103,14 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
-
+    isOTPVerified: {
+      type: Boolean,
+      default: false
+    },
+    otpAttempts: {
+      type: Number,
+      default: 0
+    },
     picture: {
       type: String,
       default: "",
