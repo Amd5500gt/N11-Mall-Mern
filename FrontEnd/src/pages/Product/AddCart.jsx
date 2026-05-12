@@ -11,6 +11,7 @@ const AddCart = () => {
   const [loader, setLoader] = useState(false);
   const navigate = useNavigate();
   const [animateRemove, setAnimateRemove] = useState(null);
+  const [showAllCart, setShowAllCart] = useState(false);
 
   const { addedItems, newCart, removeCart, total, deleteCart } = useCart();
 
@@ -50,7 +51,7 @@ const AddCart = () => {
         <div className="cart-layout">
           {/* Cart Items */}
           <div className="cart-items-section">
-            {addedItems.map((item) => {
+            {(showAllCart ? addedItems : addedItems.slice(0,4)).map((item) => {
               const itemUnitRupee = getCartItemRupee(item);
 
               return (
@@ -105,7 +106,59 @@ const AddCart = () => {
               );
             })}
           </div>
+{
+  addedItems.length > 4 && (
 
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        marginTop: "1rem"
+      }}
+    >
+
+      <button
+
+        onClick={() =>
+          setShowAllCart(!showAllCart)
+        }
+
+        style={{
+
+          padding: "12px 20px",
+
+          border: "none",
+
+          borderRadius: "12px",
+
+          background: "var(--gradient)",
+
+          color: "#fff",
+
+          fontWeight: "600",
+
+          cursor: "pointer",
+
+          boxShadow:
+            "0 8px 20px rgba(0,0,0,0.08)",
+
+          transition: "0.3s"
+
+        }}
+
+      >
+
+        {
+          showAllCart
+            ? "Show Less"
+            : `Load More (${addedItems.length - 4}+ Items)`
+        }
+
+      </button>
+
+    </div>
+  )
+}
           {/* Order Summary */}
           <div className="order-summary">
             <h2 className="summary-title">Order Summary</h2>

@@ -1796,8 +1796,8 @@
 .cart-item {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  padding: 1.5rem;
+  gap: 1rem;
+  padding: 0.5rem;
   background: var(--white);
   border-radius: 16px;
   box-shadow: var(--shadow);
@@ -1824,8 +1824,8 @@
 }
 
 .cart-item-image {
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height:80px;
   border-radius: 12px;
   overflow: hidden;
   background: var(--lighter-gray);

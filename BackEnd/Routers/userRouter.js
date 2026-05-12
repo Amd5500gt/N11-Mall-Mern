@@ -11,7 +11,7 @@ const newsletterSubscribe = require("../Controllors/contact/NewsLetterSubscriber
 const requestLimiter = require("../Middlewares/apiLimiter/requestLimiter");
 
 //Cart Related //
-Router.get("/cart",requestLimiter, authCart,goToCart)
+Router.get("/cart",authCart,goToCart)
 Router.post("/cart/add",requestLimiter,authCart,addToCart);
 Router.post("/cart/remove",requestLimiter,authCart,removeFromCart)
 Router.post("/cart/delete",requestLimiter,authCart,deleteCart)

@@ -3,8 +3,11 @@ import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaClock, FaForward, FaCheckCircle 
 import '../pages.css';
 import api from '../../utils/Api';
 import toast from 'react-hot-toast';
+import { useSearch } from '../../context/SearchContext';
+
 
 const Contact = () => {
+  const {token} = useSearch()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -36,9 +39,8 @@ const Contact = () => {
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-
-   await contactFormHandler()
+    token ?  contactFormHandler() :  toast.error("Login First")
+   
   };
 
 
