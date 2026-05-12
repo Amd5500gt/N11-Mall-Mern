@@ -1,24 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FiInstagram, FiGithub, FiTwitter, FiMail, FiMapPin, FiPhone } from 'react-icons/fi';
+import { FiInstagram, FiGithub, FiTwitter, FiMail, FiMapPin, FiPhone, FiArrowUp } from 'react-icons/fi';
 import { BsSuitcase2 } from 'react-icons/bs';
 import './footer.css';
-import logo from '../../assets/images/logo.png'
+import logo from '../../assets/images/logo.png';
 import { useSearch } from '../../context/SearchContext';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
   const currentYear = new Date().getFullYear();
   const location = useLocation();
-const{token} = useSearch()
+  const { token } = useSearch();
+
+  // Show/hide back to top button
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 300);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const handleSubscribe = (e) => {
     e.preventDefault();
-    if (email) {
+    if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setIsSubmitted(true);
       setEmail('');
       setTimeout(() => setIsSubmitted(false), 3000);
     }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const footerLinks = {
@@ -26,6 +42,7 @@ const{token} = useSearch()
       { name: 'Home', path: '/' },
       { name: 'About Us', path: '/about' },
       { name: 'Contact', path: '/contact' },
+      { name: 'Orders', path: '/user/orders' },
     ]
   };
 
@@ -35,10 +52,9 @@ const{token} = useSearch()
     { name: 'Twitter', icon: <FiTwitter size={20} />, url: 'https://www.twitter.com/harjeet_vx', color: '#1DA1F2' },
   ];
 
+  if (!token) return null;
+
   return (
-    <>
-    {
-      token && (
     <footer className="n11-footer">
       <div className="footer-container">
         {/* Main Footer Content */}
@@ -59,72 +75,74 @@ const{token} = useSearch()
               Best deals, best prices, every day 💸
             </p>
           </div>
-        </div>
 
-        {/* Links Columns */}
-        {Object.entries(footerLinks).map(([category, links]) => (
-          <div key={category} className="footer-links-column">
-            <h3 className="footer-links-title">{category}</h3>
-            <ul className="footer-links-list">
-              {links.map((link) => (
-                <li key={link.name}>
-                  <Link to={link.path} className={`footer-link ${location.pathname === link.path ? 'active' : ''}`}>
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-
-        {/* Newsletter Column */}
-        <div className="footer-newsletter">
-          <h3 className="footer-links-title">Newsletter</h3>
-          <p className="newsletter-text">
-            Subscribe to get special offers, free giveaways, and exclusive deals.
-          </p>
-          <form onSubmit={handleSubscribe} className="newsletter-form">
-            <div className="input-wrapper">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="newsletter-input"
-              />
-              <button type="submit" className="newsletter-button">
-                <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-                  <path d="M4.16667 10H15.8333M15.8333 10L10 4.16667M15.8333 10L10 15.8333" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
+          {/* Links Columns */}
+          {Object.entries(footerLinks).map(([category, links]) => (
+            <div key={category} className="footer-links-column">
+              <h3 className="footer-links-title">{category}</h3>
+              <ul className="footer-links-list">
+                {links.map((link) => (
+                  <li key={link.name}>
+                    <Link 
+                      to={link.path} 
+                      className={`footer-link ${location.pathname === link.path ? 'active' : ''}`}
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-            {isSubmitted && (
-              <div className="success-message">
-                <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                  <path d="M16.6667 5L7.5 14.1667L3.33333 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-                Subscribed successfully!
+          ))}
+
+          {/* Newsletter Column */}
+          <div className="footer-newsletter">
+            <h3 className="footer-links-title">Newsletter</h3>
+            <p className="newsletter-text">
+              Subscribe to get special offers, free giveaways, and exclusive deals.
+            </p>
+            <form onSubmit={handleSubscribe} className="newsletter-form">
+              <div className="input-wrapper">
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="newsletter-input"
+                  aria-label="Email for newsletter"
+                />
+                <button type="submit" className="newsletter-button" aria-label="Subscribe">
+                  <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+                    <path d="M4.16667 10H15.8333M15.8333 10L10 4.16667M15.8333 10L10 15.8333" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
               </div>
-            )}
-          </form>
+              {isSubmitted && (
+                <div className="success-message">
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+                    <path d="M16.6667 5L7.5 14.1667L3.33333 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                  Subscribed successfully!
+                </div>
+              )}
+            </form>
 
-          {/* Payment Methods */}
-          <div className="payment-methods">
-            <span className="payment-label">Secure Payments:</span>
-            <div className="payment-icons">
-              <span>💳</span>
-              <span>💵</span>
-              <span>🪙</span>
-              <span>📱</span>
+            {/* Payment Methods */}
+            <div className="payment-methods">
+              <span className="payment-label">Secure Payments:</span>
+              <div className="payment-icons">
+                <span>💳</span>
+                <span>💵</span>
+                <span>🪙</span>
+                <span>📱</span>
+              </div>
             </div>
           </div>
-
         </div>
 
         {/* Bottom Bar */}
         <div className="footer-bottom">
-
           <div className="footer-social-links">
             {socialLinks.map((social) => (
               <a
@@ -148,20 +166,16 @@ const{token} = useSearch()
       </div>
 
       {/* Back to Top Button */}
-      {
-        location.pathname === "/" && (
-          <button
-            className="back-to-top"
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M10 15.8333V4.16667M10 4.16667L4.16667 10M10 4.16667L15.8333 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </button>
-        )}
-    </footer>
+      {showBackToTop && (
+        <button
+          className="back-to-top"
+          onClick={scrollToTop}
+          aria-label="Back to top"
+        >
+          <FiArrowUp size={20} />
+        </button>
       )}
-    </>
+    </footer>
   );
 };
 

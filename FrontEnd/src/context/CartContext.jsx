@@ -109,11 +109,15 @@ export const CartProvider =
       ? addedItems.reduce(
           (value,item) => {
 
+            const price = Number(item.price || 0);
+            const discount = Number(item.discountPercentage || 0);
+            const discountedPrice = price * (1 - discount / 100);
+
             return (
 
               value +
 
-              (item.price || 0) *
+              discountedPrice *
 
               (item.quantity || 0)
 

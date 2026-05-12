@@ -161,8 +161,6 @@ body.dark-mode .logo-text {
 .search-box {
   position: relative;
   flex: 1;
-  min-width: 0;
-  max-width: 480px;
 }
 
 .search-input {
@@ -1451,11 +1449,6 @@ body {
   .logo{
     max-width: 95px;
   }
-  /* SEARCH */
-
-  .search-box{
-    max-width: 135px;
-  }
 
   .search-input{
     height: 36px;
@@ -1511,10 +1504,6 @@ body {
     gap: 16px;
   }
 
-  .search-box{
-    max-width: 260px;
-  }
-
   .desktop-nav{
     gap: 2px;
   }
@@ -1536,7 +1525,6 @@ body {
 ========================================= */
 
 .logo,
-.search-box,
 .cart-wrapper,
 .user-section,
 .mobile-menu-btn{

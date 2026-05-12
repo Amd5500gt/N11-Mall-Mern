@@ -57,7 +57,7 @@ const App = () => {
 
             <Route path="orders" element={<OrderHistory />} />
             <Route path="addresses" element={<AddressPage />} />
-            <Route path="addresses/add" element={<AddressForm />} />
+            <Route path="address/add" element={<AddressForm />} />
 
             </Route>
 
@@ -70,36 +70,77 @@ const App = () => {
 
       </Routes>
 
-      {/* Toaster */}
-      <Toaster
-        position="bottom-center"
-        reverseOrder={false}
-        toastOptions={{
-          duration: 2500,
-          style: {
-            zIndex:"99999",
-            background: '#1e293b',   // dark modern bg
-            color: '#fff',
-            borderRadius: '10px',
-            padding: '12px 16px',
-            fontSize: '14px',
-            boxShadow: '0 5px 15px rgba(0,0,0,0.3)',
-          },
-          success: {
-            iconTheme: {
-              primary: '#22c55e',
-              secondary: '#fff',
-            },
-          },
-          error: {
-            iconTheme: {
-              primary: '#ef4444',
-              secondary: '#fff',
-            },
-          },
-        }}
-      />
+ {/* ❤️ Red + Black Cyber Toaster */}
+<Toaster
+  position="bottom-center"
+  reverseOrder={false}
+  gutter={10}
+  containerStyle={{
+    bottom: 20,
+    zIndex: 999999,
+  }}
+  toastOptions={{
+    duration: 2800,
 
+    style: {
+      zIndex: "999999",
+
+      // 🖤 Cyber Dark Background
+      background: "rgba(47, 46, 46, 0.52)",
+      color: "#fff5f5",
+
+      backdropFilter: "blur(16px)",
+      WebkitBackdropFilter: "blur(16px)",
+
+      borderRadius: "16px",
+      padding: "14px 18px",
+
+      fontSize: "14px",
+      fontWeight: "600",
+      letterSpacing: "0.3px",
+
+      border: "1px solid rgba(255,255,255,0.05)",
+
+      boxShadow: `
+        0 10px 30px rgba(0,0,0,0.45),
+        0 0 25px rgba(255,0,80,0.12)
+      `,
+
+      minWidth: "260px",
+      maxWidth: "400px",
+
+      animation: "toastSlide 0.25s ease",
+    },
+
+    // ✅ SUCCESS
+    success: {
+      duration: 2500,
+
+      iconTheme: {
+        primary: "#ff1744",
+        secondary: "#140205",
+      },
+    },
+
+    // ❌ ERROR
+    error: {
+      duration: 3200,
+
+      iconTheme: {
+        primary: "#ff5252",
+        secondary: "#180204",
+      },
+    },
+
+    // ⏳ LOADING
+    loading: {
+      iconTheme: {
+        primary: "#ff8a80",
+        secondary: "#180304",
+      },
+    },
+  }}
+/>
     </div>
   );
 };
