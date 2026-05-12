@@ -1,5 +1,5 @@
 const nodemailer = require("nodemailer")
-const userModel = require("../Models/userModel")
+const userModel = require("../../Models/userModel")
 const bcrypt = require("bcrypt")
 const otpGenerate = async (req, res) => {
 

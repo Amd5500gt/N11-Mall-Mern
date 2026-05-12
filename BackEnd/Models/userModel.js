@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+/* ================= ADDRESS SCHEMA ================= */
+
 const addressSchema = new mongoose.Schema(
   {
     name: {
@@ -9,8 +11,8 @@ const addressSchema = new mongoose.Schema(
     },
 
     phone: {
-      type: String,
-      default: "",
+      type: Number,
+      default: null,
     },
 
     addressLine1: {
@@ -34,10 +36,42 @@ const addressSchema = new mongoose.Schema(
     pincode: {
       type: String,
       default: "",
-    }
+    },
   },
   { _id: false }
 );
+
+/* ================= CONTACT SCHEMA ================= */
+
+const contactSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      trim: true,
+      default: "",
+    },
+
+    email: {
+      type: String,
+      lowercase: true,
+      trim: true,
+      default: "",
+    },
+
+    phone: {
+      type: Number,
+      default: null,
+    },
+
+    message: {
+      type: String,
+      default: "",
+    },
+  },
+  { _id: false }
+);
+
+/* ================= USER SCHEMA ================= */
 
 const userSchema = new mongoose.Schema(
   {
@@ -97,6 +131,11 @@ const userSchema = new mongoose.Schema(
       default: () => ({}),
     },
 
+    contact: {
+      type: contactSchema,
+      default: () => ({}),
+    },
+
     cart: [
       {
         productId: {
@@ -117,9 +156,6 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const userModel = mongoose.model(
-  "users",
-  userSchema
-);
+const userModel = mongoose.model("users", userSchema);
 
 module.exports = userModel;

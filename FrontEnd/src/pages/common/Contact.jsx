@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaClock,FaForward, FaCheckCircle } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaClock, FaForward, FaCheckCircle } from 'react-icons/fa';
 import '../pages.css';
+import api from '../../utils/Api';
+import toast from 'react-hot-toast';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: '',
+    phone: '',
     message: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -17,13 +19,28 @@ const Contact = () => {
       [e.target.name]: e.target.value
     });
   };
+  const contactFormHandler = async () => {
+    try {
+      setIsSubmitted(true);
+      const { data } = await api.post("/user/contact-form",formData);
+      setTimeout(() => {
+        toast.success(data.message)
 
-  const handleSubmit = (e) => {
+      }, 500);
+
+      setTimeout(() => setIsSubmitted(false), 3000);
+      setFormData({ name: '', email: '', phone: '', message: '' });
+    } catch (err) {
+      toast.error(err.message)
+    }
+  }
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitted(true);
-    setTimeout(() => setIsSubmitted(false), 3000);
-    setFormData({ name: '', email: '', subject: '', message: '' });
+
+
+   await contactFormHandler()
   };
+
 
   return (
     <div className="pages-container">
@@ -103,9 +120,9 @@ const Contact = () => {
                 <div className="form-group">
                   <input
                     type="text"
-                    name="subject"
-                    placeholder="Subject"
-                    value={formData.subject}
+                    name="phone"
+                    placeholder="Contact Number"
+                    value={formData.phone}
                     onChange={handleChange}
                     required
                     className="form-input"
@@ -123,15 +140,9 @@ const Contact = () => {
                   ></textarea>
                 </div>
                 <button type="submit" className="submit-btn">
-                  {isSubmitted ? <><FaCheckCircle /> Sent!</> : <><FaForward /> Send Message</>}
+                  Send Message
                 </button>
               </form>
-              {isSubmitted && (
-                <div className="success-message">
-                  <FaCheckCircle />
-                  Thank you for reaching out! We'll get back to you soon.
-                </div>
-              )}
             </div>
           </div>
         </div>

@@ -5,6 +5,8 @@ import { BsSuitcase2 } from 'react-icons/bs';
 import './footer.css';
 import logo from '../../assets/images/logo.png';
 import { useSearch } from '../../context/SearchContext';
+import toast from 'react-hot-toast';
+import api from '../../utils/Api';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
@@ -36,6 +38,18 @@ const Footer = () => {
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+   const newsletterSubscribe = async(email) =>{
+    try{
+      const { data} =  await api.post("/user/subscribe",{email});
+      setTimeout(() => {
+          toast.success(  data.message )
+          
+      }, 500);
+    } catch(err){
+      toast.error(err.message)
+    }
+  }
 
   const footerLinks = {
     'Quick Links': [
@@ -112,20 +126,12 @@ const Footer = () => {
                   className="newsletter-input"
                   aria-label="Email for newsletter"
                 />
-                <button type="submit" className="newsletter-button" aria-label="Subscribe">
+                <button onClick={()=>newsletterSubscribe(email)} type="submit" className="newsletter-button" aria-label="Subscribe">
                   <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
                     <path d="M4.16667 10H15.8333M15.8333 10L10 4.16667M15.8333 10L10 15.8333" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
               </div>
-              {isSubmitted && (
-                <div className="success-message">
-                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
-                    <path d="M16.6667 5L7.5 14.1667L3.33333 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  Subscribed successfully!
-                </div>
-              )}
             </form>
 
             {/* Payment Methods */}

@@ -8,7 +8,7 @@ const loginLimiter = require("../Middlewares/rateLimit");
 Router.get("/demo",loginLimiter, (req, res) => {
   res.json(demodata);
  });
-Router.get("/",loginLimiter,ensureAuthenticated, products )
-Router.get("/:id",loginLimiter, ensureAuthenticated, productPage );
+Router.get("/",ensureAuthenticated, products )
+Router.get("/:id", ensureAuthenticated, productPage );
 
 module.exports = Router
