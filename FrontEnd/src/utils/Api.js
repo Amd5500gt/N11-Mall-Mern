@@ -108,11 +108,6 @@ api.interceptors.response.use(
     const duration =
       endTime -
       response.config.metadata.startTime;
-
-    console.log(
-      `✅ ${response.config.method?.toUpperCase()} ${response.config.url} - ${duration}ms`
-    );
-
     return response;
 
   },
