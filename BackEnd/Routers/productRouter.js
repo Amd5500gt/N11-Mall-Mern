@@ -2,10 +2,9 @@ const Router = require("express").Router()
 const {products, productPage} = require("../Controllors/productAPIs")
 const demodata = require("../productData/demodata.json")
 const ensureAuthenticated = require("../Middlewares/authData");
-const loginLimiter = require("../Middlewares/rateLimit");
 
 
-Router.get("/demo",loginLimiter, (req, res) => {
+Router.get("/demo", (req, res) => {
   res.json(demodata);
  });
 Router.get("/",ensureAuthenticated, products )
