@@ -105,7 +105,6 @@ const AddCart = () => {
                 </div>
               );
             })}
-          </div>
 {
   addedItems.length > 4 && (
 
@@ -159,6 +158,7 @@ const AddCart = () => {
     </div>
   )
 }
+          </div>
           {/* Order Summary */}
           <div className="order-summary">
             <h2 className="summary-title">Order Summary</h2>

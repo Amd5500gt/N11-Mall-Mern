@@ -14,6 +14,7 @@ const productRouter = require("./Routers/productRouter");
 const userRouter = require("./Routers/userRouter");
 
 connectDB();
+app.set("trust proxy", 1);
 app.use(compression())
 app.use(express.json());
 
