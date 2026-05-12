@@ -226,7 +226,7 @@ const ResetPassword =
 
       setTimeout(() => {
 
-        navigate(-1);
+        navigate("/");
 
       }, 1000);
 
