@@ -226,9 +226,9 @@ const ResetPassword =
 
       setTimeout(() => {
 
-        navigate("/auth");
+        navigate(-1);
 
-      }, 1500);
+      }, 1000);
 
     }
 
