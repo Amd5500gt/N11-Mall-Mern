@@ -74,10 +74,6 @@
   outline: none;
 }
 
-.form-group input:hover {
-  border-color: var(--primary-light);
-}
-
 .form-group input::placeholder {
   color: var(--text-secondary);
   opacity: 0.6;
@@ -107,16 +103,6 @@
   75% { transform: translateX(5px); }
 }
 
-/* Input Error State */
-.form-group input.error-input {
-  border-color: var(--error);
-  background-color: var(--error-light);
-}
-
-.form-group input.error-input:focus {
-  border-color: var(--error);
-  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
-}
 
 /* Address Suggestions Dropdown */
 .address-suggestions {
@@ -320,11 +306,6 @@
 /* Focus visible for accessibility */
 
 /* Disabled state for inputs */
-.form-group input:disabled {
-  background: var(--bg-light);
-  cursor: not-allowed;
-  opacity: 0.6;
-}
 
 /* Helper text styling */
 .helper-text {

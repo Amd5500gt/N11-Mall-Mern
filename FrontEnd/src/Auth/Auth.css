@@ -125,7 +125,6 @@
   color: var(--clr-gray-100);
   background: transparent;
   border: none !important;
-  border-bottom: 2px solid var(--clr-gray-300) !important;
   outline: none;
   transition: all var(--transition-base);
 }
