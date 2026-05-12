@@ -4,7 +4,7 @@ const { otpGenerate, verifyOTP, resetPassowrd, resetPassword } = require("../Con
 const { LoginUser, RegisterUser, GoogleUser } = require("../Controllors/auth/userAPIs")
 const { LoginUserValidation, RegisterUserValidation } = require("../Middlewares/authValidator")
 const otpLimiter = require("../Middlewares/apiLimiter/otpLimiter")
-const loginLimiter = require("../Middlewares/apiLimiter/requestLimit")
+const loginLimiter = require("../Middlewares/apiLimiter/requestLimiter")
 const authLimiter = require("../Middlewares/apiLimiter/authLimter")
 
 // Testing
