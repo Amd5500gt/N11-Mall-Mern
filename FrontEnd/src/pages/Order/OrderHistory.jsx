@@ -63,17 +63,17 @@ const OrderHistory = () => {
 
   const getStatusBadge = (status) => {
     const statusConfig = {
-      'Pending': { class: 'pending', icon: <FaClock />, text: 'Pending' },
-      'Confirmed': { class: 'confirmed', icon: <FaCheckCircle />, text: 'Confirmed' },
-      'Shipped': { class: 'shipped', icon: <FaTruck />, text: 'Shipped' },
-      'Delivered': { class: 'delivered', icon: <FaCheckCircle />, text: 'Delivered' },
-      'Cancelled': { class: 'cancelled', icon: <FaBox />, text: 'Cancelled' }
+      'Pending': { class: 'oh-status-pending', icon: <FaClock />, text: 'Pending' },
+      'Confirmed': { class: 'oh-status-confirmed', icon: <FaCheckCircle />, text: 'Confirmed' },
+      'Shipped': { class: 'oh-status-shipped', icon: <FaTruck />, text: 'Shipped' },
+      'Delivered': { class: 'oh-status-delivered', icon: <FaCheckCircle />, text: 'Delivered' },
+      'Cancelled': { class: 'oh-status-cancelled', icon: <FaBox />, text: 'Cancelled' }
     };
     
     const config = statusConfig[status] || statusConfig['Pending'];
     
     return (
-      <span className={`status-badge ${config.class}`}>
+      <span className={`oh-status-badge ${config.class}`}>
         {config.icon}
         {config.text}
       </span>
@@ -92,10 +92,10 @@ const OrderHistory = () => {
     }
     
     return (
-      <div className="order-progress">
+      <div className="oh-order-progress">
         {steps.map((step, index) => (
-          <div key={index} className={`progress-step ${index <= currentStep ? 'active' : ''}`}>
-            <div className="progress-dot"></div>
+          <div key={index} className={`oh-progress-step ${index <= currentStep ? 'oh-active' : ''}`}>
+            <div className="oh-progress-dot"></div>
             <span>{step}</span>
           </div>
         ))}
@@ -155,22 +155,22 @@ const OrderHistory = () => {
 
   if (orders.length === 0) {
     return (
-      <div className="orders-container">
-        <div className="empty-orders glass-effect">
-          <div className="empty-animation">
-            <FaShoppingBag className="empty-icon" />
-            <div className="empty-particles">
+      <div className="oh-orders-container">
+        <div className="oh-empty-orders oh-glass-effect">
+          <div className="oh-empty-animation">
+            <FaShoppingBag className="oh-empty-icon" />
+            <div className="oh-empty-particles">
               {[...Array(6)].map((_, i) => (
-                <div key={i} className={`empty-particle empty-particle-${i}`}></div>
+                <div key={i} className={`oh-empty-particle oh-empty-particle-${i}`}></div>
               ))}
             </div>
           </div>
           <h2>No Orders Yet</h2>
           <p>Looks like you haven't placed any orders yet.</p>
-          <p className="empty-subtitle">Start exploring our amazing collection!</p>
-          <Link to="/" className="start-shopping-btn premium-btn">
+          <p className="oh-empty-subtitle">Start exploring our amazing collection!</p>
+          <Link to="/" className="oh-start-shopping-btn oh-premium-btn">
             Start Shopping
-            <FaShoppingBag className="btn-icon" />
+            <FaShoppingBag className="oh-btn-icon" />
           </Link>
         </div>
       </div>
@@ -178,59 +178,59 @@ const OrderHistory = () => {
   }
 
   return (
-    <div className="orders-container">
-      <div className="orders-wrapper">
+    <div className="oh-orders-container">
+      <div className="oh-orders-wrapper">
         {/* Header Section */}
-        <div className="orders-header glass-effect">
-          <div className="header-content">
+        <div className="oh-orders-header oh-glass-effect">
+          <div className="oh-header-content">
             <h1>My Orders</h1>
-            <p className="order-count">{filteredOrders.length} {filteredOrders.length === 1 ? 'order' : 'orders'} found</p>
+            <p className="oh-order-count">{filteredOrders.length} {filteredOrders.length === 1 ? 'order' : 'orders'} found</p>
           </div>
           
           {/* Stats Cards */}
-          <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-icon total-icon">
+          <div className="oh-stats-grid">
+            <div className="oh-stat-card">
+              <div className="oh-stat-icon oh-total-icon">
                 <FaShoppingBag />
               </div>
-              <div className="stat-info">
-                <span className="stat-value">{stats.total}</span>
-                <span className="stat-label">Total Orders</span>
+              <div className="oh-stat-info">
+                <span className="oh-stat-value">{stats.total}</span>
+                <span className="oh-stat-label">Total Orders</span>
               </div>
             </div>
-            <div className="stat-card">
-              <div className="stat-icon delivered-icon">
+            <div className="oh-stat-card">
+              <div className="oh-stat-icon oh-delivered-icon">
                 <FaCheckCircle />
               </div>
-              <div className="stat-info">
-                <span className="stat-value">{stats.delivered}</span>
-                <span className="stat-label">Delivered</span>
+              <div className="oh-stat-info">
+                <span className="oh-stat-value">{stats.delivered}</span>
+                <span className="oh-stat-label">Delivered</span>
               </div>
             </div>
-            <div className="stat-card">
-              <div className="stat-icon pending-icon">
+            <div className="oh-stat-card">
+              <div className="oh-stat-icon oh-pending-icon">
                 <FaClock />
               </div>
-              <div className="stat-info">
-                <span className="stat-value">{stats.pending}</span>
-                <span className="stat-label">In Progress</span>
+              <div className="oh-stat-info">
+                <span className="oh-stat-value">{stats.pending}</span>
+                <span className="oh-stat-label">In Progress</span>
               </div>
             </div>
-            <div className="stat-card">
-              <div className="stat-icon cancelled-icon">
+            <div className="oh-stat-card">
+              <div className="oh-stat-icon oh-cancelled-icon">
                 <FaBox />
               </div>
-              <div className="stat-info">
-                <span className="stat-value">{stats.cancelled}</span>
-                <span className="stat-label">Cancelled</span>
+              <div className="oh-stat-info">
+                <span className="oh-stat-value">{stats.cancelled}</span>
+                <span className="oh-stat-label">Cancelled</span>
               </div>
             </div>
           </div>
 
           {/* Filters */}
-          <div className="filters-section">
-            <div className="search-box">
-              <FaSearch className="search-icon" />
+          <div className="oh-filters-section">
+            <div className="oh-search-box">
+              <FaSearch className="oh-search-icon" />
               <input
                 type="text"
                 placeholder="Search by order ID or product name..."
@@ -239,33 +239,33 @@ const OrderHistory = () => {
               />
             </div>
             
-            <div className="filter-buttons">
+            <div className="oh-filter-buttons">
               <button 
-                className={`filter-btn ${filterStatus === 'all' ? 'active' : ''}`}
+                className={`oh-filter-btn ${filterStatus === 'all' ? 'oh-active' : ''}`}
                 onClick={() => setFilterStatus('all')}
               >
                 All Orders
               </button>
               <button 
-                className={`filter-btn ${filterStatus === 'Pending' ? 'active' : ''}`}
+                className={`oh-filter-btn ${filterStatus === 'Pending' ? 'oh-active' : ''}`}
                 onClick={() => setFilterStatus('Pending')}
               >
                 Pending
               </button>
               <button 
-                className={`filter-btn ${filterStatus === 'Shipped' ? 'active' : ''}`}
+                className={`oh-filter-btn ${filterStatus === 'Shipped' ? 'oh-active' : ''}`}
                 onClick={() => setFilterStatus('Shipped')}
               >
                 Shipped
               </button>
               <button 
-                className={`filter-btn ${filterStatus === 'Delivered' ? 'active' : ''}`}
+                className={`oh-filter-btn ${filterStatus === 'Delivered' ? 'oh-active' : ''}`}
                 onClick={() => setFilterStatus('Delivered')}
               >
                 Delivered
               </button>
               <button 
-                className={`filter-btn ${filterStatus === 'Cancelled' ? 'active' : ''}`}
+                className={`oh-filter-btn ${filterStatus === 'Cancelled' ? 'oh-active' : ''}`}
                 onClick={() => setFilterStatus('Cancelled')}
               >
                 Cancelled
@@ -275,17 +275,17 @@ const OrderHistory = () => {
         </div>
 
         {/* Orders List */}
-        <div className="orders-list">
+        <div className="oh-orders-list">
           {filteredOrders.map((order) => (
-            <div key={order.id} className="order-card glass-effect card-hover">
-              <div className="order-header">
-                <div className="order-info">
-                  <div className="order-id-group">
-                    <div className="order-id-badge">
-                      <FaBox className="order-icon" />
+            <div key={order.id} className="oh-order-card oh-glass-effect oh-card-hover">
+              <div className="oh-order-header">
+                <div className="oh-order-info">
+                  <div className="oh-order-id-group">
+                    <div className="oh-order-id-badge">
+                      <FaBox className="oh-order-icon" />
                       <strong>Order #{order.orderId}</strong>
                     </div>
-                    <div className="order-date">
+                    <div className="oh-order-date">
                       <FaCalendar />
                       <span>{formatDate(order.date)}</span>
                     </div>
@@ -298,41 +298,41 @@ const OrderHistory = () => {
               {order.status !== 'Cancelled' && getProgressSteps(order.status)}
 
               {/* Items Preview */}
-              <div className="order-items-preview">
-                <div className="items-scroll">
+              <div className="oh-order-items-preview">
+                <div className="oh-items-scroll">
                   {order.items.map((item, idx) => (
-                    <div key={idx} className="order-item-preview">
-                      <div className="item-image-wrapper">
+                    <div key={idx} className="oh-order-item-preview">
+                      <div className="oh-item-image-wrapper">
                         <img src={item.thumbnail} alt={item.title} />
-                        <span className="item-quantity-badge">{item.quantity}</span>
+                        <span className="oh-item-quantity-badge">{item.quantity}</span>
                       </div>
-                      <div className="item-preview-info">
-                        <span className="item-title">{item.title}</span>
-                        <span className="item-price">{formatPrice(item.price * (1 - (item.discountPercentage || 0) / 100) * 20)}</span>
+                      <div className="oh-item-preview-info">
+                        <span className="oh-item-title">{item.title}</span>
+                        <span className="oh-item-price">{formatPrice(item.price * (1 - (item.discountPercentage || 0) / 100) * 20)}</span>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="order-footer">
-                <div className="order-summary">
-                  <div className="order-total">
-                    <FaRupeeSign className="total-icon" />
+              <div className="oh-order-footer">
+                <div className="oh-order-summary">
+                  <div className="oh-order-total">
+                    <FaRupeeSign className="oh-total-icon" />
                     <div>
-                      <span className="total-label">Total Amount</span>
-                      <span className="total-value">{formatPrice(order.total)}</span>
+                      <span className="oh-total-label">Total Amount</span>
+                      <span className="oh-total-value">{formatPrice(order.total)}</span>
                     </div>
                   </div>
-                  <div className="order-payment">
-                    <span className="payment-label">Payment Method</span>
-                    <span className="payment-value">{order.paymentMethod}</span>
+                  <div className="oh-order-payment">
+                    <span className="oh-payment-label">Payment Method</span>
+                    <span className="oh-payment-value">{order.paymentMethod}</span>
                   </div>
                 </div>
                 
-                <div className="order-actions">
+                <div className="oh-order-actions">
                   <button 
-                    className="action-btn details-btn"
+                    className="oh-action-btn oh-details-btn"
                     onClick={() => setSelectedOrder(selectedOrder?.id === order.id ? null : order)}
                   >
                     {selectedOrder?.id === order.id ? <FaChevronUp /> : <FaChevronDown />}
@@ -340,12 +340,12 @@ const OrderHistory = () => {
                   </button>
                   
                   {order.status === 'Delivered' && (
-                    <button className="action-btn review-btn">
+                    <button className="oh-action-btn oh-review-btn">
                       <FaStar /> Write a Review
                     </button>
                   )}
                   
-                  <button className="action-btn print-btn" onClick={() => handlePrint(order)}>
+                  <button className="oh-action-btn oh-print-btn" onClick={() => handlePrint(order)}>
                     <FaPrint /> Print
                   </button>
                 </div>
@@ -353,39 +353,39 @@ const OrderHistory = () => {
 
               {/* Expanded Details */}
               {selectedOrder?.id === order.id && (
-                <div className="order-details-expanded slide-down">
-                  <div className="expanded-grid">
-                    <div className="delivery-address premium-card">
+                <div className="oh-order-details-expanded oh-slide-down">
+                  <div className="oh-expanded-grid">
+                    <div className="oh-delivery-address oh-premium-card">
                       <h4>
-                        <FaMapMarkerAlt className="section-icon" />
+                        <FaMapMarkerAlt className="oh-section-icon" />
                         Delivery Address
                       </h4>
-                      <div className="address-content">
-                        <p className="address-name"><strong>{order.address.fullName}</strong></p>
+                      <div className="oh-address-content">
+                        <p className="oh-address-name"><strong>{order.address.fullName}</strong></p>
                         <p>{order.address.addressLine1}</p>
                         {order.address.addressLine2 && <p>{order.address.addressLine2}</p>}
                         <p>{order.address.city}, {order.address.state} - {order.address.pincode}</p>
-                        <p className="address-phone">📞 {order.address.phone}</p>
+                        <p className="oh-address-phone">📞 {order.address.phone}</p>
                       </div>
                     </div>
 
-                    <div className="order-summary-details premium-card">
+                    <div className="oh-order-summary-details oh-premium-card">
                       <h4>Order Summary</h4>
-                      <div className="summary-items">
-                        <div className="summary-row">
+                      <div className="oh-summary-items">
+                        <div className="oh-summary-row">
                           <span>Subtotal:</span>
                           <span>{formatPrice(order.total)}</span>
                         </div>
-                        <div className="summary-row">
+                        <div className="oh-summary-row">
                           <span>Delivery Charges:</span>
-                          <span className="free-delivery">Free</span>
+                          <span className="oh-free-delivery">Free</span>
                         </div>
-                        <div className="summary-row">
+                        <div className="oh-summary-row">
                           <span>Tax (GST):</span>
                           <span>{formatPrice(order.total * 0.18)}</span>
                         </div>
-                        <div className="summary-divider"></div>
-                        <div className="summary-row total">
+                        <div className="oh-summary-divider"></div>
+                        <div className="oh-summary-row oh-total">
                           <span>Total:</span>
                           <span>{formatPrice(order.total)}</span>
                         </div>
@@ -393,28 +393,28 @@ const OrderHistory = () => {
                     </div>
                   </div>
 
-                  <div className="all-order-items">
+                  <div className="oh-all-order-items">
                     <h4>
-                      <FaShoppingBag className="section-icon" />
+                      <FaShoppingBag className="oh-section-icon" />
                       Order Items ({order.items.length})
                     </h4>
-                    <div className="items-grid">
+                    <div className="oh-items-grid">
                       {order.items.map((item, idx) => (
-                        <div key={idx} className="order-item-full premium-card">
-                          <div className="item-full-image">
+                        <div key={idx} className="oh-order-item-full oh-premium-card">
+                          <div className="oh-item-full-image">
                             <img src={item.thumbnail} alt={item.title} />
                           </div>
-                          <div className="order-item-details">
+                          <div className="oh-order-item-details">
                             <h5>{item.title}</h5>
-                            <p className="item-brand">Brand: {item.brand}</p>
-                            <div className="item-meta">
-                              <span className="item-quantity">Quantity: {item.quantity}</span>
-                              <span className="item-price-each">Price: {formatPrice(item.price * (1 - (item.discountPercentage || 0) / 100) * 20)} each</span>
+                            <p className="oh-item-brand">Brand: {item.brand}</p>
+                            <div className="oh-item-meta">
+                              <span className="oh-item-quantity">Quantity: {item.quantity}</span>
+                              <span className="oh-item-price-each">Price: {formatPrice(item.price * (1 - (item.discountPercentage || 0) / 100) * 20)} each</span>
                             </div>
-                            <p className="item-subtotal">
+                            <p className="oh-item-subtotal">
                               Subtotal: {formatPrice(item.price * (1 - (item.discountPercentage || 0) / 100) * 20 * item.quantity)}
                             </p>
-                            <button onClick={()=> navigate("/product/"+item.id)} className="buy-again-btn">Buy Again</button>
+                            <button onClick={()=> navigate("/product/"+item.id)} className="oh-buy-again-btn">Buy Again</button>
                           </div>
                         </div>
                       ))}
@@ -422,16 +422,16 @@ const OrderHistory = () => {
                   </div>
 
                   {order.status === 'Delivered' && (
-                    <div className="order-review-section">
-                      <div className="rating-prompt">
+                    <div className="oh-order-review-section">
+                      <div className="oh-rating-prompt">
                         <h4>Love this product?</h4>
                         <p>Share your experience with others!</p>
-                        <div className="rating-stars">
+                        <div className="oh-rating-stars">
                           {[1, 2, 3, 4, 5].map(star => (
-                            <FaStar key={star} className="star-icon" />
+                            <FaStar key={star} className="oh-star-icon" />
                           ))}
                         </div>
-                        <button className="write-review-btn">Write a Detailed Review</button>
+                        <button className="oh-write-review-btn">Write a Detailed Review</button>
                       </div>
                     </div>
                   )}
@@ -442,14 +442,14 @@ const OrderHistory = () => {
         </div>
 
         {filteredOrders.length === 0 && (
-          <div className="no-results glass-effect">
-            <FaSearch className="no-results-icon" />
+          <div className="oh-no-results oh-glass-effect">
+            <FaSearch className="oh-no-results-icon" />
             <h3>No orders found</h3>
             <p>Try adjusting your filters or search term</p>
             <button onClick={() => {
               setFilterStatus('all');
               setSearchTerm('');
-            }} className="clear-filters-btn">
+            }} className="oh-clear-filters-btn">
               Clear Filters
             </button>
           </div>
