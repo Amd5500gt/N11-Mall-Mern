@@ -1,17 +1,11 @@
-import React,{
+import React, {
   useState,
   useEffect
-}
-from "react";
+} from "react";
 
 import {
   useNavigate
-}
-from "react-router-dom";
-
-
-import api
-from "../utils/Api";
+} from "react-router-dom";
 
 import Login
 from "./pages/Login";
@@ -29,15 +23,16 @@ from "./components/PageForward";
 
 import {
   useSearch
-}
-from "../context/SearchContext";
+} from "../context/SearchContext";
 
 import ForgetPassword
 from "./pages/ForgetPassword/ForgetPassword";
 import toast from "react-hot-toast";
+import BASE_URL from "../config/config";
+
+
 
 const AuthPage = () => {
-
   const navigate =
   useNavigate();
 
@@ -204,17 +199,23 @@ const AuthPage = () => {
 
       setIsLoading(true);
 
-      const res =
-      await api.post(
-        "/auth/login",
+      const response =
+      await fetch(
+        `${BASE_URL}/auth/login`,
         {
-          email,
-          password
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email,
+            password
+          })
         }
       );
 
       const result =
-      res.data;
+      await response.json();
 
       if (result.success) {
 
@@ -264,6 +265,11 @@ const AuthPage = () => {
 
         }, 1500);
 
+      } else {
+        toast.error(
+          result.message ||
+          "Login failed"
+        );
       }
 
     }
@@ -275,7 +281,6 @@ const AuthPage = () => {
   setToken(null);
 
   toast.error(
-    err.response?.data?.message ||
     err.message ||
     "Login failed"
   );
@@ -347,18 +352,24 @@ const AuthPage = () => {
 
       setIsLoading(true);
 
-      const res =
-      await api.post(
-        "/auth/register",
+      const response =
+      await fetch(
+        `${BASE_URL}/auth/register`,
         {
-          name,
-          email,
-          password
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name,
+            email,
+            password
+          })
         }
       );
 
       const result =
-      res.data;
+      await response.json();
 
       if (result.success) {
 
@@ -408,6 +419,11 @@ const AuthPage = () => {
 
         }, 1500);
 
+      } else {
+        toast.error(
+          result.message ||
+          "Registration failed"
+        );
       }
 
     }
@@ -415,16 +431,8 @@ const AuthPage = () => {
     catch (err) {
 
       toast.error(
-
-        err.response?.data?.error
-        ?.details?.[0]?.message ||
-
-        err.response?.data?.message ||
-
         err.message ||
-
         "Registration failed"
-
       );
 
     }
@@ -448,19 +456,23 @@ const AuthPage = () => {
 
       setIsLoading(true);
 
-      const res =
-      await api.post(
-        "/auth/google",
+      const response =
+      await fetch(
+        `${BASE_URL}/auth/google`,
         {
-
-          credential:
-          credentialResponse.credential
-
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            credential:
+            credentialResponse.credential
+          })
         }
       );
 
       const result =
-      res.data;
+      await response.json();
 
       if (result.success) {
 
@@ -510,6 +522,11 @@ const AuthPage = () => {
 
         }, 1500);
 
+      } else {
+        toast.error(
+          result.message ||
+          "Authentication failed"
+        );
       }
 
     }
@@ -519,13 +536,8 @@ const AuthPage = () => {
       console.log(err);
 
       toast.error(
-
-        err.response?.data?.message ||
-
         err.message ||
-
         "Authentication failed"
-
       );
 
     }
