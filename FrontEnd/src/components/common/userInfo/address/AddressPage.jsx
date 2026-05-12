@@ -3,31 +3,22 @@ import toast from "react-hot-toast";
 import AddressForm from "../addressForm/AddressForm";
 import "./AddressPage.css";
 import { useAddress } from "../../../../context/AddressContext";
+import api from "../../../../utils/Api";
 
 const Addresses = () => {
-  const { userAddress, setUserAddress } = useAddress();
   const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+   const {userAddress} = useAddress()
   const handleAddressSubmit = async (newAddress) => {
     setIsLoading(true);
     
     try {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 500));
-      
-      setUserAddress(newAddress);
+    const{data} =  await  api.post("/user/update-address",{newAddress})
       setShowForm(false);
       
-      toast.success("Address saved successfully!", {
-        icon: "✅",
-        duration: 3000,
-        style: {
-          background: "linear-gradient(135deg, #10b981, #059669)",
-          color: "white",
-          borderRadius: "12px",
-        },
-      });
+      toast.success(data.message);
     } catch (error) {
       toast.error("Failed to save address", {
         duration: 3000,

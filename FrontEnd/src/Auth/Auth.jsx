@@ -9,10 +9,6 @@ import {
 }
 from "react-router-dom";
 
-import {
-  toast
-}
-from "react-hot-toast";
 
 import api
 from "../utils/Api";
@@ -38,6 +34,7 @@ from "../context/SearchContext";
 
 import ForgetPassword
 from "./pages/ForgetPassword/ForgetPassword";
+import toast from "react-hot-toast";
 
 const AuthPage = () => {
 
@@ -62,7 +59,6 @@ const AuthPage = () => {
     formData,
     setFormData
   ] = useState({
-
     name:"",
     email:"",
     password:"",
@@ -202,7 +198,6 @@ const AuthPage = () => {
       return toast.error(
         "All fields are required"
       );
-
     }
 
     try {
@@ -273,17 +268,19 @@ const AuthPage = () => {
 
     }
 
-    catch (err) {
+   catch (err) {
 
-      toast.error(
+  localStorage.removeItem("jwtToken");
 
-        err.response?.data?.message ||
+  setToken(null);
 
-        err.message ||
+  toast.error(
+    err.response?.data?.message ||
+    err.message ||
+    "Login failed"
+  );
 
-        "Login failed"
 
-      );
 
     }
 
@@ -646,15 +643,16 @@ const AuthPage = () => {
   /* REDIRECT */
 
   useEffect(() => {
+if (
+  token &&
+  localStorage.getItem("jwtToken")
+) {
 
-    if (token) {
+  navigate("/", {
+    replace: true
+  });
 
-      navigate("/",
-      {
-        replace:true
-      });
-
-    }
+}
 
   }, [token,navigate]);
 
