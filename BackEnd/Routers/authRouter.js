@@ -19,8 +19,8 @@ Router.post("/register",authLimiter,RegisterUserValidation,RegisterUser)
 // Password Reset
 
 Router.post("/send-request",otpLimiter,otpGenerate)
-Router.post("/verify-otp",otpLimiter, verifyOTP)
-Router.post("/reset-password",otpLimiter, resetPassword)
+Router.post("/verify-otp", verifyOTP)
+Router.post("/reset-password", resetPassword)
 
 
 
