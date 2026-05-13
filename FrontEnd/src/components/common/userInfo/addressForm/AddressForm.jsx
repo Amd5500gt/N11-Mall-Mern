@@ -124,7 +124,11 @@ const AddressForm = ({ onSubmit }) => {
         onSubmit(data.address);
       }
       toast.success(data.message || "Address Saved");
-      navigate(-1)
+      navigate(-1);
+
+setTimeout(() => {
+  window.location.reload();
+}, 400);
 
       // Reset form
       setFormData({
