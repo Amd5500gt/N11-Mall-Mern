@@ -43,7 +43,7 @@ const newsletterSubscribe = async (req, res) => {
 
       await transporter.sendMail({
 
-        from: process.env.EMAIL_USER,
+        from: `"NexXcart" ${process.env.EMAIL_USER}`,
 
         to: email,
 

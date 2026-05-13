@@ -36,7 +36,7 @@ const ContactFormData = async (req, res) => {
         setTimeout( async() => {
             await transporter.sendMail({
 
-                from: process.env.EMAIL_USER,
+                from:`"NexXcart" ${process.env.EMAIL_USER}`,
 
                 to: email,
 

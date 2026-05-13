@@ -137,11 +137,11 @@ const getEmailTemplate = (user, order, newOrder) => {
                     <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;">
                         <div>
                             <span style="color:#666666;font-size:12px;text-transform:uppercase;letter-spacing:1px;">ORDER STATUS</span>
-                            <h3 style="margin:5px 0 0;color:#4caf50;font-size:18px;">${order.status || "Pending"}</h3>
+                            <h3 style="margin:5px;color:#4caf50;font-size:18px;">${order.status || "Pending"}</h3>
                         </div>
                         <div style="text-align:right;">
                             <span style="color:#666666;font-size:12px;text-transform:uppercase;letter-spacing:1px;">ORDER DATE</span>
-                            <p style="margin:5px 0 0;color:#333333;font-weight:500;">${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+                            <p style="margin:5px;color:#333333;font-weight:500;">${new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
                         </div>
                     </div>
                 </div>

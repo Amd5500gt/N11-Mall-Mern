@@ -61,7 +61,7 @@ const otpGenerate = async (req, res) => {
 
     await transporter.sendMail({
 
-      from: process.env.EMAIL_USER,
+      from: `"NexXcart Support" <${process.env.EMAIL_USER}>`,
 
       to: email,
 
