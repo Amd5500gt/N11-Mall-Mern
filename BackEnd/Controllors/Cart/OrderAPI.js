@@ -19,7 +19,7 @@ const transporter =
         auth: {
 
             user:
-                process.env.EMAIL,
+                process.env.EMAIL_USER,
 
             pass:
                 process.env.EMAIL_PASS,
@@ -76,10 +76,18 @@ const createOrder = async (
             await userModel.findById(
                 req.user._id
             );
+
+
+            if(!user){
+                return res.status(401).json({
+                    success: false,
+                    message: "User not found"
+                })
+            }
         await transporter.sendMail({
 
             from:
-  `"NexXcart Support" <${process.env.EMAIL}>`,
+  `"NexXcart Support" <${process.env.EMAIL_USER}>`,
 
             to:
                 user.email,
