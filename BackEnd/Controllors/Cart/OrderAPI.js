@@ -41,7 +41,7 @@ const createOrder = async (req, res) => {
 
         // Create order
         const newOrder = await orderModel.create({
-            user: req.user._id,
+            user: req.user.id,
             order: {
                 ...order,
                 status: order.status || "Pending",
@@ -52,14 +52,14 @@ const createOrder = async (req, res) => {
 
         // Push to user's orders array
         await userModel.findByIdAndUpdate(
-            req.user._id,
+            req.user.id,
             {
                 $push: { orders: newOrder._id }
             }
         );
 
         // Get user with populated data
-        const user = await userModel.findById(req.user._id);
+        const user = await userModel.findById(req.user.id);
 
         if (!user) {
             return res.status(401).json({
@@ -238,7 +238,7 @@ const getOrders = async (req, res) => {
     try {
         const { page = 1, limit = 10, status } = req.query;
         
-        let query = { user: req.user._id };
+        let query = { user: req.user.id };
         
         if (status && status !== 'all') {
             query["order.status"] = status;
@@ -279,7 +279,7 @@ const getOrderById = async (req, res) => {
         
         const order = await orderModel.findOne({
             _id: id,
-            user: req.user._id
+            user: req.user.id
         });
         
         if (!order) {
