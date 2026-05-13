@@ -170,13 +170,12 @@ const Payment = () => {
 
        const res = await api.post("/user/orders/create",{order})
 
-       const data = await res.json();
-
-       if(!res.ok || data.success){
+       if(!res.data.success){
         throw new Error (
-          data.message || "Order Failed"
+          res.data.message || "Order Failed"
         )
        }
+       toast.success(res.data.message)
 
       // CLEAR CART
       localStorage.removeItem("cartItems");
