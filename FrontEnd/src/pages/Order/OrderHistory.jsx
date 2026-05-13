@@ -1,10 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, {
+  useState,
+  useEffect,
+  useMemo
+} from 'react';
+
 import {
-  FaBox, FaCalendar, FaRupeeSign, FaMapMarkerAlt,
-  FaChevronDown, FaChevronUp, FaTruck,
-  FaCheckCircle, FaClock, FaShoppingBag,
-  FaStar, FaSearch, FaPrint
+  Link,
+  useNavigate
+} from 'react-router-dom';
+
+import {
+  FaBox,
+  FaCalendar,
+  FaRupeeSign,
+  FaMapMarkerAlt,
+  FaChevronDown,
+  FaChevronUp,
+  FaTruck,
+  FaCheckCircle,
+  FaClock,
+  FaShoppingBag,
+  FaStar,
+  FaSearch,
+  FaPrint,
+  FaTimesCircle,
+  FaRedo,
+  FaDownload
 } from 'react-icons/fa';
 
 import './OrderHistory.css';
@@ -15,55 +36,50 @@ import api from '../../utils/api';
 
 const OrderHistory = () => {
 
-  const [orders, setOrders] = useState([]);
-
-  const [filteredOrders, setFilteredOrders] = useState([]);
-
   const navigate = useNavigate();
 
-  const [selectedOrder, setSelectedOrder] = useState(null);
+  /* ================= STATES ================= */
 
-  const [filterStatus, setFilterStatus] = useState('all');
+  const [orders, setOrders] =
+    useState([]);
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] =
+    useState(true);
 
-  const [stats, setStats] = useState({
-    total: 0,
-    delivered: 0,
-    pending: 0,
-    cancelled: 0
-  });
+  const [selectedOrder,
+    setSelectedOrder] =
+    useState(null);
 
-  useEffect(() => {
+  const [filterStatus,
+    setFilterStatus] =
+    useState('all');
 
-    fetchOrders();
+  const [searchTerm,
+    setSearchTerm] =
+    useState('');
 
-  }, []);
+  const [sortBy,
+    setSortBy] =
+    useState('latest');
+
+  /* ================= FETCH ORDERS ================= */
 
   const fetchOrders = async () => {
 
     try {
 
-      const res = await api.get(
-        "/user/orders/history"
-      );
+      setLoading(true);
+
+      const res =
+        await api.post(
+          "/user/orders"
+        );
 
       const data = res.data;
 
       if (data.success) {
 
-        const sortedOrders =
-          data.orders.sort(
-            (a, b) =>
-              new Date(b.createdAt) -
-              new Date(a.createdAt)
-          );
-
-        setOrders(sortedOrders);
-
-        setFilteredOrders(sortedOrders);
-
-        calculateStats(sortedOrders);
+        setOrders(data.orders);
 
       }
 
@@ -71,7 +87,13 @@ const OrderHistory = () => {
 
       console.log(err);
 
-      toast.error("Failed to fetch orders");
+      toast.error(
+        "Failed to fetch orders"
+      );
+
+    } finally {
+
+      setLoading(false);
 
     }
 
@@ -79,127 +101,233 @@ const OrderHistory = () => {
 
   useEffect(() => {
 
-    filterOrders();
+    fetchOrders();
 
-  }, [filterStatus, searchTerm, orders]);
+  }, []);
 
-  const calculateStats = (ordersList) => {
+  /* ================= FILTER + SEARCH + SORT ================= */
 
-    const total = ordersList.length;
-
-    const delivered =
-      ordersList.filter(
-        o => o.order.status === 'Delivered'
-      ).length;
-
-    const pending =
-      ordersList.filter(
-        o =>
-          o.order.status === 'Pending' ||
-          o.order.status === 'Confirmed' ||
-          o.order.status === 'Shipped'
-      ).length;
-
-    const cancelled =
-      ordersList.filter(
-        o => o.order.status === 'Cancelled'
-      ).length;
-
-    setStats({
-      total,
-      delivered,
-      pending,
-      cancelled
-    });
-
-  };
-
-  const filterOrders = () => {
+  const filteredOrders = useMemo(() => {
 
     let filtered = [...orders];
 
+    // FILTER STATUS
     if (filterStatus !== 'all') {
 
-      filtered = filtered.filter(
-        order =>
-          order.order.status === filterStatus
-      );
+      filtered =
+        filtered.filter(
+          order =>
+            order.status ===
+            filterStatus
+        );
 
     }
 
+    // SEARCH
     if (searchTerm) {
 
-      filtered = filtered.filter(order =>
+      filtered =
+        filtered.filter(order =>
 
-        order.order.orderId
-          .toLowerCase()
-          .includes(
-            searchTerm.toLowerCase()
-          ) ||
-
-        order.order.items.some(item =>
-          item.title
-            .toLowerCase()
+          order.orderId
+            ?.toLowerCase()
             .includes(
               searchTerm.toLowerCase()
-            )
-        )
+            ) ||
 
+          order.items.some(item =>
+            item.title
+              ?.toLowerCase()
+              .includes(
+                searchTerm.toLowerCase()
+              )
+          )
+
+        );
+
+    }
+
+    // SORT
+    if (sortBy === 'latest') {
+
+      filtered.sort(
+        (a, b) =>
+          new Date(b.createdAt) -
+          new Date(a.createdAt)
       );
 
     }
 
-    setFilteredOrders(filtered);
+    if (sortBy === 'oldest') {
+
+      filtered.sort(
+        (a, b) =>
+          new Date(a.createdAt) -
+          new Date(b.createdAt)
+      );
+
+    }
+
+    if (sortBy === 'high') {
+
+      filtered.sort(
+        (a, b) =>
+          b.total - a.total
+      );
+
+    }
+
+    if (sortBy === 'low') {
+
+      filtered.sort(
+        (a, b) =>
+          a.total - b.total
+      );
+
+    }
+
+    return filtered;
+
+  }, [
+    orders,
+    filterStatus,
+    searchTerm,
+    sortBy
+  ]);
+
+  /* ================= STATS ================= */
+
+  const stats = useMemo(() => {
+
+    return {
+
+      total:
+        orders.length,
+
+      delivered:
+        orders.filter(
+          o =>
+            o.status ===
+            'Delivered'
+        ).length,
+
+      pending:
+        orders.filter(
+          o =>
+            o.status === 'Pending' ||
+            o.status === 'Confirmed' ||
+            o.status === 'Shipped'
+        ).length,
+
+      cancelled:
+        orders.filter(
+          o =>
+            o.status ===
+            'Cancelled'
+        ).length
+
+    };
+
+  }, [orders]);
+
+  /* ================= HELPERS ================= */
+
+  const formatDate = (
+    dateString
+  ) => {
+
+    return new Date(
+      dateString
+    ).toLocaleDateString(
+      'en-IN',
+      {
+
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+
+      }
+    );
 
   };
 
-  const getStatusBadge = (status) => {
+  const formatPrice = (
+    price
+  ) => {
 
-    const statusConfig = {
+    return new Intl.NumberFormat(
+      'en-IN',
+      {
 
-      'Pending': {
-        class: 'oh-status-pending',
+        style: 'currency',
+
+        currency: 'INR',
+
+        minimumFractionDigits: 0,
+
+        maximumFractionDigits: 0
+
+      }
+    ).format(price);
+
+  };
+
+  /* ================= STATUS BADGE ================= */
+
+  const getStatusBadge = (
+    status
+  ) => {
+
+    const config = {
+
+      Pending: {
         icon: <FaClock />,
-        text: 'Pending'
+        className:
+          'oh-status-pending'
       },
 
-      'Confirmed': {
-        class: 'oh-status-confirmed',
-        icon: <FaCheckCircle />,
-        text: 'Confirmed'
+      Confirmed: {
+        icon:
+          <FaCheckCircle />,
+        className:
+          'oh-status-confirmed'
       },
 
-      'Shipped': {
-        class: 'oh-status-shipped',
+      Shipped: {
         icon: <FaTruck />,
-        text: 'Shipped'
+        className:
+          'oh-status-shipped'
       },
 
-      'Delivered': {
-        class: 'oh-status-delivered',
-        icon: <FaCheckCircle />,
-        text: 'Delivered'
+      Delivered: {
+        icon:
+          <FaCheckCircle />,
+        className:
+          'oh-status-delivered'
       },
 
-      'Cancelled': {
-        class: 'oh-status-cancelled',
-        icon: <FaBox />,
-        text: 'Cancelled'
+      Cancelled: {
+        icon:
+          <FaTimesCircle />,
+        className:
+          'oh-status-cancelled'
       }
 
     };
 
-    const config =
-      statusConfig[status] ||
-      statusConfig['Pending'];
+    const current =
+      config[status] ||
+      config.Pending;
 
     return (
 
-      <span className={`oh-status-badge ${config.class}`}>
+      <span
+        className={`oh-status-badge ${current.className}`}
+      >
 
-        {config.icon}
+        {current.icon}
 
-        {config.text}
+        {status}
 
       </span>
 
@@ -207,65 +335,114 @@ const OrderHistory = () => {
 
   };
 
-  const formatDate = (dateString) => {
+  /* ================= TIMELINE ================= */
 
-    return new Date(dateString)
-      .toLocaleDateString('en-IN', {
+  const getTimeline = (
+    status
+  ) => {
 
-        day: 'numeric',
+    const steps = [
 
-        month: 'long',
+      'Pending',
 
-        year: 'numeric'
+      'Confirmed',
 
-      });
+      'Shipped',
 
-  };
+      'Delivered'
 
-  const formatPrice = (price) => {
+    ];
 
-    return new Intl.NumberFormat(
-      'en-IN',
-      {
-        style: 'currency',
-        currency: 'INR',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0
-      }
-    ).format(price);
-
-  };
-
-  if (orders.length === 0) {
+    const currentIndex =
+      steps.indexOf(status);
 
     return (
 
-      <div className="oh-orders-container">
+      <div className="oh-timeline">
 
-        <div className="oh-empty-orders oh-glass-effect">
+        {steps.map(
+          (step, index) => (
 
-          <div className="oh-empty-animation">
+            <div
+              key={step}
 
-            <FaShoppingBag className="oh-empty-icon" />
+              className={`oh-timeline-step ${index <= currentIndex
+                ? 'active'
+                : ''
+                }`}
+            >
 
-          </div>
+              <div className="oh-dot" />
 
-          <h2>No Orders Yet</h2>
+              <span>
+                {step}
+              </span>
 
-          <p>
-            Looks like you haven't placed any orders yet.
-          </p>
+            </div>
 
-          <Link
-            to="/"
-            className="oh-start-shopping-btn oh-premium-btn"
-          >
+          )
+        )}
 
-            Start Shopping
+      </div>
 
-          </Link>
+    );
 
-        </div>
+  };
+
+  /* ================= PRINT ================= */
+
+  const handlePrint = (
+    order
+  ) => {
+
+    window.print();
+
+  };
+
+  /* ================= LOADING ================= */
+
+  if (loading) {
+
+    return (
+
+      <div className="oh-loading-container">
+
+        <div className="oh-loader"></div>
+
+      </div>
+
+    );
+
+  }
+
+  /* ================= EMPTY ================= */
+
+  if (!loading &&
+    orders.length === 0
+  ) {
+
+    return (
+
+      <div className="oh-empty-orders">
+
+        <FaShoppingBag className="oh-empty-icon" />
+
+        <h2>
+          No Orders Yet
+        </h2>
+
+        <p>
+          Start shopping to see your orders here.
+        </p>
+
+        <Link
+          to="/"
+          className="oh-shop-btn"
+        >
+
+          Start Shopping
+
+        </Link>
 
       </div>
 
@@ -275,121 +452,310 @@ const OrderHistory = () => {
 
   return (
 
-    <div className="oh-orders-container">
+    <div className="oh-container">
 
-      <div className="oh-orders-wrapper">
+      {/* ================= HEADER ================= */}
 
-        <div className="oh-orders-list">
+      <div className="oh-header">
 
-          {filteredOrders.map((order) => (
+        <div>
+
+          <h1>
+            My Orders
+          </h1>
+
+          <p>
+            Manage and track your orders
+          </p>
+
+        </div>
+
+      </div>
+
+      {/* ================= STATS ================= */}
+
+      <div className="oh-stats-grid">
+
+        <div className="oh-stat-card">
+
+          <FaShoppingBag />
+
+          <h3>
+            {stats.total}
+          </h3>
+
+          <p>
+            Total Orders
+          </p>
+
+        </div>
+
+        <div className="oh-stat-card">
+
+          <FaCheckCircle />
+
+          <h3>
+            {stats.delivered}
+          </h3>
+
+          <p>
+            Delivered
+          </p>
+
+        </div>
+
+        <div className="oh-stat-card">
+
+          <FaClock />
+
+          <h3>
+            {stats.pending}
+          </h3>
+
+          <p>
+            In Progress
+          </p>
+
+        </div>
+
+        <div className="oh-stat-card">
+
+          <FaTimesCircle />
+
+          <h3>
+            {stats.cancelled}
+          </h3>
+
+          <p>
+            Cancelled
+          </p>
+
+        </div>
+
+      </div>
+
+      {/* ================= FILTERS ================= */}
+
+      <div className="oh-filters">
+
+        <div className="oh-search-box">
+
+          <FaSearch />
+
+          <input
+            type="text"
+
+            placeholder="Search orders..."
+
+            value={searchTerm}
+
+            onChange={(e) =>
+              setSearchTerm(
+                e.target.value
+              )
+            }
+          />
+
+        </div>
+
+        <select
+          value={filterStatus}
+
+          onChange={(e) =>
+            setFilterStatus(
+              e.target.value
+            )
+          }
+        >
+
+          <option value="all">
+            All
+          </option>
+
+          <option value="Pending">
+            Pending
+          </option>
+
+          <option value="Confirmed">
+            Confirmed
+          </option>
+
+          <option value="Shipped">
+            Shipped
+          </option>
+
+          <option value="Delivered">
+            Delivered
+          </option>
+
+          <option value="Cancelled">
+            Cancelled
+          </option>
+
+        </select>
+
+        <select
+          value={sortBy}
+
+          onChange={(e) =>
+            setSortBy(
+              e.target.value
+            )
+          }
+        >
+
+          <option value="latest">
+            Latest
+          </option>
+
+          <option value="oldest">
+            Oldest
+          </option>
+
+          <option value="high">
+            Price High
+          </option>
+
+          <option value="low">
+            Price Low
+          </option>
+
+        </select>
+
+      </div>
+
+      {/* ================= ORDERS ================= */}
+
+      <div className="oh-orders-list">
+
+        {filteredOrders.map(
+          (order) => (
 
             <div
               key={order._id}
-              className="oh-order-card oh-glass-effect oh-card-hover"
+
+              className="oh-order-card"
             >
 
-              <div className="oh-order-header">
+              {/* TOP */}
 
-                <div className="oh-order-info">
+              <div className="oh-order-top">
 
-                  <div className="oh-order-id-group">
+                <div>
 
-                    <div className="oh-order-id-badge">
+                  <h3>
+                    #{order.orderId}
+                  </h3>
 
-                      <FaBox className="oh-order-icon" />
+                  <p>
+                    <FaCalendar />
 
-                      <strong>
-                        Order #{order.order.orderId}
-                      </strong>
-
-                    </div>
-
-                    <div className="oh-order-date">
-
-                      <FaCalendar />
-
-                      <span>
-                        {formatDate(order.createdAt)}
-                      </span>
-
-                    </div>
-
-                  </div>
-
-                  {getStatusBadge(order.order.status)}
+                    {formatDate(
+                      order.createdAt
+                    )}
+                  </p>
 
                 </div>
 
+                {getStatusBadge(
+                  order.status
+                )}
+
               </div>
 
-              <div className="oh-order-items-preview">
+              {/* TIMELINE */}
 
-                <div className="oh-items-scroll">
+              {
+                order.status !==
+                'Cancelled' &&
 
-                  {order.order.items.map((item, idx) => (
+                getTimeline(
+                  order.status
+                )
+              }
+
+              {/* ITEMS */}
+
+              <div className="oh-items">
+
+                {order.items.map(
+                  (item, idx) => (
 
                     <div
                       key={idx}
-                      className="oh-order-item-preview"
+
+                      className="oh-item"
                     >
 
-                      <div className="oh-item-image-wrapper">
+                      <img
+                        src={
+                          item.thumbnail
+                        }
 
-                        <img
-                          src={item.thumbnail}
-                          alt={item.title}
-                        />
+                        alt={
+                          item.title
+                        }
+                      />
 
-                        <span className="oh-item-quantity-badge">
-                          {item.quantity}
-                        </span>
+                      <div>
 
-                      </div>
-
-                      <div className="oh-item-preview-info">
-
-                        <span className="oh-item-title">
+                        <h4>
                           {item.title}
-                        </span>
+                        </h4>
+
+                        <p>
+                          Qty:
+                          {' '}
+                          {item.quantity}
+                        </p>
 
                       </div>
 
                     </div>
 
-                  ))}
-
-                </div>
+                  )
+                )}
 
               </div>
 
+              {/* FOOTER */}
+
               <div className="oh-order-footer">
 
-                <div className="oh-order-summary">
+                <div>
 
-                  <div className="oh-order-total">
+                  <span>
+                    Total
+                  </span>
 
-                    <FaRupeeSign className="oh-total-icon" />
-
-                    <div>
-
-                      <span className="oh-total-label">
-                        Total Amount
-                      </span>
-
-                      <span className="oh-total-value">
-                        {formatPrice(order.order.total)}
-                      </span>
-
-                    </div>
-
-                  </div>
+                  <h2>
+                    {formatPrice(
+                      order.total
+                    )}
+                  </h2>
 
                 </div>
 
-                <div className="oh-order-actions">
+                <div className="oh-actions">
 
                   <button
-                    className="oh-action-btn oh-details-btn"
+                    className="oh-btn"
+
+                    onClick={() =>
+                      handlePrint(
+                        order
+                      )
+                    }
+                  >
+
+                    <FaPrint />
+
+                    Print
+
+                  </button>
+
+                  <button
+                    className="oh-btn"
 
                     onClick={() =>
                       setSelectedOrder(
@@ -405,10 +771,7 @@ const OrderHistory = () => {
                       : <FaChevronDown />
                     }
 
-                    {selectedOrder?._id === order._id
-                      ? 'Hide Details'
-                      : 'View Details'
-                    }
+                    Details
 
                   </button>
 
@@ -416,11 +779,123 @@ const OrderHistory = () => {
 
               </div>
 
+              {/* DETAILS */}
+
+              {selectedOrder?._id ===
+                order._id && (
+
+                  <div className="oh-details">
+
+                    {/* ADDRESS */}
+
+                    <div className="oh-details-card">
+
+                      <h4>
+
+                        <FaMapMarkerAlt />
+
+                        Delivery Address
+
+                      </h4>
+
+                      <p>
+                        {order.address.fullName}
+                      </p>
+
+                      <p>
+                        {order.address.addressLine1}
+                      </p>
+
+                      <p>
+                        {order.address.city},
+                        {' '}
+                        {order.address.state}
+                      </p>
+
+                      <p>
+                        {order.address.pincode}
+                      </p>
+
+                    </div>
+
+                    {/* ITEMS */}
+
+                    <div className="oh-details-card">
+
+                      <h4>
+                        Order Items
+                      </h4>
+
+                      {order.items.map(
+                        (item, idx) => (
+
+                          <div
+                            key={idx}
+
+                            className="oh-details-item"
+                          >
+
+                            <img
+                              src={
+                                item.thumbnail
+                              }
+
+                              alt={
+                                item.title
+                              }
+                            />
+
+                            <div>
+
+                              <h5>
+                                {item.title}
+                              </h5>
+
+                              <p>
+                                Qty:
+                                {' '}
+                                {item.quantity}
+                              </p>
+
+                              <p>
+                                {formatPrice(
+                                  item.price
+                                )}
+                              </p>
+
+                            </div>
+
+                            <button
+                              className="oh-buy-btn"
+
+                              onClick={() =>
+                                navigate(
+                                  `/product/${item.id}`
+                                )
+                              }
+                            >
+
+                              <FaRedo />
+
+                              Buy Again
+
+                            </button>
+
+                          </div>
+
+                        )
+                      )}
+
+                    </div>
+
+                  </div>
+
+                )}
+
             </div>
 
-          ))}
-
-        </div>
+          )
+        )}
 
       </div>
 
