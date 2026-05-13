@@ -219,12 +219,7 @@ const getEmailTemplate = (user, order, newOrder) => {
                 
                 <!-- Footer -->
                 <div style="text-align:center;padding:20px 0 0;border-top:1px solid #e0e0e0;">
-                    <p style="margin:0 0 10px;color:#666666;font-size:12px;">
-                        Need help? Contact us at 
-                        <a href="mailto:${process.env.SUPPORT_EMAIL || 'support@nexxcart.com'}" style="color:#667eea;text-decoration:none;">
-                            ${process.env.SUPPORT_EMAIL || 'support@nexxcart.com'}
-                        </a>
-                    </p>
+                   
                     <p style="margin:0;color:#999999;font-size:12px;">
                         © ${new Date().getFullYear()} NexXcart. All rights reserved.
                     </p>
