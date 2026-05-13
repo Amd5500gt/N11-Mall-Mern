@@ -19,6 +19,8 @@ import Confetti from 'react-confetti';
 import './Payment.css';
 
 import { useAddress } from '../../context/AddressContext';
+import toast from 'react-hot-toast';
+import api from '../../utils/Api';
 
 const Payment = () => {
 
@@ -115,7 +117,7 @@ const Payment = () => {
       // CHECK EMPTY CART
       if (cartItems.length === 0) {
 
-        alert("Your cart is empty");
+        toast.error("Your cart is empty");
 
         setLoading(false);
 
@@ -124,10 +126,7 @@ const Payment = () => {
       }
 
       // SIMULATE API
-      await new Promise((resolve) =>
-        setTimeout(resolve, 1500)
-      );
-
+ 
       // CREATE ORDER
       const order = {
 
@@ -156,18 +155,28 @@ const Payment = () => {
 
       };
 
-      // SAVE ORDER
-      const existingOrders =
-        JSON.parse(
-          localStorage.getItem("orders")
-        ) || [];
+      // // SAVE ORDER
+      // const existingOrders =
+      //   JSON.parse(
+      //     localStorage.getItem("orders")
+      //   ) || [];
 
-      existingOrders.push(order);
+      // existingOrders.push(order);
 
-      localStorage.setItem(
-        "orders",
-        JSON.stringify(existingOrders)
-      );
+      // localStorage.setItem(
+      //   "orders",
+      //   JSON.stringify(existingOrders)
+      // );
+
+       const res = await api.post("/user/orders/create",{order})
+
+       const data = await res.json();
+
+       if(!res.ok || data.success){
+        throw new Error (
+          data.message || "Order Failed"
+        )
+       }
 
       // CLEAR CART
       localStorage.removeItem("cartItems");
@@ -195,7 +204,7 @@ const Payment = () => {
 
       setLoading(false);
 
-      alert("Something went wrong");
+      toast.error("Something went wrong");
 
     }
 
