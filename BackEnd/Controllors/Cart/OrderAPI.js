@@ -182,7 +182,7 @@ const getEmailTemplate = (user, order, newOrder) => {
                             <tr>
                                 <td style="padding:10px;color:#333333;border-bottom:1px solid #e0e0e0;">${item.name || item.title}</td>
                                 <td style="text-align:center;padding:10px;color:#555555;border-bottom:1px solid #e0e0e0;">${item.quantity}</td>
-                                <td style="text-align:right;padding:10px;color:#555555;border-bottom:1px solid #e0e0e0;">₹${item.price}</td>
+                                <td style="text-align:right;padding:10px;color:#555555;border-bottom:1px solid #e0e0e0;">₹${item.price*20}</td>
                             </tr>
                             `).join('')}
                             <tr style="background:#f8f9fa;">
