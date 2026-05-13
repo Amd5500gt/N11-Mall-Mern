@@ -6,11 +6,11 @@ import {
 } from 'react-icons/fa';
 import './OrderHistory.css';
 import toast from 'react-hot-toast';
-import api from '../../utils/api';
+import api from "../../utils/Api"
 
 const OrderHistory = () => {
   const [orders, setOrders] = useState([]);
-
+ 
   const [loading, setLoading] = useState(true);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
