@@ -623,17 +623,6 @@
   }
 }
 
-/* Dark mode preference */
-@media (prefers-color-scheme: dark) {
-  .container {
-    background: rgba(0, 0, 0, 0.4);
-  }
-  
-  .container input {
-    color: var(--clr-gray-100);
-  }
-}
-
 /* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
   *,

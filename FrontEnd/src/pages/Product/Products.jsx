@@ -6,7 +6,6 @@ import Header from '../../components/common/Header';
 import { useSearch } from '../../context/SearchContext';
 import NoProductsFound from './ProductNotFound';
 import { handleSuccess } from '../../utils/Utils';
-import toast from 'react-hot-toast';
 import { useCart } from '../../context/CartContext';
 import BASE_URL from '../../config/config';
 import '../pages.css';

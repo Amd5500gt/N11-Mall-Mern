@@ -7,7 +7,6 @@ import ErrorPage from '../../components/ui/ErrorPage';
 import '../pages.css';
 import { useCart } from '../../context/CartContext';
 import { useSearch } from '../../context/SearchContext';
-import toast from 'react-hot-toast';
 import api from "../../utils/Api"
 const OpenPrev = () => {
   const { id } = useParams();
@@ -19,8 +18,6 @@ const OpenPrev = () => {
   const [activeImage, setActiveImage] = useState('');
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [activeTab, setActiveTab] = useState('details');
-  const [showToast, setShowToast] = useState(false);
-  const [toastProduct, setToastProduct] = useState(null);
   const { newCart, addWithQuantity } = useCart()
   const { token } = useSearch()
 
@@ -105,12 +102,10 @@ useEffect(() => {
     const productWithQuantity = { ...product, quantity: quantity };
     addWithQuantity(productWithQuantity);
     setIsAdded(true);
-    setShowToast(true);
-    setToastProduct(product);
     setTimeout(() => {
       setIsAdded(false);
     }, 500);
-    setTimeout(() => { setShowToast(false); setToastProduct(null); }, 3000);
+
   };
 
   const formatPrice = (price) => {
@@ -372,23 +367,6 @@ useEffect(() => {
           </div>
         </div>
       </div>
-      {/* Toast */}
-      {showToast && toastProduct && (
-        <div className="toast-notification">
-          <div className="toast-content">
-            <div className="toast-image">
-              <img src={toastProduct.thumbnail} alt={toastProduct.title} />
-            </div>
-            <div className="toast-details">
-              <div className="toast-title">{toastProduct.title}</div>
-              <div className="toast-message">
-                <BsFillCartCheckFill className="toast-icon" />
-                Added to cart
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
