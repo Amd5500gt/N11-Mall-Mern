@@ -1,5 +1,5 @@
-const userModel = require("../Models/userModel");
-const { products } = require("../productData/data.json");
+const userModel = require("../../Models/userModel");
+const { products } = require("../../productData/data.json");
 
 // Add To Cart
 const addToCart = async (req, res) => {
