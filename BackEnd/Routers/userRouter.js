@@ -1,15 +1,15 @@
 
 const Router = require("express").Router()
 const { Address, updateAddress } = require("../Controllors/AddressAPIs");
-const { addToCart, goToCart, removeFromCart, deleteCart } = require("../Controllors/CartAPIs");
 const ContactFormData = require("../Controllors/contact/ContactEmail");
 const authCart = require("../Middlewares/authCart");
 const loginLimiter = require("../Middlewares/apiLimiter/requestLimiter");
 const { authenticateToken } = require("../Middlewares/verifiyToken");
 const formSubmitLimiter = require("../Middlewares/apiLimiter/submitLimiter");
 const newsletterSubscribe = require("../Controllors/contact/NewsLetterSubscriber");
-const requestLimiter = require("../Middlewares/apiLimiter/requestLimiter");
 const { getOrders, createOrder } = require("../Controllors/Cart/OrderAPI");
+const { goToCart, addToCart, removeFromCart, deleteCart } = require("../Controllors/Cart/CartAPIs");
+const requestLimiter = require("../Middlewares/apiLimiter/requestLimiter");
 
 
 //Cart Related //
