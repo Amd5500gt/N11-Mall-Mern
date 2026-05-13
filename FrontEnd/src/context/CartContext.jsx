@@ -386,7 +386,13 @@ export const CartProvider =
   };
 
   /* DELETE ITEM */
+const clearCart = () => {
 
+   setAddedItems([]);
+
+   localStorage.removeItem("cartItems");
+
+};
   const deleteCart =
   async (item) => {
 
@@ -450,6 +456,7 @@ export const CartProvider =
 
         removeCart,
         deleteCart,
+        clearCart
 
       }}
     >

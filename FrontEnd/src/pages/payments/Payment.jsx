@@ -1,6 +1,6 @@
 // src/pages/Payment.jsx
 
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import {
@@ -21,13 +21,14 @@ import './Payment.css';
 import { useAddress } from '../../context/AddressContext';
 import toast from 'react-hot-toast';
 import api from '../../utils/Api';
+import { useCart } from '../../context/CartContext';
 
 const Payment = () => {
 
   const navigate = useNavigate();
 
   const { userAddress } = useAddress();
-
+  const { clearCart} = useCart()
   const [step, setStep] = useState(1);
 
   const [loading, setLoading] = useState(false);
@@ -178,9 +179,10 @@ const Payment = () => {
        toast.success(res.data.message)
 
       // CLEAR CART
-      localStorage.removeItem("cartItems");
+   clearCart();
 
-      localStorage.removeItem("total");
+   localStorage.removeItem("total");
+
 
       // SUCCESS
       setShowConfetti(true);
