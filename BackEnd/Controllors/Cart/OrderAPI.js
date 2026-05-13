@@ -1,7 +1,6 @@
 const orderModel = require("../../Models/orderModel");
 const userModel = require("../../Models/userModel");
 const nodemailer = require("nodemailer");
-const productModel = require("../../Models/productModel"); // Add if needed for stock updates
 
 /* =========================
    MAIL TRANSPORTER
