@@ -304,7 +304,7 @@ const Payment = () => {
 
                 <button
                   className="add-address-btn"
-                  onClick={() => (window.location.href = "/user/address/add")}
+                  onClick={() => navigate("/user/address/add")}
                     >
                   Add New Address
                 </button>
