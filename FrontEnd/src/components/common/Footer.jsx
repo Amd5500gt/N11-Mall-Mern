@@ -196,7 +196,10 @@ const handleSubscribe = async (e) => {
           <FiArrowUp size={20} />
         </button>
       )}
-      <InstallPWAButton />
+      <div className="pwa-install-wrapper">
+  <InstallPWAButton />
+</div>
+      
     </footer>
   );
 };
