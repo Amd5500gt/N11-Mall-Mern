@@ -23,6 +23,9 @@ const AddressForm = ({ onSubmit }) => {
   
   // Suggestions state
   const [suggestions, setSuggestions] = useState([]);
+useEffect(() => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+},[])
 
   // Validation
   const validateForm = () => {

@@ -46,6 +46,9 @@ const Payment = () => {
         ? window.innerHeight
         : 0,
   });
+useEffect(() => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+},[step])
 
   // SAFE TOTAL
   const totalAmount =
