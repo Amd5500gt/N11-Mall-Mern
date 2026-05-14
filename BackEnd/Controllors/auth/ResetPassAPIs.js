@@ -333,15 +333,24 @@ const verifyOTP = async (req, res) => {
 
 };
 /* ================= RESET PASSWORD ================= */
+/* ================= RESET PASSWORD ================= */
 
 const resetPassword = async (req, res) => {
 
   try {
 
-    const {
-      email,
-      newPassword
-    } = req.body;
+    const { email, newPassword } = req.body;
+
+    if (!email || !newPassword) {
+
+      return res.status(400).json({
+
+        success: false,
+        message: "All fields are required"
+
+      });
+
+    }
 
     const user =
       await userModel.findOne({ email });
@@ -377,11 +386,12 @@ const resetPassword = async (req, res) => {
       return res.status(400).json({
 
         success: false,
-
-        message:
-          "Password must be at least 8 characters"
+        message: "Password must be at least 6 characters"
 
       });
+
+    }
+
     /* ================= STRONG PASSWORD ================= */
 
     const strongPassword =
@@ -400,8 +410,18 @@ const resetPassword = async (req, res) => {
 
     }
 
-    }
     /* ================= PREVENT SAME PASSWORD ================= */
+
+    if (!user.password) {
+
+      return res.status(400).json({
+
+        success: false,
+        message: "Old password not found"
+
+      });
+
+    }
 
     const isSamePassword =
       await bcrypt.compare(
@@ -437,6 +457,8 @@ const resetPassword = async (req, res) => {
 
     user.isOTPVerified = false;
 
+    user.otpAttempts = 0;
+
     await user.save();
 
     /* ================= RESPONSE ================= */
@@ -451,6 +473,8 @@ const resetPassword = async (req, res) => {
   }
 
   catch (err) {
+
+    console.log(err);
 
     res.status(500).json({
 
