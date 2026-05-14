@@ -127,7 +127,7 @@ const AddressForm = ({ onSubmit }) => {
       navigate(-1)
       setTimeout(() => {
          window.location.reload()
-      }, 200);
+      }, 500);
 
       // Reset form
       setFormData({

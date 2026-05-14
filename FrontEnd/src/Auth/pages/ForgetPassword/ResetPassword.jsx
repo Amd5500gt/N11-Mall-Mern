@@ -228,7 +228,7 @@ const ResetPassword =
 
         navigate(-1);
 
-      }, 1000);
+      }, 500);
 
     }
 
