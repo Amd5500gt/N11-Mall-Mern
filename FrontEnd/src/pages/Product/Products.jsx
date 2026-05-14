@@ -255,7 +255,6 @@ const handleAddToCart = async (item) => {
                         </>
                       )}
                     </div>
-
                     <button
                       onClick={() =>{
                      handleAddToCart(item)
