@@ -15,12 +15,12 @@ const EmptyCart = () => {
         src="/empty.lottie"  
         loop
         autoplay
-        style={{ width: 200 }}
+        style={{ width: 180 }}
       />
       <div>
            <h1
             style={{
-              fontSize: "24px",
+              fontSize: "22px",
               fontWeight: "800",
               color: "#0f172a",
               marginBottom: "12px",
