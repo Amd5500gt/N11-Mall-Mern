@@ -109,7 +109,7 @@ const LoginUser = async (req, res) => {
     if (existUser.googleAuth && !existUser.password) {
       return res.status(400).json({
         success: false,
-        message: "Please login with Google",
+        message: "Please login with Google or reset password",
       });
     }
 
