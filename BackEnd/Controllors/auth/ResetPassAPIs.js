@@ -302,7 +302,12 @@ const verifyOTP = async (req, res) => {
       });
 
     }
-
+if (!user.passwordResetOTPExpire) {
+  return res.status(400).json({
+    success: false,
+    message: "OTP not found"
+  });
+}
     /* ================= SUCCESS ================= */
 
     user.isOTPVerified = true;
@@ -410,7 +415,36 @@ const resetPassword = async (req, res) => {
 
     }
 
+   /* ================= HASH PASSWORD ================= */
+
+    const hashedPassword =
+      await bcrypt.hash(newPassword, 10);
     /* ================= PREVENT SAME PASSWORD ================= */
+
+if (!user.password) {
+
+   user.password = hashedPassword;
+
+   /* ================= CLEAR OTP ================= */
+
+   user.passwordResetOTP = null;
+
+   user.passwordResetOTPExpire = null;
+
+   user.isOTPVerified = false;
+
+   user.otpAttempts = 0;
+
+   await user.save();
+
+   return res.status(200).json({
+
+      success: true,
+      message: "Password set successfully"
+
+   });
+
+}
     const isSamePassword =
       await bcrypt.compare(
         newPassword,
@@ -430,10 +464,6 @@ const resetPassword = async (req, res) => {
 
     }
 
-    /* ================= HASH PASSWORD ================= */
-
-    const hashedPassword =
-      await bcrypt.hash(newPassword, 10);
 
     user.password = hashedPassword;
 
