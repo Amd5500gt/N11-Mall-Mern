@@ -19,21 +19,13 @@ import "../pages.css"
           ? `We couldn't find any products matching "${searchTerm}"` 
           : "No products are available at the moment"}
       </p>
-      {searchTerm && (
-        <button 
-          className="clear-search-btn"
-          onClick={() => {
-            setSearchTerm('');
-          }}
-        >
-          Clear Search
-        </button>
-      )}
       <div className="suggestions">
-        <span>Try:</span>
-        <button onClick={() => setSearchTerm('phone')}>Phones</button>
-        <button onClick={() => setSearchTerm('laptop')}>Laptops</button>
-        <button onClick={() => setSearchTerm('watch')}>Watches</button>
+      <button 
+          className="clear-search-btn"
+          onClick={()=> window.location.href="/"}
+        >
+        Go To Home
+        </button>
       </div>
     </div>
   );
