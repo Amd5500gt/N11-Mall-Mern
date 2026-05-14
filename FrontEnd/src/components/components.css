@@ -143,16 +143,11 @@ body {
   background: rgba(241, 245, 249, 0.5);
   color: var(--dark);
   outline: none;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .search-input::placeholder { color: var(--gray-400); }
 
-.search-input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
-  background: var(--light);
-}
+
 .search-btn {
   position: absolute;
   right: 4px;
