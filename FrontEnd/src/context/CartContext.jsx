@@ -385,12 +385,12 @@ export const CartProvider =
 
   };
 
-  /* DELETE ITEM */
+  /* DELETE Cart */
 const clearCart = async() => {
 try {
 
       await api.post(
-        "/user/cart/alldelete");
+        "/user/cart/deleteall");
    setAddedItems([]);
    localStorage.removeItem("cartItems");
 
@@ -404,6 +404,7 @@ try {
       );
     }};
 
+      /* DELETE ITEM */
   const deleteCart =
   async (item) => {
 

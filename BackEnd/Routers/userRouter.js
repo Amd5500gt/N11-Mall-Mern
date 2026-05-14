@@ -17,7 +17,7 @@ Router.get("/cart",authCart,goToCart)
 Router.post("/cart/add",requestLimiter,authCart,addToCart);
 Router.post("/cart/remove",requestLimiter,authCart,removeFromCart)
 Router.post("/cart/delete",requestLimiter,authCart,deleteCart)
-Router.post("/cart/delete",requestLimiter,authCart,deleteAll)
+Router.post("/cart/deleteall",requestLimiter,authCart,deleteAll)
 
 //Order Routes
 Router.post("/orders", authenticateToken,getOrders)
