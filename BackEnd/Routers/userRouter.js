@@ -8,7 +8,7 @@ const { authenticateToken } = require("../Middlewares/verifiyToken");
 const formSubmitLimiter = require("../Middlewares/apiLimiter/submitLimiter");
 const newsletterSubscribe = require("../Controllors/contact/NewsLetterSubscriber");
 const { getOrders, createOrder } = require("../Controllors/Cart/OrderAPI");
-const { goToCart, addToCart, removeFromCart, deleteCart } = require("../Controllors/Cart/CartAPIs");
+const { goToCart, addToCart, removeFromCart, deleteCart, deleteAll } = require("../Controllors/Cart/CartAPIs");
 const requestLimiter = require("../Middlewares/apiLimiter/requestLimiter");
 
 
@@ -17,6 +17,7 @@ Router.get("/cart",authCart,goToCart)
 Router.post("/cart/add",requestLimiter,authCart,addToCart);
 Router.post("/cart/remove",requestLimiter,authCart,removeFromCart)
 Router.post("/cart/delete",requestLimiter,authCart,deleteCart)
+Router.post("/cart/delete",requestLimiter,authCart,deleteAll)
 
 //Order Routes
 Router.post("/orders", authenticateToken,getOrders)

@@ -386,13 +386,24 @@ export const CartProvider =
   };
 
   /* DELETE ITEM */
-const clearCart = () => {
+const clearCart = async() => {
+try {
 
+      await api.post(
+        "/user/cart/alldelete");
    setAddedItems([]);
-
    localStorage.removeItem("cartItems");
 
-};
+    }
+
+    catch (err) {
+
+      console.error(
+        "Error deleting item:",
+        err
+      );
+    }};
+
   const deleteCart =
   async (item) => {
 

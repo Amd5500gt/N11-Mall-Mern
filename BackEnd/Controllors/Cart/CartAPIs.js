@@ -190,9 +190,48 @@ const deleteCart =
       });
     }
 };
+
+
+const deleteAll = async(req,res) =>{
+ try {
+       const user = userModel.findById(req.user.id)
+       if(!user){
+          return res.json({
+            success: false,
+            message:"User not found"
+          })
+       }
+      await userModel
+        .findByIdAndUpdate(
+          req.user.id,
+          {
+            $set: {
+              cart:[],
+            },
+          }
+        );
+      
+
+      res.status(200).json({
+        success: true
+      });
+
+    } catch (err) {
+
+      console.log(err);
+
+      res.status(500).json({
+        success: false,
+        message:
+          "Internal server error",
+      });
+    }
+
+}
 module.exports = {
   addToCart,
   goToCart,
   removeFromCart,
-  deleteCart
+  deleteCart,
+  deleteAll
 };
