@@ -411,18 +411,6 @@ const resetPassword = async (req, res) => {
     }
 
     /* ================= PREVENT SAME PASSWORD ================= */
-
-    if (!user.password) {
-
-      return res.status(400).json({
-
-        success: false,
-        message: "Old password not found"
-
-      });
-
-    }
-
     const isSamePassword =
       await bcrypt.compare(
         newPassword,
