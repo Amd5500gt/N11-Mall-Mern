@@ -13,7 +13,7 @@ const AddCart = () => {
   const [animateRemove, setAnimateRemove] = useState(null);
   const [showAllCart, setShowAllCart] = useState(false);
 
-  const { addedItems, newCart, removeCart, total, deleteCart } = useCart();
+  const { addedItems, newCart, removeCart, total, deleteCart,clearCart } = useCart();
 
   const totalPrice = (Number(total) * 20).toFixed(2);
   const totalAmount = (Number(totalPrice) * 1.03).toFixed(2);
@@ -46,10 +46,31 @@ const AddCart = () => {
             Your Shopping Cart
           </h1>
           <p className="cart-subtitle">{addedItems.length} {addedItems.length === 1 ? 'item' : 'items'} in your cart</p>
+    <button
+  onClick={clearCart}
+  style={{
+    border: "none",
+    outline: "none",
+    background:
+      "linear-gradient(135deg,#f86565,#f86565",
+    color: "#fff",
+    padding: "12px 20px",
+    borderRadius: "14px",
+    fontSize: "14px",
+    fontWeight: "700",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    gap: "10px"
+  }}
+>
+  🗑 Remove All
+</button>
         </div>
 
         <div className="cart-layout">
           {/* Cart Items */}
+          
           <div className="cart-items-section">
             {(showAllCart ? addedItems : addedItems.slice(0,4)).map((item) => {
               const itemUnitRupee = getCartItemRupee(item);
