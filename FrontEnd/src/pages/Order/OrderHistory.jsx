@@ -245,13 +245,13 @@ const fetchOrders = async () => {
 
             <div className="oh-order-items-preview">
               {order.order.items.slice(0, 3).map((item, idx) => (
-                <div key={idx} className="oh-order-item-preview">
+                <Link key={idx} to={`/product/${item.id}`} style={{textDecoration:"none"}} className="oh-order-item-preview">
                   <img src={item.thumbnail} alt={item.title} />
                   <div className="oh-item-info">
                     <span className="oh-item-title">{item.title}</span>
                     <span className="oh-item-quantity">x{item.quantity}</span>
                   </div>
-                </div>
+                </Link>
               ))}
               {order.order.items.length > 3 && <span className="oh-more-items">+{order.order.items.length - 3} more</span>}
             </div>
