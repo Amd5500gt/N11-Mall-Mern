@@ -19,8 +19,7 @@ const InstallPWAButton = () => {
     const isInstalled =
       window.matchMedia(
         "(display-mode: standalone)"
-      ).matches ||
-      window.navigator.standalone === true;
+      ).matches;
 
     if (isInstalled) {
       setInstalled(true);
@@ -35,7 +34,9 @@ const InstallPWAButton = () => {
 
       setDeferredPrompt(e);
 
-      setShowPopup(true);
+      if (!installed) {
+        setShowPopup(true);
+      }
     };
 
     const installedHandler = () => {
@@ -43,11 +44,13 @@ const InstallPWAButton = () => {
 
       setInstalled(true);
 
+      setShowPopup(true);
+
       navigator.vibrate?.(200);
 
       setTimeout(() => {
         setShowPopup(false);
-      }, 5000);
+      }, 6000);
     };
 
     window.addEventListener(
@@ -71,46 +74,60 @@ const InstallPWAButton = () => {
         installedHandler
       );
     };
-  }, []);
+  }, [installed]);
 
   /* ================= INSTALL APP ================= */
 
   const installApp = async () => {
-    if (!deferredPrompt) return;
+    try {
+      if (
+        !deferredPrompt ||
+        installing
+      )
+        return;
 
-    setInstalling(true);
+      setInstalling(true);
 
-    deferredPrompt.prompt();
+      deferredPrompt.prompt();
 
-    const { outcome } =
-      await deferredPrompt.userChoice;
+      const { outcome } =
+        await deferredPrompt.userChoice;
 
-    if (outcome !== "accepted") {
+      if (outcome !== "accepted") {
+        setInstalling(false);
+      }
+
+      setDeferredPrompt(null);
+    } catch (error) {
+      console.log(error);
+
       setInstalling(false);
     }
-
-    setDeferredPrompt(null);
   };
 
   /* ================= OPEN APP ================= */
 
   const openApp = () => {
-    window.location.href = "/";
+    window.location.reload();
   };
 
-  if (!showPopup && !installed) return null;
+  /* ================= CLOSE ================= */
+
+  const closePopup = () => {
+    setShowPopup(false);
+  };
+
+  if (!showPopup) return null;
 
   return (
     <>
-      {/* BACKDROP */}
-
       <div
         style={{
           position: "fixed",
           inset: 0,
           background:
-            "rgba(0,0,0,0.55)",
-          backdropFilter: "blur(8px)",
+            "rgba(0,0,0,0.65)",
+          backdropFilter: "blur(6px)",
           zIndex: 99999,
           display: "flex",
           justifyContent: "center",
@@ -118,62 +135,59 @@ const InstallPWAButton = () => {
           padding: "20px",
         }}
       >
-        {/* CARD */}
-
         <div
           style={{
             width: "100%",
-            maxWidth: "370px",
-            borderRadius: "28px",
-            background:
-              "linear-gradient(145deg,#0f172a,#1e293b)",
-            padding: "30px",
-            border:
-              "1px solid rgba(255,255,255,0.08)",
-            boxShadow:
-              "0 25px 60px rgba(0,0,0,0.55)",
+            maxWidth: "340px",
+            background: "#111827",
+            borderRadius: "24px",
+            padding: "28px",
             textAlign: "center",
-            animation:
-              "popupShow 0.35s ease",
-            overflow: "hidden",
             position: "relative",
+            boxShadow:
+              "0 20px 50px rgba(0,0,0,0.45)",
+            animation:
+              "popupShow 0.3s ease",
           }}
         >
-          {/* GLOW */}
+          {/* CLOSE */}
 
-          <div
-            style={{
-              position: "absolute",
-              width: "180px",
-              height: "180px",
-              background:
-                "rgba(34,197,94,0.18)",
-              borderRadius: "50%",
-              top: "-60px",
-              right: "-60px",
-              filter: "blur(40px)",
-            }}
-          />
+          {!installing && (
+            <button
+              onClick={closePopup}
+              style={{
+                position: "absolute",
+                top: "12px",
+                right: "12px",
+                border: "none",
+                background: "transparent",
+                color: "#94a3b8",
+                fontSize: "22px",
+                cursor: "pointer",
+              }}
+            >
+              ×
+            </button>
+          )}
 
           {/* ICON */}
 
           <div
             style={{
-              width: "90px",
-              height: "90px",
-              margin: "0 auto 20px",
-              borderRadius: "26px",
+              width: "80px",
+              height: "80px",
+              margin: "0 auto 18px",
+              borderRadius: "22px",
               background:
                 "linear-gradient(135deg,#22c55e,#16a34a)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              fontSize: "42px",
-              boxShadow:
-                "0 15px 35px rgba(34,197,94,0.4)",
+              fontSize: "36px",
+              color: "#fff",
             }}
           >
-            📱
+            {installed ? "✅" : "📱"}
           </div>
 
           {/* TITLE */}
@@ -181,124 +195,61 @@ const InstallPWAButton = () => {
           <h2
             style={{
               color: "#fff",
-              fontSize: "28px",
-              fontWeight: "800",
-              marginBottom: "10px",
+              marginBottom: "12px",
+              fontSize: "24px",
+              fontWeight: "700",
             }}
           >
             NexXcart
           </h2>
 
-          {/* TEXT */}
-
-          {!installing && !installed && (
-            <p
-              style={{
-                color: "#cbd5e1",
-                fontSize: "15px",
-                lineHeight: "1.7",
-                marginBottom: "26px",
-              }}
-            >
-              Install NexXcart for
-              lightning fast access,
-              smoother performance &
-              app-like experience 🚀
-            </p>
-          )}
-
-          {/* INSTALLING UI */}
+          {/* INSTALLING */}
 
           {installing && (
-            <div>
-              {/* SPINNER */}
-
+            <>
               <div
                 style={{
-                  width: "80px",
-                  height: "80px",
-                  margin: "0 auto 20px",
+                  width: "55px",
+                  height: "55px",
+                  margin:
+                    "10px auto 18px",
                   border:
-                    "6px solid rgba(255,255,255,0.1)",
+                    "5px solid rgba(255,255,255,0.1)",
                   borderTop:
-                    "6px solid #22c55e",
+                    "5px solid #22c55e",
                   borderRadius: "50%",
                   animation:
                     "spin 1s linear infinite",
                 }}
               />
 
-              <h3
-                style={{
-                  color: "#fff",
-                  marginBottom: "10px",
-                }}
-              >
-                Installing...
-              </h3>
-
               <p
                 style={{
-                  color: "#94a3b8",
-                  fontSize: "14px",
+                  color: "#cbd5e1",
                   lineHeight: "1.6",
+                  fontSize: "15px",
                 }}
               >
-                Please wait while
-                NexXcart is being added
-                to your device
+                Installing app...
+                <br />
+                Please wait
               </p>
-            </div>
+            </>
           )}
 
-          {/* INSTALLED UI */}
+          {/* INSTALLED */}
 
-          {installed && (
-            <div>
-              {/* SUCCESS ICON */}
-
-              <div
-                style={{
-                  width: "90px",
-                  height: "90px",
-                  margin: "0 auto 18px",
-                  borderRadius: "50%",
-                  background:
-                    "rgba(34,197,94,0.15)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontSize: "42px",
-                  color: "#22c55e",
-                  border:
-                    "2px solid rgba(34,197,94,0.35)",
-                  animation:
-                    "successPop 0.5s ease",
-                }}
-              >
-                ✅
-              </div>
-
-              <h3
-                style={{
-                  color: "#4ade80",
-                  marginBottom: "12px",
-                  fontSize: "24px",
-                }}
-              >
-                App Installed
-              </h3>
-
+          {!installing && installed && (
+            <>
               <p
                 style={{
                   color: "#cbd5e1",
                   lineHeight: "1.7",
-                  marginBottom: "24px",
+                  marginBottom: "22px",
                 }}
               >
-                NexXcart has been
-                successfully installed on
-                your device 🎉
+                App has been installed
+                successfully 🎉
               </p>
 
               <button
@@ -306,47 +257,58 @@ const InstallPWAButton = () => {
                 style={{
                   width: "100%",
                   border: "none",
-                  padding: "15px",
-                  borderRadius: "16px",
+                  padding: "14px",
+                  borderRadius: "14px",
                   background:
-                    "linear-gradient(135deg,#22c55e,#16a34a)",
+                    "#22c55e",
                   color: "#fff",
                   fontWeight: "700",
-                  fontSize: "16px",
+                  fontSize: "15px",
                   cursor: "pointer",
-                  boxShadow:
-                    "0 12px 30px rgba(34,197,94,0.35)",
                 }}
               >
-                🚀 Open App
+                Open App
               </button>
-            </div>
+            </>
           )}
 
-          {/* INSTALL BUTTON */}
+          {/* DEFAULT */}
 
-          {!installing && !installed && (
-            <button
-              onClick={installApp}
-              style={{
-                width: "100%",
-                border: "none",
-                padding: "15px",
-                borderRadius: "16px",
-                background:
-                  "linear-gradient(135deg,#22c55e,#16a34a)",
-                color: "#fff",
-                fontWeight: "700",
-                fontSize: "16px",
-                cursor: "pointer",
-                boxShadow:
-                  "0 12px 30px rgba(34,197,94,0.35)",
-                transition: "0.3s",
-              }}
-            >
-              📥 Install App
-            </button>
-          )}
+          {!installing &&
+            !installed && (
+              <>
+                <p
+                  style={{
+                    color: "#cbd5e1",
+                    lineHeight: "1.7",
+                    fontSize: "15px",
+                    marginBottom: "22px",
+                  }}
+                >
+                  Install NexXcart
+                  for faster access and
+                  app-like experience 🚀
+                </p>
+
+                <button
+                  onClick={installApp}
+                  style={{
+                    width: "100%",
+                    border: "none",
+                    padding: "14px",
+                    borderRadius: "14px",
+                    background:
+                      "#22c55e",
+                    color: "#fff",
+                    fontWeight: "700",
+                    fontSize: "15px",
+                    cursor: "pointer",
+                  }}
+                >
+                  Install App
+                </button>
+              </>
+            )}
         </div>
       </div>
 
@@ -357,28 +319,17 @@ const InstallPWAButton = () => {
           @keyframes popupShow {
             from {
               opacity: 0;
-              transform: scale(0.85) translateY(20px);
+              transform: scale(0.9);
             }
             to {
               opacity: 1;
-              transform: scale(1) translateY(0);
+              transform: scale(1);
             }
           }
 
           @keyframes spin {
             100% {
               transform: rotate(360deg);
-            }
-          }
-
-          @keyframes successPop {
-            from {
-              transform: scale(0.5);
-              opacity: 0;
-            }
-            to {
-              transform: scale(1);
-              opacity: 1;
             }
           }
         `}
