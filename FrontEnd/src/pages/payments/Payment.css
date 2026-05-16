@@ -1,16 +1,18 @@
-/* Payment.css - Professional & Advanced Version */
+/* Payment.css - Professional & Advanced Version - Updated Colors */
 
 :root {
-  --primary: #2c7da0;
-  --primary-dark: #1f5068;
-  --primary-light: #61a5c2;
-  --primary-gradient: linear-gradient(135deg, #2c7da0 0%, #3498db 100%);
-  --success: #2ecc71;
-  --success-dark: #27ae60;
-  --success-gradient: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-  --text-primary: #1a1a2e;
-  --text-secondary: #666;
-  --bg-light: #f8f9fa;
+  --primary: #ffb22c;
+  --primary-dark: #e69e1a;
+  --primary-light: #ffcc66;
+  --primary-gradient: linear-gradient(135deg, #ffb22c 0%, #ffcc66 100%);
+  --secondary: #854836;
+  --secondary-dark: #6b3a2b;
+  --success: #10b981;
+  --success-dark: #0d9488;
+  --success-gradient: linear-gradient(135deg, #10b981 0%, #0d9488 100%);
+  --text-primary: #000000;
+  --text-secondary: #4a4a4a;
+  --bg-light: #f7f7f7;
   --bg-white: #ffffff;
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
   --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -25,7 +27,7 @@
 /* Container */
 .payment-container {
   min-height: calc(100vh - 80px);
-  background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+  background: #f7f7f7;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -45,6 +47,7 @@
 .payment-card {
   max-width: 550px;
   width: 100%;
+  background: var(--bg-white);
   border-radius: var(--radius);
   box-shadow: var(--shadow-lg);
   padding: 2rem;
@@ -157,7 +160,7 @@
 
 .deliver-here-btn {
   width: 100%;
-  background: var(--primary-gradient);
+  background: var(--success-gradient);
   color: white;
   padding: 0.875rem;
   border: none;
@@ -176,6 +179,7 @@
 .deliver-here-btn:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+  background: #0d9488;
 }
 
 .change-address-btn {
@@ -220,7 +224,7 @@
 }
 
 .add-address-btn {
-  background: var(--primary-gradient);
+  background: var(--success-gradient);
   color: white;
   padding: 0.875rem 2rem;
   border: none;
@@ -234,6 +238,7 @@
 .add-address-btn:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+  background: #0d9488;
 }
 
 /* Mini Address */
@@ -293,7 +298,7 @@
 
 .payment-option.selected {
   border-color: var(--primary);
-  background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+  background: linear-gradient(135deg, #f7f7f7 0%, #fff 100%);
   box-shadow: var(--shadow-sm);
 }
 
@@ -306,7 +311,7 @@
 .payment-icon-wrapper {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #e8f4f8 0%, #d4eaf1 100%);
+  background: linear-gradient(135deg, rgba(255, 178, 44, 0.1) 0%, rgba(255, 178, 44, 0.05) 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -432,7 +437,7 @@
   padding: 1rem;
   font-size: 1rem;
   font-weight: 700;
-  background: var(--primary-gradient);
+  background: var(--success-gradient);
   color: white;
   border: none;
   border-radius: var(--radius-sm);
@@ -449,6 +454,7 @@
 .place-order-btn:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+  background: #0d9488;
 }
 
 .place-order-btn:disabled {
@@ -463,19 +469,15 @@
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
-
-/* Success Page */
-.success-page {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
 .success-card {
   max-width: 500px;
   width: 100%;
+  background: var(--bg-white);
   border-radius: var(--radius);
   padding: 2.5rem;
   text-align: center;
   animation: scaleUp 0.6s ease-out;
+  box-shadow: var(--shadow-xl);
 }
 
 .premium-glass {
@@ -585,18 +587,18 @@
 }
 
 /* Generate particles */
-.particle-0 { --tx: 40px; --ty: -60px; animation-delay: 0s; background: #2ecc71; }
-.particle-1 { --tx: -40px; --ty: -50px; animation-delay: 0.1s; background: #3498db; }
-.particle-2 { --tx: 60px; --ty: -30px; animation-delay: 0.2s; background: #f39c12; }
-.particle-3 { --tx: -50px; --ty: -40px; animation-delay: 0.15s; background: #e74c3c; }
-.particle-4 { --tx: 30px; --ty: -70px; animation-delay: 0.05s; background: #9b59b6; }
-.particle-5 { --tx: -60px; --ty: -20px; animation-delay: 0.25s; background: #1abc9c; }
-.particle-6 { --tx: 20px; --ty: -80px; animation-delay: 0.08s; background: #e67e22; }
-.particle-7 { --tx: -30px; --ty: -65px; animation-delay: 0.18s; background: #2ecc71; }
-.particle-8 { --tx: 50px; --ty: -45px; animation-delay: 0.12s; background: #3498db; }
-.particle-9 { --tx: -20px; --ty: -55px; animation-delay: 0.22s; background: #f39c12; }
-.particle-10 { --tx: 70px; --ty: -25px; animation-delay: 0.07s; background: #e74c3c; }
-.particle-11 { --tx: -70px; --ty: -35px; animation-delay: 0.17s; background: #9b59b6; }
+.particle-0 { --tx: 40px; --ty: -60px; animation-delay: 0s; background: #10b981; }
+.particle-1 { --tx: -40px; --ty: -50px; animation-delay: 0.1s; background: #ffb22c; }
+.particle-2 { --tx: 60px; --ty: -30px; animation-delay: 0.2s; background: #854836; }
+.particle-3 { --tx: -50px; --ty: -40px; animation-delay: 0.15s; background: #ffcc66; }
+.particle-4 { --tx: 30px; --ty: -70px; animation-delay: 0.05s; background: #10b981; }
+.particle-5 { --tx: -60px; --ty: -20px; animation-delay: 0.25s; background: #ffb22c; }
+.particle-6 { --tx: 20px; --ty: -80px; animation-delay: 0.08s; background: #854836; }
+.particle-7 { --tx: -30px; --ty: -65px; animation-delay: 0.18s; background: #10b981; }
+.particle-8 { --tx: 50px; --ty: -45px; animation-delay: 0.12s; background: #ffb22c; }
+.particle-9 { --tx: -20px; --ty: -55px; animation-delay: 0.22s; background: #ffcc66; }
+.particle-10 { --tx: 70px; --ty: -25px; animation-delay: 0.07s; background: #10b981; }
+.particle-11 { --tx: -70px; --ty: -35px; animation-delay: 0.17s; background: #ffb22c; }
 
 .success-title {
   font-size: 1.75rem;
@@ -611,7 +613,7 @@
 }
 
 .order-success-details {
-  background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+  background: linear-gradient(135deg, #f7f7f7 0%, #fff 100%);
   border-radius: var(--radius-sm);
   padding: 1.25rem;
   margin: 1.5rem 0;
@@ -673,13 +675,14 @@
 }
 
 .view-orders-btn {
-  background: var(--primary-gradient);
+  background: var(--success-gradient);
   color: white;
 }
 
 .view-orders-btn:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
+  background: #0d9488;
 }
 
 .continue-shopping-btn {

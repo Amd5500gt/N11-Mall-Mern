@@ -1,17 +1,19 @@
-/* AddressForm.css - Clean & Lightweight Version */
+/* AddressForm.css - Clean & Lightweight Version - Updated Colors */
 
 /* Variables */
 :root {
-  --primary: #2c7da0;
-  --primary-light: #61a5c2;
-  --primary-dark: #1f5068;
-  --error: #e74c3c;
-  --error-light: #fadbd8;
-  --text-primary: #2c3e50;
-  --text-secondary: #7f8c8d;
+  --primary: #ffb22c;
+  --primary-light: #ffcc66;
+  --primary-dark: #e69e1a;
+  --secondary: #854836;
+  --error: #ef4444;
+  --error-light: #fee2e2;
+  --success: #10b981;
+  --text-primary: #000000;
+  --text-secondary: #4a4a4a;
   --border: #e0e0e0;
   --bg-white: #ffffff;
-  --bg-light: #f8f9fa;
+  --bg-light: #f7f7f7;
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
   --radius: 12px;
@@ -28,6 +30,8 @@
   border-radius: var(--radius);
   padding: 2rem;
   animation: fadeIn 0.4s ease-out;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
 }
 
 @keyframes fadeIn {
@@ -56,8 +60,9 @@
   letter-spacing: 0.3px;
 }
 
-
-.form-group input {
+.form-group input,
+.form-group select,
+.form-group textarea {
   width: 100%;
   padding: 0.75rem 1rem;
   font-size: 0.95rem;
@@ -93,12 +98,18 @@
   animation: shake 0.3s ease;
 }
 
+.form-group.error input,
+.form-group.error select,
+.form-group.error textarea {
+  border-color: var(--error);
+  background: var(--error-light);
+}
+
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   25% { transform: translateX(-5px); }
   75% { transform: translateX(5px); }
 }
-
 
 /* Address Suggestions Dropdown */
 .address-suggestions {
@@ -144,7 +155,7 @@
 .suggestion-item:hover {
   background: var(--bg-light);
   padding-left: 1.25rem;
-  color: var(--primary);
+  color: var(--primary-dark);
 }
 
 /* Scrollbar for suggestions */
@@ -173,7 +184,7 @@
   font-size: 1rem;
   font-weight: 600;
   color: white;
-  background: var(--primary);
+  background: var(--success);
   border: none;
   border-radius: var(--radius-sm);
   cursor: pointer;
@@ -184,7 +195,7 @@
 }
 
 .submit-address-btn:hover {
-  background: var(--primary-dark);
+  background: var(--success-dark);
   transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
 }
@@ -193,14 +204,31 @@
   transform: translateY(0);
 }
 
-
-/* Loading State (if needed) */
-.submit-address-btn.loading {
-  opacity: 0.7;
+.submit-address-btn:disabled {
+  opacity: 0.6;
   cursor: not-allowed;
   transform: none;
 }
 
+/* Loading State */
+.submit-address-btn.loading {
+  opacity: 0.7;
+  cursor: not-allowed;
+  transform: none;
+  position: relative;
+}
+
+.submit-address-btn.loading::after {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  margin-left: 8px;
+  border: 2px solid white;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
 
 @keyframes spin {
   to { transform: rotate(360deg); }
@@ -221,7 +249,9 @@
     margin-bottom: 1rem;
   }
 
-  .form-group input {
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
     padding: 0.65rem 0.875rem;
     font-size: 0.9rem;
   }
@@ -246,13 +276,15 @@
     font-size: 0.8rem;
   }
 
-  .form-group input {
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
     padding: 0.6rem 0.75rem;
     font-size: 0.85rem;
   }
 }
 
-/* Optional: Success State Animation */
+/* Success State Animation */
 @keyframes successPulse {
   0% {
     transform: scale(1);
@@ -266,13 +298,25 @@
 }
 
 .form-group.success input {
-  border-color: var(--primary);
+  border-color: var(--success);
   animation: successPulse 0.3s ease;
 }
 
 /* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
 
 /* Disabled state for inputs */
+.form-group input:disabled,
+.form-group select:disabled,
+.form-group textarea:disabled {
+  background: var(--bg-light);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
 
 /* Helper text styling */
 .helper-text {
@@ -282,7 +326,7 @@
   margin-top: 0.25rem;
 }
 
-/* Optional: Floating label effect (if needed) */
+/* Floating label effect */
 .form-group.floating {
   position: relative;
 }

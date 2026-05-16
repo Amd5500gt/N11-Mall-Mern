@@ -1,14 +1,17 @@
-/* OrderHistory.css */
+/* OrderHistory.css - Updated with New Color Scheme */
 
 /* ===== CSS VARIABLES ===== */
 :root {
-  --oh-primary: #4f46e5;
-  --oh-primary-light: #818cf8;
-  --oh-bg: #f8fafc;
+  --oh-primary: #ffb22c;
+  --oh-primary-light: #ffcc66;
+  --oh-primary-dark: #e69e1a;
+  --oh-secondary: #854836;
+  --oh-secondary-light: #a65a44;
+  --oh-bg: #f7f7f7;
   --oh-card-bg: #ffffff;
-  --oh-text: #1e293b;
-  --oh-text-secondary: #64748b;
-  --oh-border: #e2e8f0;
+  --oh-text: #000000;
+  --oh-text-secondary: #4a4a4a;
+  --oh-border: #e0e0e0;
   --oh-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
   --oh-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07), 0 2px 4px rgba(0, 0, 0, 0.06);
   --oh-radius: 12px;
@@ -16,12 +19,12 @@
   --oh-transition: all 0.2s ease;
   
   /* Status Colors */
-  --oh-status-pending: #f59e0b;
-  --oh-status-pending-bg: #fffbeb;
+  --oh-status-pending: #ffb22c;
+  --oh-status-pending-bg: #fff8e8;
   --oh-status-confirmed: #3b82f6;
   --oh-status-confirmed-bg: #eff6ff;
-  --oh-status-shipped: #8b5cf6;
-  --oh-status-shipped-bg: #f5f3ff;
+  --oh-status-shipped: #854836;
+  --oh-status-shipped-bg: #f5f0ee;
   --oh-status-delivered: #10b981;
   --oh-status-delivered-bg: #ecfdf5;
   --oh-status-cancelled: #ef4444;
@@ -36,6 +39,7 @@
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color: var(--oh-text);
   min-height: 100vh;
+  background: var(--oh-bg);
 }
 
 /* ===== STATS GRID ===== */
@@ -62,6 +66,7 @@
 .oh-stat-card:hover {
   box-shadow: var(--oh-shadow-md);
   transform: translateY(-2px);
+  border-color: var(--oh-primary-light);
 }
 
 .oh-stat-value {
@@ -111,13 +116,14 @@
 .oh-filter-btn:hover {
   background: #f1f5f9;
   border-color: var(--oh-primary-light);
+  color: var(--oh-primary-dark);
 }
 
 .oh-filter-btn.active {
   background: var(--oh-primary);
   color: white;
   border-color: var(--oh-primary);
-  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 2px 8px rgba(255, 178, 44, 0.3);
 }
 
 /* ===== NO ORDERS ===== */
@@ -165,6 +171,7 @@
 
 .oh-order-card:hover {
   box-shadow: var(--oh-shadow-md);
+  border-color: var(--oh-primary-light);
 }
 
 /* ===== ORDER HEADER ===== */
@@ -222,16 +229,18 @@
 .oh-status-pending {
   background: var(--oh-status-pending-bg);
   color: #b45309;
+  border: 1px solid rgba(255, 178, 44, 0.3);
 }
 
 .oh-status-confirmed {
   background: var(--oh-status-confirmed-bg);
-  color: #1d4ed8;
+  color: var(--oh-text);
 }
 
 .oh-status-shipped {
   background: var(--oh-status-shipped-bg);
-  color: #6d28d9;
+  color: #5a2e1f;
+  border: 1px solid rgba(133, 72, 54, 0.3);
 }
 
 .oh-status-delivered {
@@ -277,6 +286,7 @@
   background: var(--oh-bg);
   padding: 8px 12px;
   border-radius: var(--oh-radius-sm);
+  border: 1px solid var(--oh-border);
 }
 
 .oh-order-item-preview img {
@@ -320,6 +330,7 @@
   color: var(--oh-primary);
   padding: 8px 12px;
   flex-shrink: 0;
+  border: 1px solid var(--oh-border);
 }
 
 /* ===== ORDER FOOTER ===== */
@@ -341,6 +352,10 @@
   font-size: 16px;
   font-weight: 700;
   color: var(--oh-text);
+}
+
+.oh-order-total span:last-child {
+  color: var(--oh-primary);
 }
 
 .oh-details-btn {
@@ -832,7 +847,7 @@
     
     --oh-status-pending-bg: #422006;
     --oh-status-confirmed-bg: #172554;
-    --oh-status-shipped-bg: #2e1065;
+    --oh-status-shipped-bg: #2a1812;
     --oh-status-delivered-bg: #052e16;
     --oh-status-cancelled-bg: #450a0a;
   }

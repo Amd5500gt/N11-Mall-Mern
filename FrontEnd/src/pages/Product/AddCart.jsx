@@ -1,223 +1,492 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import EmptyCart from '../../components/ui/Emptycart';
-import { FaTrash, FaPlus, FaMinus, FaShoppingBag, FaArrowLeft, FaCreditCard } from 'react-icons/fa';
+import {
+  FaTrash,
+  FaPlus,
+  FaMinus,
+  FaShoppingBag,
+  FaArrowLeft,
+  FaCreditCard
+} from 'react-icons/fa';
+
 import { FaSpinner } from 'react-icons/fa6';
+
 import { useNavigate } from 'react-router-dom';
+
 import { useCart } from '../../context/CartContext';
-import toast from 'react-hot-toast';
 
 const AddCart = () => {
-  const [loader, setLoader] = useState(false);
+
+  const [loader, setLoader] =
+    useState(false);
+
   const navigate = useNavigate();
-  const [animateRemove, setAnimateRemove] = useState(null);
-  const [showAllCart, setShowAllCart] = useState(false);
 
-  const { addedItems, newCart, removeCart, total, deleteCart,clearCart } = useCart();
+  const [animateRemove, setAnimateRemove] =
+    useState(null);
 
-  const totalPrice = (Number(total) * 20).toFixed(2);
-  const totalAmount = (Number(totalPrice) * 1.03).toFixed(2);
+  const [showAllCart, setShowAllCart] =
+    useState(false);
+
+  const {
+    addedItems,
+    newCart,
+    removeCart,
+    total,
+    deleteCart,
+    clearCart
+  } = useCart();
+
+  /* =========================
+     PRICE CALCULATIONS
+  ========================= */
+
+  const subtotal =
+    Number(total) * 20;
+
+  const gstRate = 0.03;
+
+  let gstAmount =
+    subtotal * gstRate;
+
+  /* GST MAX 1000 */
+
+  if (gstAmount > 1000) {
+    gstAmount = 1000;
+  }
+
+  const finalTotal =
+    subtotal + gstAmount;
+
+  /* =========================
+     ITEM PRICE
+  ========================= */
 
   const getCartItemRupee = (item) => {
-    const price = Number(item.price || 0);
-    const discount = Number(item.discountPercentage || 0);
-    return price * (1 - discount / 100) * 20;
+
+    const price =
+      Number(item.price || 0);
+
+    const discount =
+      Number(
+        item.discountPercentage || 0
+      );
+
+    return (
+      price *
+      (1 - discount / 100) *
+      20
+    );
   };
 
+  /* =========================
+     CHECKOUT
+  ========================= */
+
   const handleCheckoutItem = () => {
+
     setLoader(true);
+
     setTimeout(() => {
-      navigate("/cart/checkout/payment");
-      localStorage.setItem("total", totalAmount);
+
+      localStorage.setItem(
+        "subtotal",
+        subtotal.toFixed(2)
+      );
+
+      localStorage.setItem(
+        "gst",
+        gstAmount.toFixed(2)
+      );
+
+      localStorage.setItem(
+        "total",
+        finalTotal.toFixed(2)
+      );
+
+      navigate(
+        "/cart/checkout/payment"
+      );
+
     }, 2000);
   };
 
+  /* =========================
+     EMPTY CART
+  ========================= */
 
   if (addedItems.length === 0) {
     return <EmptyCart />;
   }
 
   return (
+
     <div className="pages-container">
+
       <div className="cart-page">
+
+        {/* HEADER */}
+
         <div className="cart-header">
+
           <h1 className="cart-title-page">
+
             <FaShoppingBag className="header-icon" />
+
             Your Shopping Cart
+
           </h1>
-          <p className="cart-subtitle">{addedItems.length} {addedItems.length === 1 ? 'item' : 'items'} in your cart</p>
-    <button
-  onClick={clearCart}
-  style={{
-    border: "none",
-    outline: "none",
-    background:
-      "linear-gradient(135deg,#f86565,#f86565",
-    color: "#fff",
-    padding: "12px 20px",
-    borderRadius: "14px",
-    fontSize: "14px",
-    fontWeight: "700",
-    cursor: "pointer",
-    display: "flex",
-    alignItems: "center",
-    gap: "10px"
-  }}
->
-  🗑 Remove All
-</button>
+
+          <p className="cart-subtitle">
+
+            {addedItems.length}
+
+            {" "}
+
+            {addedItems.length === 1
+              ? "item"
+              : "items"}
+
+            {" "}in your cart
+
+          </p>
+
+          {/* CLEAR CART */}
+
+          <button
+
+            onClick={clearCart}
+
+            style={{
+
+              border: "none",
+
+              outline: "none",
+
+              background:
+                "linear-gradient(135deg,#ef4444,#dc2626)",
+
+              color: "#fff",
+
+              padding: "12px 20px",
+
+              borderRadius: "14px",
+
+              fontSize: "14px",
+
+              fontWeight: "700",
+
+              cursor: "pointer",
+
+              display: "flex",
+
+              alignItems: "center",
+
+              gap: "10px"
+
+            }}
+
+          >
+
+            🗑 Remove All
+
+          </button>
+
         </div>
 
         <div className="cart-layout">
-          {/* Cart Items */}
-          
+
+          {/* CART ITEMS */}
+
           <div className="cart-items-section">
-            {(showAllCart ? addedItems : addedItems.slice(0,4)).map((item) => {
-              const itemUnitRupee = getCartItemRupee(item);
+
+            {(showAllCart
+              ? addedItems
+              : addedItems.slice(0, 4)
+            ).map((item) => {
+
+              const itemUnitRupee =
+                getCartItemRupee(item);
 
               return (
-                <div 
-                  key={item.id} 
-                  className={`cart-item ${animateRemove === item.id ? 'removing' : ''}`}
+
+                <div
+                  key={item.id}
+                  className={`cart-item ${
+                    animateRemove === item.id
+                      ? "removing"
+                      : ""
+                  }`}
                 >
-                  <Link to={`/product/${item.id}`} className="cart-item-link">
+
+                  <Link
+                    to={`/product/${item.id}`}
+                    className="cart-item-link"
+                  >
+
                     <div className="cart-item-image">
-                      <img src={item.thumbnail} alt={item.title} />
+
+                      <img
+                        src={item.thumbnail}
+                        alt={item.title}
+                      />
+
                     </div>
+
                     <div className="cart-item-details">
-                      <h3 className="cart-item-title">{item.title}</h3>
-                      {item.brand && <p className="cart-item-brand">{item.brand}</p>}
+
+                      <h3 className="cart-item-title">
+
+                        {item.title}
+
+                      </h3>
+
+                      {item.brand && (
+
+                        <p className="cart-item-brand">
+
+                          {item.brand}
+
+                        </p>
+                      )}
+
                       <div className="cart-item-price">
-                        ₹{itemUnitRupee.toFixed(2)}
+
+                        ₹
+                        {itemUnitRupee.toFixed(2)}
+
                         {item.discountPercentage > 0 && (
-                          <span className="item-discount">-{item.discountPercentage}%</span>
+
+                          <span className="item-discount">
+
+                            -{item.discountPercentage}%
+
+                          </span>
+
                         )}
+
                       </div>
+
                     </div>
+
                   </Link>
-                  
+
+                  {/* ACTIONS */}
+
                   <div className="cart-item-actions">
+
                     <div className="quantity-controls">
-                      <button 
-                        onClick={() => removeCart(item)} 
+
+                      <button
+                        onClick={() =>
+                          removeCart(item)
+                        }
                         className="qty-control-btn"
                       >
                         <FaMinus />
                       </button>
-                      <span className="quantity-display">{item.quantity}</span>
-                      <button 
-                        onClick={() => newCart(item)} 
+
+                      <span className="quantity-display">
+
+                        {item.quantity}
+
+                      </span>
+
+                      <button
+                        onClick={() =>
+                          newCart(item)
+                        }
                         className="qty-control-btn"
-                        disabled={item.quantity >= item.stock}
+                        disabled={
+                          item.quantity >= item.stock
+                        }
                       >
                         <FaPlus />
                       </button>
+
                     </div>
+
                     <div className="item-total">
-                      ₹{(itemUnitRupee * item.quantity).toFixed(2)}
+
+                      ₹
+                      {(
+                        itemUnitRupee *
+                        item.quantity
+                      ).toFixed(2)}
+
                     </div>
-                    <button 
-                      onClick={() =>  deleteCart(item)} 
+
+                    <button
+                      onClick={() =>
+                        deleteCart(item)
+                      }
                       className="remove-item-btn"
                     >
                       <FaTrash />
                     </button>
+
                   </div>
+
                 </div>
               );
             })}
-{
-  addedItems.length > 4 && (
 
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        marginTop: "1rem"
-      }}
-    >
+            {/* LOAD MORE */}
 
-      <button
+            {addedItems.length > 4 && (
 
-        onClick={() =>
-          setShowAllCart(!showAllCart)
-        }
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  marginTop: "1rem"
+                }}
+              >
 
-        style={{
+                <button
 
-          padding: "12px 20px",
+                  onClick={() =>
+                    setShowAllCart(
+                      !showAllCart
+                    )
+                  }
 
-          border: "none",
+                  style={{
 
-          borderRadius: "12px",
+                    padding: "12px 20px",
 
-          background: "var(--gradient)",
+                    border: "none",
 
-          color: "#fff",
+                    borderRadius: "12px",
 
-          fontWeight: "600",
+                    background:
+                      "var(--gradient)",
 
-          cursor: "pointer",
+                    color: "#fff",
 
-          boxShadow:
-            "0 8px 20px rgba(0,0,0,0.08)",
+                    fontWeight: "600",
 
-          transition: "0.3s"
+                    cursor: "pointer"
 
-        }}
+                  }}
 
-      >
+                >
 
-        {
-          showAllCart
-            ? "Show Less"
-            : `Load More (${addedItems.length - 4}+ Items)`
-        }
+                  {showAllCart
+                    ? "Show Less"
+                    : `Load More (${
+                        addedItems.length - 4
+                      }+ Items)`}
 
-      </button>
+                </button>
 
-    </div>
-  )
-}
+              </div>
+            )}
+
           </div>
-          {/* Order Summary */}
+
+          {/* ORDER SUMMARY */}
+
           <div className="order-summary">
-            <h2 className="summary-title">Order Summary</h2>
+
+            <h2 className="summary-title">
+
+              Order Summary
+
+            </h2>
+
             <div className="summary-details">
+
               <div className="summary-row">
+
                 <span>Subtotal</span>
-                <span>₹{totalPrice}</span>
+
+                <span>
+                  ₹{subtotal.toFixed(2)}
+                </span>
+
               </div>
+
               <div className="summary-row">
+
                 <span>Shipping</span>
-                <span className="free-ship">Free</span>
+
+                <span className="free-ship">
+
+                  Free
+
+                </span>
+
               </div>
+
               <div className="summary-row">
-                <span>Tax (GST)</span>
-                <span>₹{totalAmount}</span>
+
+                <span>GST (3%)</span>
+
+                <span>
+                  ₹{gstAmount.toFixed(2)}
+                </span>
+
               </div>
+
               <div className="summary-divider"></div>
+
               <div className="summary-row total">
+
                 <span>Total</span>
-                <span>₹{totalAmount}</span>
+
+                <span>
+                  ₹{finalTotal.toFixed(2)}
+                </span>
+
               </div>
+
             </div>
 
-            <button onClick={handleCheckoutItem} className="checkout-btn">
+            {/* CHECKOUT */}
+
+            <button
+              onClick={handleCheckoutItem}
+              className="checkout-btn"
+            >
+
               {loader ? (
-                <>Proceed to Checkout <FaSpinner className='spin' /></>
+
+                <>
+                  Proceeding
+                  <FaSpinner className="spin" />
+                </>
+
               ) : (
-                <><FaCreditCard /> Proceed to Checkout</>
+
+                <>
+                  <FaCreditCard />
+
+                  Proceed to Checkout
+                </>
+
               )}
+
             </button>
-            
-            <Link to="/" className="continue-shopping">
-              <FaArrowLeft /> Continue Shopping
+
+            <Link
+              to="/"
+              className="continue-shopping"
+            >
+
+              <FaArrowLeft />
+
+              Continue Shopping
+
             </Link>
+
           </div>
+
         </div>
+
       </div>
-      
+
     </div>
   );
 };
