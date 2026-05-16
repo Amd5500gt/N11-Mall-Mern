@@ -1,10 +1,23 @@
 /* Payment.css - Professional & Advanced Version - Updated Colors */
 
 :root {
-  --primary: #ffb22c;
-  --primary-dark: #e69e1a;
-  --primary-light: #ffcc66;
-  --primary-gradient: linear-gradient(135deg, #ffb22c 0%, #ffcc66 100%);
+--primary: #854836;
+--primary-light: #a05a45;
+--primary-dark: #5e2f22;
+
+--primary-gradient:
+linear-gradient(
+  135deg,
+  #854836,
+  #000000
+);
+
+--primary-gradient-hover:
+linear-gradient(
+  135deg,
+  #a05a45,
+  #000000
+);
   --secondary: #854836;
   --secondary-dark: #6b3a2b;
   --success: #10b981;

@@ -86,11 +86,8 @@ const App = () => {
       zIndex: "999999",
 
       // 🖤 Cyber Dark Background
-      background: "rgba(47, 46, 46, 0.52)",
-      color: "#fff5f5",
 
-      backdropFilter: "blur(16px)",
-      WebkitBackdropFilter: "blur(16px)",
+      color: "#000000",
 
       borderRadius: "16px",
       padding: "14px 18px",
@@ -98,13 +95,6 @@ const App = () => {
       fontSize: "14px",
       fontWeight: "600",
       letterSpacing: "0.3px",
-
-      border: "1px solid rgba(255,255,255,0.05)",
-
-      boxShadow: `
-        0 10px 30px rgba(0,0,0,0.45),
-        0 0 25px rgba(255,0,80,0.12)
-      `,
 
       minWidth: "260px",
       maxWidth: "400px",

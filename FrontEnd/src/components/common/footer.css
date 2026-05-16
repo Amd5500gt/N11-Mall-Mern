@@ -167,10 +167,6 @@
   color: #a0a0a0;
 }
 
-.newsletter-input:focus {
-  border-color: var(--primary);
-  box-shadow: 0 0 0 2px rgba(255, 178, 44, 0.1);
-}
 
 .newsletter-button {
   width: 50px;
