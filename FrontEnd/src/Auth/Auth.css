@@ -7,7 +7,7 @@
   --clr-primary-dark: #764ba2;
   --clr-accent: #ec4899;
   --clr-highlight: #fbbf24;
-  --clr-purple-light: #a78bfa;
+  --clr-purple-light: #fabf8b;
   --clr-success: #00C851;
   --clr-error: #ff4444;
   --clr-warning: #ffbb33;
@@ -69,7 +69,8 @@
   width: min(100% - 2rem, 460px);
   margin: clamp(1rem, 8vh, 2rem) auto;
   padding: clamp(1.5rem, 5vw, 2rem) clamp(1.25rem, 4vw, 3rem);
-
+ box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+ border-radius: 40px;
   /* Misc */
   position: relative;
   z-index: var(--z-base);
@@ -87,14 +88,14 @@
   font-weight: 700;
   background: linear-gradient(
     135deg,
-    var(--clr-purple-light) 0%,
-    var(--clr-accent) 50%,
-    var(--clr-highlight) 100%
+    rgb(67, 92, 67) 0%,
+    rgb(255, 255, 255) 50%,
+    rgb(80, 58, 58) 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: titleShine 3s ease-in-out infinite;
+  animation: titleShine 5s ease-in-out infinite;
   letter-spacing: -0.5px;
 }
 
@@ -470,10 +471,10 @@
 
 @keyframes titleShine {
   0%, 100% {
-    filter: brightness(1);
+    filter: brightness(0.7);
   }
   50% {
-    filter: brightness(1.2);
+    filter: brightness(1.3);
   }
 }
 
@@ -611,3 +612,4 @@
     background: white;
   }
 }
+
