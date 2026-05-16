@@ -78,15 +78,6 @@
   transition: var(--transition-base);
 }
 
-.profile-hero::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--primary-gradient);
-}
 
 .profile-hero:hover {
   transform: translateY(-4px);
@@ -264,17 +255,6 @@
   position: relative;
 }
 
-.section-title::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 50px;
-  height: 2px;
-  background: var(--primary-gradient);
-  border-radius: var(--radius-full);
-  transition: var(--transition-base);
-}
 
 .profile-section:hover .section-title::after {
   width: 80px;

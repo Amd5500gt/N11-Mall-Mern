@@ -254,10 +254,6 @@ const AuthPage = () => {
         setToken(
           result.token
         );
-      
-        toast.success(
-          "Login successful"
-        );
 
         setTimeout(() => {
 
@@ -510,10 +506,6 @@ const AuthPage = () => {
 
         setToken(
           result.token
-        );
-
-        toast.success(
-          "Google login successful"
         );
 
         setTimeout(() => {

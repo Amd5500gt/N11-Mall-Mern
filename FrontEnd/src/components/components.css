@@ -197,17 +197,7 @@ body {
   transition: all 0.15s ease;
   position: relative;
 }
-.nav-link:hover {
-  color: var(--primary);
-  background: rgba(99, 102, 241, 0.06);
-}
 
-.nav-link.active {
-  color: var(--primary);
-  background: rgba(99, 102, 241, 0.1);
-  font-weight: 600;
-  position: relative;
-}
 
 .nav-link.active::after {
   content: '';

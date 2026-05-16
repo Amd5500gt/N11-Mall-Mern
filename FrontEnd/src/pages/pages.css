@@ -185,17 +185,6 @@
   position: relative;
   padding-right: 1rem;
 }
-
-.stat-item::before {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 4px;
-  bottom: 4px;
-  width: 2px;
-  background: var(--accent);
-}
-
 .stat-number {
   display: block;
   font-family: var(--font-display);
@@ -549,15 +538,6 @@
   transition: var(--transition);
   position: relative;
   overflow: hidden;
-}
-
-.add-to-cart-btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--accent);
-  transform: translateX(-101%);
-  transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .add-to-cart-btn:hover:not(:disabled)::before {
@@ -1337,15 +1317,6 @@
   color: var(--primary);
 }
 
-.tab-btn.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--primary);
-}
 
 .tab-content {
   padding: 2rem 0;

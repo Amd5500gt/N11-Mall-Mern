@@ -151,26 +151,6 @@
   transform: translateX(10px);
 }
 
-/* Animated underline */
-.form-group::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    var(--clr-purple-light),
-    var(--clr-accent),
-    var(--clr-highlight)
-  );
-  transition: width var(--transition-slow);
-}
-
-.form-group:focus-within::after {
-  width: 100%;
-}
 
 /* Disabled state */
 .container input:disabled {
@@ -436,17 +416,6 @@
   position: relative;
 }
 
-.container > span a::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, var(--clr-highlight), var(--clr-accent));
-  transform: scaleX(0);
-  transition: transform var(--transition-base);
-}
 
 .container > span a:hover {
   color: var(--clr-highlight);

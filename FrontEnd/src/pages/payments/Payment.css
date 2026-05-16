@@ -53,16 +53,6 @@
   overflow: hidden;
 }
 
-.payment-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 4px;
-  background: var(--primary-gradient);
-}
-
 @keyframes slideUp {
   from {
     opacity: 0;

@@ -220,7 +220,7 @@ const ResetPassword =
 
         data.message ||
 
-        "Password updated"
+        "Success"
 
       );
 
