@@ -968,9 +968,9 @@ body {
 
 .install-pwa-btn {
 
-  position: fixed;
+  position:sticky;
 
-  bottom: 20px;
+  bottom: 4.3%;
 
   left: 50%;
 
@@ -985,6 +985,8 @@ body {
   gap: 10px;
 
   padding: 12px 18px;
+  text-align:center;
+  
 
   border-radius: 14px;
 
@@ -1022,10 +1024,6 @@ body {
     0 10px 24px rgba(20,184,166,0.18);
 }
 
-.install-pwa-btn svg {
-
-  font-size: 18px;
-}
 
 /* =========================
    POPUP
@@ -1242,23 +1240,4 @@ body {
 
   color:
     #d1d5db;
-}
-
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 600px) {
-
-  .install-pwa-btn {
-
-    width:
-      calc(100% - 30px);
-
-    justify-content:
-      center;
-
-    bottom: 15px;
-  }
-
 }

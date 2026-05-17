@@ -196,6 +196,7 @@ const handleSubscribe = async (e) => {
           <FiArrowUp size={20} />
         </button>
       )}
+
       
     </footer>
   );
