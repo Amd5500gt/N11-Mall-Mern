@@ -72,7 +72,7 @@ const App = () => {
 
       </Routes>
 
-
+<InstallPWA />
  {/* ❤️ Red + Black Cyber Toaster */}
 <Toaster
   position="bottom-center"
