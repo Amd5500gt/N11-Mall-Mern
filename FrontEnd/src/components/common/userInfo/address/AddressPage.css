@@ -4,23 +4,7 @@
    ROOT VARIABLES
    ======================================== */
 :root {
- --primary: #16a34a;
---primary-light: #22c55e;
---primary-dark: #14532d;
 
---primary-gradient:
-linear-gradient(
-  135deg,
-  #16a34a,
-  #000000
-);
-
---primary-gradient-hover:
-linear-gradient(
-  135deg,
-  #22c55e,
-  #111111
-);
   --secondary: #854836;
   --secondary-light: #a65a44;
   
