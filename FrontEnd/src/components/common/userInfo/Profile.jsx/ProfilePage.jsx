@@ -46,16 +46,21 @@ useEffect(() => {
 
       orders: sortedOrders.length,
 
- joinedDate :  new Date(userData.createdAt)
-  .toLocaleDateString(
-    "en-IN",
-    {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    }
-  )
+ joinedDate:
+  userData?.createdAt
 
+    ? new Date(
+        userData.createdAt
+      ).toLocaleDateString(
+        "en-IN",
+        {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        }
+      )
+
+    : "Recently"
     });
 
   }

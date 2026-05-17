@@ -31,6 +31,7 @@ const sendUserResponse = (res, statusCode, message, user) => {
       email: user.email,
       picture: user.picture || null,
       googleAuth: user.googleAuth || false,
+      createdAt: user.createdAt,
     },
   });
 };
