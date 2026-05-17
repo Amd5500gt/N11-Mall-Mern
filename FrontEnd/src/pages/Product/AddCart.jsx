@@ -164,16 +164,16 @@ const AddCart = () => {
 
               outline: "none",
 
-              background:
-                "linear-gradient(135deg,#ef4444,#dc2626)",
+             background:"#f7f7f7",
 
-              color: "#fff",
+              color: "#ff0000",
 
-              padding: "12px 20px",
+              padding: "10px 17px",
 
               borderRadius: "14px",
 
               fontSize: "14px",
+              
 
               fontWeight: "700",
 
