@@ -9,21 +9,22 @@ import "@khmyznikov/pwa-install";
 const InstallPWA = () => {
 
   const pwaRef = useRef(null);
+  const loaderRef = useRef(null);
 
-  const [
-    canInstall,
-    setCanInstall
-  ] = useState(false);
+  const [canInstall, setCanInstall] =
+    useState(false);
 
-  const [
-    showPopup,
-    setShowPopup
-  ] = useState(false);
+  const [showPopup, setShowPopup] =
+    useState(false);
 
-  const [
-    installed,
-    setInstalled
-  ] = useState(false);
+  const [installing, setInstalling] =
+    useState(false);
+
+  const [installed, setInstalled] =
+    useState(false);
+
+  const [progress, setProgress] =
+    useState(0);
 
   /* =========================
      CHECK INSTALLED
@@ -31,18 +32,24 @@ const InstallPWA = () => {
 
   useEffect(() => {
 
-    const isInstalled =
+    const checkInstalled = () => {
 
-      window.matchMedia(
-        "(display-mode: standalone)"
-      ).matches;
+      const isInstalled =
+        window.matchMedia(
+          "(display-mode: standalone)"
+        ).matches ||
+        window.navigator.standalone;
 
-    if (isInstalled) {
+      if (isInstalled) {
 
-      setInstalled(true);
+        setInstalled(true);
+        setCanInstall(false);
 
-      setCanInstall(false);
-    }
+      }
+
+    };
+
+    checkInstalled();
 
   }, []);
 
@@ -52,75 +59,86 @@ const InstallPWA = () => {
 
   useEffect(() => {
 
-    const pwa =
-      pwaRef.current;
+    const pwa = pwaRef.current;
 
     if (!pwa) return;
 
     /* INSTALL AVAILABLE */
 
-    const availableHandler =
-      () => {
+    const availableHandler = () => {
 
-        const isInstalled =
+      const isInstalled =
+        window.matchMedia(
+          "(display-mode: standalone)"
+        ).matches ||
+        window.navigator.standalone;
 
-          window.matchMedia(
-            "(display-mode: standalone)"
-          ).matches;
+      if (!isInstalled) {
 
-        if (!isInstalled) {
+        setCanInstall(true);
 
-          setCanInstall(true);
+      }
 
-        }
-      };
+    };
 
     /* INSTALL SUCCESS */
 
-    const successHandler =
-      () => {
+    const successHandler = () => {
 
-        navigator.vibrate?.(200);
+      clearInterval(loaderRef.current);
 
-        /* SHOW SUCCESS STATE */
+      setProgress(100);
+
+      navigator.vibrate?.(200);
+
+      setTimeout(() => {
+
+        setInstalling(false);
 
         setInstalled(true);
 
         setCanInstall(false);
 
-        /* AUTO CLOSE */
+      }, 600);
 
-        setTimeout(() => {
+      setTimeout(() => {
 
-          setShowPopup(false);
+        setShowPopup(false);
 
-        }, 5000);
-      };
+      }, 2500);
+
+    };
 
     /* INSTALL FAIL */
 
-    const failHandler =
-      () => {
+    const failHandler = () => {
 
-        setShowPopup(false);
-      };
+      clearInterval(loaderRef.current);
 
-    /* USER CHOICE */
+      setInstalling(false);
 
-    const userChoiceHandler =
-      (e) => {
+      setProgress(0);
 
-        if (
-          e.detail.outcome !==
-          "accepted"
-        ) {
+    };
 
-          /* USER CANCELLED */
+    /* USER CANCEL */
 
-          setShowPopup(false);
-        }
+    const userChoiceHandler = (e) => {
 
-      };
+      if (
+        e.detail.outcome !==
+        "accepted"
+      ) {
+
+        clearInterval(loaderRef.current);
+
+        setInstalling(false);
+
+        setProgress(0);
+
+      }
+
+    };
 
     pwa.addEventListener(
       "pwa-install-available-event",
@@ -144,6 +162,8 @@ const InstallPWA = () => {
 
     return () => {
 
+      clearInterval(loaderRef.current);
+
       pwa.removeEventListener(
         "pwa-install-available-event",
         availableHandler
@@ -163,31 +183,82 @@ const InstallPWA = () => {
         "pwa-user-choice-result-event",
         userChoiceHandler
       );
+
     };
 
   }, []);
 
   /* =========================
-     OPEN INSTALL POPUP
+     OPEN POPUP
   ========================= */
 
-  const handleInstallClick =
-    () => {
+  const handleInstallClick = () => {
 
-      setShowPopup(true);
+    setShowPopup(true);
 
-    };
+  };
 
   /* =========================
      START INSTALL
   ========================= */
 
   const startInstallation =
-    () => {
+    async () => {
 
-      /* SHOW NATIVE INSTALL DIALOG */
+      try {
 
-      pwaRef.current?.showDialog();
+        setInstalling(true);
+
+        setProgress(0);
+
+        let current = 0;
+
+        loaderRef.current =
+          setInterval(() => {
+
+            current += 5;
+
+            if (current >= 90) {
+
+              current = 90;
+
+              clearInterval(
+                loaderRef.current
+              );
+
+            }
+
+            setProgress(current);
+
+          }, 200);
+
+        /* REAL INSTALL */
+
+        if (pwaRef.current?.show) {
+
+          await pwaRef.current.show();
+
+        } else {
+
+          console.log(
+            "Install method not found"
+          );
+
+        }
+
+      }
+
+      catch (error) {
+
+        console.log(error);
+
+        clearInterval(loaderRef.current);
+
+        setInstalling(false);
+
+        setProgress(0);
+
+      }
 
     };
 
@@ -197,31 +268,29 @@ const InstallPWA = () => {
 
   const openApp = () => {
 
-    window.location.reload();
+    window.open("/", "_self");
 
   };
 
   /* =========================
-     CLOSE
+     CLOSE POPUP
   ========================= */
 
-  const closePopup =
-    () => {
+  const closePopup = () => {
+
+    if (!installing) {
 
       setShowPopup(false);
 
-    };
+    }
 
-  /* =========================
-     HIDE BUTTON
-  ========================= */
+  };
 
-  if (
-    !canInstall &&
-    !installed
-  ) {
+  return (
 
-    return (
+    <>
+
+      {/* PWA ELEMENT */}
 
       <pwa-install
         ref={pwaRef}
@@ -229,19 +298,12 @@ const InstallPWA = () => {
         manual-apple
         use-local-storage
         manifest-url="/manifest.json"
-        style={{ display: "none" }}
       ></pwa-install>
-
-    );
-  }
-
-  return (
-
-    <>
 
       {/* INSTALL BUTTON */}
 
-      {!installed && (
+      {!installed &&
+        canInstall && (
 
         <button
           onClick={
@@ -285,17 +347,6 @@ const InstallPWA = () => {
 
       )}
 
-      {/* HIDDEN PWA INSTALL */}
-
-      <pwa-install
-        ref={pwaRef}
-        manual-chrome
-        manual-apple
-        use-local-storage
-        manifest-url="/manifest.json"
-        style={{ display: "none" }}
-      ></pwa-install>
-
       {/* POPUP */}
 
       {showPopup && (
@@ -315,18 +366,14 @@ const InstallPWA = () => {
             alignItems:
               "center",
             padding: "20px",
-            animation: "fadeIn 0.3s ease",
           }}
         >
-
-          {/* CARD */}
 
           <div
             style={{
               width: "100%",
               maxWidth: "360px",
-              background:
-                "#f7f7f7",
+              background: "#f7f7f7",
               borderRadius: "28px",
               padding: "30px",
               textAlign: "center",
@@ -334,50 +381,31 @@ const InstallPWA = () => {
               overflow: "hidden",
               boxShadow:
                 "0 25px 60px rgba(0,0,0,0.35)",
-              animation: "popupShow 0.35s ease",
             }}
           >
 
-            {/* GLOW */}
+            {!installing && (
 
-            <div
-              style={{
-                position: "absolute",
-                width: "200px",
-                height: "200px",
-                background:
-                  installed
-                    ? "rgba(34,197,94,0.12)"
-                    : "rgba(20,184,166,0.12)",
-                borderRadius: "50%",
-                top: "-80px",
-                right: "-80px",
-                filter: "blur(40px)",
-              }}
-            />
+              <button
+                onClick={
+                  closePopup
+                }
+                style={{
+                  position:
+                    "absolute",
+                  top: "14px",
+                  right: "14px",
+                  border: "none",
+                  background:
+                    "transparent",
+                  fontSize: "22px",
+                  cursor: "pointer",
+                }}
+              >
+                ×
+              </button>
 
-            {/* CLOSE */}
-
-            <button
-              onClick={
-                closePopup
-              }
-              style={{
-                position:
-                  "absolute",
-                top: "14px",
-                right: "14px",
-                border: "none",
-                background:
-                  "transparent",
-                color: "#555",
-                fontSize: "22px",
-                cursor: "pointer",
-                zIndex: 2,
-              }}
-            >
-              ×
-            </button>
+            )}
 
             {/* ICON */}
 
@@ -400,14 +428,6 @@ const InstallPWA = () => {
                   "center",
                 fontSize: "42px",
                 color: "#fff",
-                boxShadow:
-                  installed
-                    ? "0 15px 35px rgba(34,197,94,0.35)"
-                    : "0 15px 35px rgba(20,184,166,0.35)",
-                animation:
-                  installed
-                    ? "bounceIn 0.6s ease"
-                    : "none",
               }}
             >
               {installed
@@ -415,48 +435,86 @@ const InstallPWA = () => {
                 : "📱"}
             </div>
 
-            {/* TITLE */}
-
             <h2
               style={{
-                color:
-                  "#111827",
+                color: "#111827",
                 marginBottom:
                   "12px",
-                fontSize:
-                  "28px",
-                fontWeight:
-                  "800",
+                fontSize: "28px",
+                fontWeight: "800",
               }}
             >
               NexXcart
             </h2>
 
-            {/* INSTALLED SUCCESS */}
+            {/* INSTALLING */}
 
-            {installed && (
+            {installing && (
+
+              <>
+
+                <div
+                  style={{
+                    width: "100%",
+                    height: "10px",
+                    background:
+                      "#e5e7eb",
+                    borderRadius:
+                      "999px",
+                    overflow:
+                      "hidden",
+                    marginBottom:
+                      "18px",
+                  }}
+                >
+
+                  <div
+                    style={{
+                      width:
+                        `${progress}%`,
+                      height: "100%",
+                      background:
+                        "linear-gradient(90deg,#14b8a6,#0f766e)",
+                      transition:
+                        "0.2s linear",
+                    }}
+                  />
+
+                </div>
+
+                <h3>
+                  Installing...
+                </h3>
+
+                <p
+                  style={{
+                    color: "#6b7280",
+                    marginTop: "8px",
+                  }}
+                >
+                  {progress}%
+                </p>
+
+              </>
+
+            )}
+
+            {/* INSTALLED */}
+
+            {!installing &&
+              installed && (
 
               <>
 
                 <p
                   style={{
-                    color:
-                      "#4b5563",
-                    lineHeight:
-                      "1.7",
-                    fontSize:
-                      "15px",
                     marginBottom:
                       "24px",
-                    animation:
-                      "fadeInUp 0.5s ease",
+                    color:
+                      "#4b5563",
                   }}
                 >
-                  App Installed
-                  Successfully! 🎉
-                  <br />
-                  Enjoy the premium
-                  app experience.
+                  App Installed 🎉
                 </p>
 
                 <button
@@ -464,28 +522,18 @@ const InstallPWA = () => {
                     openApp
                   }
                   style={{
-                    width:
-                      "100%",
-                    border:
-                      "none",
-                    padding:
-                      "15px",
+                    width: "100%",
+                    border: "none",
+                    padding: "15px",
                     borderRadius:
                       "16px",
                     background:
                       "linear-gradient(135deg,#22c55e,#16a34a)",
-                    color:
-                      "#fff",
+                    color: "#fff",
                     fontWeight:
                       "700",
-                    fontSize:
-                      "16px",
-                    cursor:
-                      "pointer",
-                    boxShadow:
-                      "0 12px 30px rgba(34,197,94,0.25)",
-                    animation:
-                      "fadeInUp 0.5s ease",
+                    fontSize: "16px",
+                    cursor: "pointer",
                   }}
                 >
                   🚀 Open App
@@ -495,9 +543,10 @@ const InstallPWA = () => {
 
             )}
 
-            {/* DEFAULT INSTALL */}
+            {/* DEFAULT */}
 
-            {!installed && (
+            {!installing &&
+              !installed && (
 
               <>
 
@@ -507,16 +556,12 @@ const InstallPWA = () => {
                       "#4b5563",
                     lineHeight:
                       "1.7",
-                    fontSize:
-                      "15px",
                     marginBottom:
                       "24px",
                   }}
                 >
                   Install NexXcart
-                  for faster access
-                  and smoother app
-                  experience 🚀
+                  for better experience 🚀
                 </p>
 
                 <button
@@ -524,26 +569,18 @@ const InstallPWA = () => {
                     startInstallation
                   }
                   style={{
-                    width:
-                      "100%",
-                    border:
-                      "none",
-                    padding:
-                      "15px",
+                    width: "100%",
+                    border: "none",
+                    padding: "15px",
                     borderRadius:
                       "16px",
                     background:
                       "linear-gradient(135deg,#14b8a6,#0f766e)",
-                    color:
-                      "#fff",
+                    color: "#fff",
                     fontWeight:
                       "700",
-                    fontSize:
-                      "16px",
-                    cursor:
-                      "pointer",
-                    boxShadow:
-                      "0 12px 30px rgba(20,184,166,0.25)",
+                    fontSize: "16px",
+                    cursor: "pointer",
                   }}
                 >
                   📥 Install Now
@@ -559,100 +596,8 @@ const InstallPWA = () => {
 
       )}
 
-      {/* ANIMATIONS */}
-
-      <style>
-        {`
-
-          @keyframes popupShow {
-
-            from {
-
-              opacity: 0;
-
-              transform:
-                scale(0.9)
-                translateY(20px);
-
-            }
-
-            to {
-
-              opacity: 1;
-
-              transform:
-                scale(1)
-                translateY(0);
-
-            }
-          }
-
-          @keyframes fadeIn {
-
-            from { opacity: 0; }
-            to { opacity: 1; }
-          }
-
-          @keyframes fadeInUp {
-
-            from {
-
-              opacity: 0;
-
-              transform:
-                translateY(20px);
-
-            }
-
-            to {
-
-              opacity: 1;
-
-              transform:
-                translateY(0);
-
-            }
-          }
-
-          @keyframes bounceIn {
-
-            0% {
-
-              transform:
-                scale(0.3);
-
-              opacity: 0;
-
-            }
-
-            50% {
-
-              transform:
-                scale(1.05);
-
-            }
-
-            70% {
-
-              transform:
-                scale(0.9);
-
-            }
-
-            100% {
-
-              transform:
-                scale(1);
-
-              opacity: 1;
-
-            }
-          }
-
-        `}
-      </style>
-
     </>
+
   );
 };
 
