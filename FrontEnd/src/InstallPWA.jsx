@@ -9,7 +9,11 @@ import "@khmyznikov/pwa-install";
 const InstallPWA = () => {
 
   const pwaRef = useRef(null);
+
   const loaderRef = useRef(null);
+
+  const deferredPrompt =
+    useRef(null);
 
   const [canInstall, setCanInstall] =
     useState(false);
@@ -32,24 +36,55 @@ const InstallPWA = () => {
 
   useEffect(() => {
 
-    const checkInstalled = () => {
+    const isInstalled =
 
-      const isInstalled =
-        window.matchMedia(
-          "(display-mode: standalone)"
-        ).matches ||
-        window.navigator.standalone;
+      window.matchMedia(
+        "(display-mode: standalone)"
+      ).matches ||
 
-      if (isInstalled) {
+      window.navigator?.standalone;
 
-        setInstalled(true);
-        setCanInstall(false);
+    if (isInstalled) {
 
-      }
+      setInstalled(true);
+
+      setCanInstall(false);
+
+    }
+
+  }, []);
+
+  /* =========================
+     BEFORE INSTALL PROMPT
+  ========================= */
+
+  useEffect(() => {
+
+    const handleBeforeInstall =
+      (e) => {
+
+        e.preventDefault();
+
+        deferredPrompt.current =
+          e;
+
+        setCanInstall(true);
+
+      };
+
+    window.addEventListener(
+      "beforeinstallprompt",
+      handleBeforeInstall
+    );
+
+    return () => {
+
+      window.removeEventListener(
+        "beforeinstallprompt",
+        handleBeforeInstall
+      );
 
     };
-
-    checkInstalled();
 
   }, []);
 
@@ -63,87 +98,51 @@ const InstallPWA = () => {
 
     if (!pwa) return;
 
-    /* INSTALL AVAILABLE */
+    /* SUCCESS */
 
-    const availableHandler = () => {
+    const successHandler =
+      () => {
 
-      const isInstalled =
-        window.matchMedia(
-          "(display-mode: standalone)"
-        ).matches ||
-        window.navigator.standalone;
+        clearInterval(
+          loaderRef.current
+        );
 
-      if (!isInstalled) {
+        setProgress(100);
 
-        setCanInstall(true);
+        navigator.vibrate?.(200);
 
-      }
+        setTimeout(() => {
 
-    };
+          setInstalling(false);
 
-    /* INSTALL SUCCESS */
+          setInstalled(true);
 
-    const successHandler = () => {
+          setCanInstall(false);
 
-      clearInterval(loaderRef.current);
+        }, 500);
 
-      setProgress(100);
+        setTimeout(() => {
 
-      navigator.vibrate?.(200);
+          setShowPopup(false);
 
-      setTimeout(() => {
+        }, 2200);
 
-        setInstalling(false);
+      };
 
-        setInstalled(true);
+    /* FAIL */
 
-        setCanInstall(false);
+    const failHandler =
+      () => {
 
-      }, 600);
-
-      setTimeout(() => {
-
-        setShowPopup(false);
-
-      }, 2500);
-
-    };
-
-    /* INSTALL FAIL */
-
-    const failHandler = () => {
-
-      clearInterval(loaderRef.current);
-
-      setInstalling(false);
-
-      setProgress(0);
-
-    };
-
-    /* USER CANCEL */
-
-    const userChoiceHandler = (e) => {
-
-      if (
-        e.detail.outcome !==
-        "accepted"
-      ) {
-
-        clearInterval(loaderRef.current);
+        clearInterval(
+          loaderRef.current
+        );
 
         setInstalling(false);
 
         setProgress(0);
 
-      }
-
-    };
-
-    pwa.addEventListener(
-      "pwa-install-available-event",
-      availableHandler
-    );
+      };
 
     pwa.addEventListener(
       "pwa-install-success-event",
@@ -155,18 +154,10 @@ const InstallPWA = () => {
       failHandler
     );
 
-    pwa.addEventListener(
-      "pwa-user-choice-result-event",
-      userChoiceHandler
-    );
-
     return () => {
 
-      clearInterval(loaderRef.current);
-
-      pwa.removeEventListener(
-        "pwa-install-available-event",
-        availableHandler
+      clearInterval(
+        loaderRef.current
       );
 
       pwa.removeEventListener(
@@ -179,11 +170,6 @@ const InstallPWA = () => {
         failHandler
       );
 
-      pwa.removeEventListener(
-        "pwa-user-choice-result-event",
-        userChoiceHandler
-      );
-
     };
 
   }, []);
@@ -192,14 +178,15 @@ const InstallPWA = () => {
      OPEN POPUP
   ========================= */
 
-  const handleInstallClick = () => {
+  const handleInstallClick =
+    () => {
 
-    setShowPopup(true);
+      setShowPopup(true);
 
-  };
+    };
 
   /* =========================
-     START INSTALL
+     INSTALL
   ========================= */
 
   const startInstallation =
@@ -207,16 +194,30 @@ const InstallPWA = () => {
 
       try {
 
+        if (
+          !deferredPrompt.current
+        ) {
+
+          alert(
+            "Install not supported on this device/browser"
+          );
+
+          return;
+
+        }
+
         setInstalling(true);
 
         setProgress(0);
+
+        /* FAKE LOADER */
 
         let current = 0;
 
         loaderRef.current =
           setInterval(() => {
 
-            current += 5;
+            current += 4;
 
             if (current >= 90) {
 
@@ -230,21 +231,54 @@ const InstallPWA = () => {
 
             setProgress(current);
 
-          }, 200);
+          }, 180);
 
-        /* REAL INSTALL */
+        /* OPEN INSTALL */
 
-        if (pwaRef.current?.show) {
+        deferredPrompt.current.prompt();
 
-          await pwaRef.current.show();
+        const result =
+          await deferredPrompt.current.userChoice;
 
-        } else {
+        if (
+          result.outcome ===
+          "accepted"
+        ) {
 
-          console.log(
-            "Install method not found"
-          );
+          setProgress(100);
+
+          setTimeout(() => {
+
+            setInstalling(false);
+
+            setInstalled(true);
+
+            setCanInstall(false);
+
+          }, 500);
+
+          setTimeout(() => {
+
+            setShowPopup(false);
+
+          }, 2200);
 
         }
+
+        else {
+
+          clearInterval(
+            loaderRef.current
+          );
+
+          setInstalling(false);
+
+          setProgress(0);
+
+        }
+
+        deferredPrompt.current =
+          null;
 
       }
 
@@ -252,7 +286,9 @@ const InstallPWA = () => {
 
         console.log(error);
 
-        clearInterval(loaderRef.current);
+        clearInterval(
+          loaderRef.current
+        );
 
         setInstalling(false);
 
@@ -268,29 +304,30 @@ const InstallPWA = () => {
 
   const openApp = () => {
 
-    window.open("/", "_self");
+    window.location.href = "/";
 
   };
 
   /* =========================
-     CLOSE POPUP
+     CLOSE
   ========================= */
 
-  const closePopup = () => {
+  const closePopup =
+    () => {
 
-    if (!installing) {
+      if (!installing) {
 
-      setShowPopup(false);
+        setShowPopup(false);
 
-    }
+      }
 
-  };
+    };
 
   return (
 
     <>
 
-      {/* PWA ELEMENT */}
+      {/* PWA */}
 
       <pwa-install
         ref={pwaRef}
@@ -298,9 +335,9 @@ const InstallPWA = () => {
         manual-apple
         use-local-storage
         manifest-url="/manifest.json"
-      ></pwa-install>
+      />
 
-      {/* INSTALL BUTTON */}
+      {/* INSTALL BTN */}
 
       {!installed &&
         canInstall && (
@@ -373,12 +410,17 @@ const InstallPWA = () => {
             style={{
               width: "100%",
               maxWidth: "360px",
-              background: "#f7f7f7",
-              borderRadius: "28px",
+              background:
+                "#f7f7f7",
+              borderRadius:
+                "28px",
               padding: "30px",
-              textAlign: "center",
-              position: "relative",
-              overflow: "hidden",
+              textAlign:
+                "center",
+              position:
+                "relative",
+              overflow:
+                "hidden",
               boxShadow:
                 "0 25px 60px rgba(0,0,0,0.35)",
             }}
@@ -437,11 +479,14 @@ const InstallPWA = () => {
 
             <h2
               style={{
-                color: "#111827",
+                color:
+                  "#111827",
                 marginBottom:
                   "12px",
-                fontSize: "28px",
-                fontWeight: "800",
+                fontSize:
+                  "28px",
+                fontWeight:
+                  "800",
               }}
             >
               NexXcart
@@ -456,7 +501,8 @@ const InstallPWA = () => {
                 <div
                   style={{
                     width: "100%",
-                    height: "10px",
+                    height:
+                      "10px",
                     background:
                       "#e5e7eb",
                     borderRadius:
@@ -472,7 +518,8 @@ const InstallPWA = () => {
                     style={{
                       width:
                         `${progress}%`,
-                      height: "100%",
+                      height:
+                        "100%",
                       background:
                         "linear-gradient(90deg,#14b8a6,#0f766e)",
                       transition:
@@ -488,8 +535,10 @@ const InstallPWA = () => {
 
                 <p
                   style={{
-                    color: "#6b7280",
-                    marginTop: "8px",
+                    color:
+                      "#6b7280",
+                    marginTop:
+                      "8px",
                   }}
                 >
                   {progress}%
@@ -522,18 +571,24 @@ const InstallPWA = () => {
                     openApp
                   }
                   style={{
-                    width: "100%",
-                    border: "none",
-                    padding: "15px",
+                    width:
+                      "100%",
+                    border:
+                      "none",
+                    padding:
+                      "15px",
                     borderRadius:
                       "16px",
                     background:
                       "linear-gradient(135deg,#22c55e,#16a34a)",
-                    color: "#fff",
+                    color:
+                      "#fff",
                     fontWeight:
                       "700",
-                    fontSize: "16px",
-                    cursor: "pointer",
+                    fontSize:
+                      "16px",
+                    cursor:
+                      "pointer",
                   }}
                 >
                   🚀 Open App
@@ -569,18 +624,24 @@ const InstallPWA = () => {
                     startInstallation
                   }
                   style={{
-                    width: "100%",
-                    border: "none",
-                    padding: "15px",
+                    width:
+                      "100%",
+                    border:
+                      "none",
+                    padding:
+                      "15px",
                     borderRadius:
                       "16px",
                     background:
                       "linear-gradient(135deg,#14b8a6,#0f766e)",
-                    color: "#fff",
+                    color:
+                      "#fff",
                     fontWeight:
                       "700",
-                    fontSize: "16px",
-                    cursor: "pointer",
+                    fontSize:
+                      "16px",
+                    cursor:
+                      "pointer",
                   }}
                 >
                   📥 Install Now
