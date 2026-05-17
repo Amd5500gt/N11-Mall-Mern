@@ -7,7 +7,6 @@ import logo from '../../assets/images/logo.png';
 import { useSearch } from '../../context/SearchContext';
 import toast from 'react-hot-toast';
 import api from '../../utils/Api';
-import InstallPWAButton from '../../InstallPWAButton';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
@@ -196,9 +195,6 @@ const handleSubscribe = async (e) => {
           <FiArrowUp size={20} />
         </button>
       )}
-      <div className="pwa-install-wrapper">
-  <InstallPWAButton />
-</div>
       
     </footer>
   );
