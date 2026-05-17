@@ -25,7 +25,6 @@ const Login = ({
           type="email"
           name="email"
           placeholder="Enter your email..."
-          autoFocus
           autoComplete='email'
           value={formData.email}
           onChange={handleChange}

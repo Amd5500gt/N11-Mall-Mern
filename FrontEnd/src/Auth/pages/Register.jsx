@@ -31,7 +31,6 @@ const Register = ({
           type="text"
           name="name"
           placeholder="Enter your name..."
-          autoFocus
           autoComplete='name'
           value={formData.name}
           onChange={handleChange}

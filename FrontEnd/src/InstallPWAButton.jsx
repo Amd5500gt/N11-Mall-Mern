@@ -144,8 +144,6 @@ const InstallPWAButton = () => {
             padding: "28px",
             textAlign: "center",
             position: "relative",
-            boxShadow:
-              "0 20px 50px rgba(0,0,0,0.45)",
             animation:
               "popupShow 0.3s ease",
           }}

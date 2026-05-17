@@ -172,8 +172,6 @@ const ForgetPassword = ({
           placeholder=
           "Enter your email..."
 
-          autoFocus
-
           value={email}
 
           onChange={(e) =>
