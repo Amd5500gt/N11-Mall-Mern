@@ -66,21 +66,21 @@
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "NexXcart Home"
+      "label": "Search"
     },
     {
       "src": "/screenshots/home2.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "NexXcart Home"
+      "label": "Order History"
     },
     {
       "src": "/screenshots/home3.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "NexXcart Home"
+      "label": "Preview Product"
     },
 
     {
@@ -95,21 +95,21 @@
       "sizes": "720x1280",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "NexXcart Mobile"
+      "label": "Preview Product"
     },
     {
       "src": "/screenshots/mobile2.png",
       "sizes": "720x1280",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "NexXcart Mobile"
+      "label": "Order History"
     },
     {
       "src": "/screenshots/mobile3.png",
       "sizes": "720x1280",
       "type": "image/png",
       "form_factor": "narrow",
-      "label": "NexXcart Mobile"
+      "label": "Search"
     }
 
   ],
