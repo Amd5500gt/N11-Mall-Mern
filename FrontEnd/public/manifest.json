@@ -1,7 +1,7 @@
 {
   "name": "NexXcart",
   "short_name": "NexXcart",
-  "description": "Chose Buy And Enjoy - Curated products at unbeatable prices — with free shipping on every order you place.",
+  "description": "Curated products at unbeatable prices — with free shipping on every order you place.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0f172a",
