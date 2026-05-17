@@ -2196,12 +2196,6 @@ linear-gradient(
   font-weight: 500;
 }
 
-.clear-search-btn:hover {
-  transform: translateY(-2px);
-  background-color: rgba(255, 255, 255, 0.397);
-  color: rgba(0, 0, 0, 0.51);
-}
-
 .suggestions {
   display: flex;
   gap: 1rem;

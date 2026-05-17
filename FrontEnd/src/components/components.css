@@ -159,8 +159,6 @@ body {
   outline: none;
 }
 
-.search-input::placeholder { color: var(--gray-400); }
-
 .search-btn {
   position: absolute;
   right: 4px;
@@ -180,14 +178,6 @@ body {
   transition: all 0.15s ease;
 }
 
-.search-btn:hover {
-  background: var(--primary-dark);
-  transform: translateY(-50%) scale(1.1);
-}
-
-.search-btn:active {
-  transform: translateY(-50%) scale(0.95);
-}
 
 /* ==================== DESKTOP NAV ==================== */
 .desktop-nav {

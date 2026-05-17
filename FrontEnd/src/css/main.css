@@ -902,15 +902,6 @@ body {
 .shadow-lg { box-shadow: var(--shadow-lg); }
 .shadow-glow { box-shadow: var(--shadow-glow); }
 
-/* ========================================
-   ACCESSIBILITY
-   ======================================== */
-:focus-visible {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-  border-radius: var(--radius-sm);
-}
-
 /* Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
   *,

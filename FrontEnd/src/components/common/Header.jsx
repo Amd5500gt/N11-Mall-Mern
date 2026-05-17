@@ -1,10 +1,10 @@
 // components/Header.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { BsCartFill } from 'react-icons/bs';
+import { BsCartFill, BsSearch } from 'react-icons/bs';
 import { useSearch } from '../../context/SearchContext';
 import { FiHome, FiInfo, FiPhone, FiMenu, FiX, FiUser, FiLogOut, FiSettings, FiMapPin, FiPackage } from 'react-icons/fi';
-import { FaUserCircle, FaMoon, FaSun, FaChevronDown } from 'react-icons/fa';
+import { FaUserCircle, FaMoon, FaSun, FaChevronDown, FaSearch } from 'react-icons/fa';
 import ProfileDropdown from './navbar/ProfileDropdown';
 import '../components.css';
 import Cart from './navbar/Cart';
@@ -133,7 +133,7 @@ const Header = ({ cartCount }) => {
                  }
               }}
             />
-            <button onClick={handleSearch} className="search-btn">🔍</button>
+            <button onClick={handleSearch} className="search-btn">< BsSearch size={12} /></button>
           </div>
 
           {isLogged ? (
