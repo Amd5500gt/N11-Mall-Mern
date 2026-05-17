@@ -13,79 +13,53 @@ const InstallPWA = () => {
   const [installed, setInstalled] =
     useState(false);
 
-  const [installing, setInstalling] =
-    useState(false);
-
-  const [progress, setProgress] =
-    useState(0);
-
-  const [supported, setSupported] =
-    useState(true);
-
   useEffect(() => {
 
-    /* CHECK INSTALLED */
+    /* CHECK IF APP ALREADY INSTALLED */
 
-    const isStandalone =
+    const isInstalled =
+
       window.matchMedia(
         "(display-mode: standalone)"
       ).matches
-      ||
-      window.navigator.standalone;
 
-    if (isStandalone) {
+      ||
+
+      window.navigator.standalone
+
+      ||
+
+      document.referrer.includes(
+        "android-app://"
+      );
+
+    if (isInstalled) {
 
       setInstalled(true);
-
-    }
-
-    /* CHECK SUPPORT */
-
-    if (
-      !("BeforeInstallPromptEvent" in window)
-      &&
-      !window.navigator.userAgent.includes(
-        "Android"
-      )
-    ) {
-
-      setSupported(false);
 
     }
 
     const pwa =
       pwaRef.current;
 
-    /* SUCCESS */
+    /* INSTALL SUCCESS */
 
     const handleSuccess = () => {
-setProgress(100);
 
-setTimeout(() => {
-
-  setInstalling(false);
-
-  setInstalled(true);
-   console.log(
-        "✅ Installed"
+      console.log(
+        "App Installed"
       );
 
-}, 700);
-
-     
+      setInstalled(true);
 
     };
 
-    /* FAIL */
+    /* INSTALL FAIL */
 
     const handleFail = () => {
 
-      setInstalling(false);
-
-      setProgress(0);
-
       console.log(
-        "❌ Failed"
+        "Install Failed"
       );
 
     };
@@ -97,16 +71,6 @@ setTimeout(() => {
       console.log(
         e.detail.outcome
       );
-
-      if (
-        e.detail.outcome === "dismissed"
-      ) {
-
-        setInstalling(false);
-
-        setProgress(0);
-
-      }
 
     };
 
@@ -125,239 +89,60 @@ setTimeout(() => {
       handleChoice
     );
 
-    return () => {
+    /* REAL INSTALL EVENT */
 
-      pwa?.removeEventListener(
-        "pwa-install-success-event",
-        handleSuccess
-      );
+    window.addEventListener(
+      "appinstalled",
+      () => {
 
-      pwa?.removeEventListener(
-        "pwa-install-fail-event",
-        handleFail
-      );
+        setInstalled(true);
 
-      pwa?.removeEventListener(
-        "pwa-user-choice-result-event",
-        handleChoice
-      );
-
-    };
+      }
+    );
 
   }, []);
 
-  /* INSTALL */
-const handleInstall = async () => {
+  /* HIDE BUTTON IF INSTALLED */
 
-  if (!pwaRef.current)
-    return;
-
-  setInstalling(true);
-
-  setProgress(0);
-
-  let current = 0;
-
-  const interval =
-    setInterval(() => {
-
-      current += 5;
-
-      /* STOP AT 90 */
-
-      if (current < 90) {
-
-        setProgress(current);
-
-      }
-
-    }, 200);
-
-  try {
-
-    /* OPEN INSTALL POPUP */
-
-    pwaRef.current.showDialog();
-
-    /* WAIT SOME TIME */
-
-    setTimeout(() => {
-
-      /* IF STILL NOT INSTALLED */
-
-      setProgress(100);
-
-    }, 2500);
-
-  } catch (err) {
-
-    console.log(err);
-
-    setInstalling(false);
-
-    setProgress(0);
-
-  }
-
-  /* AUTO CLEANUP */
-
-  setTimeout(() => {
-
-    clearInterval(interval);
-
-  }, 4000);
-  };
-
-  /* OPEN APP */
-
-  const openApp = () => {
-
-    window.location.href = "/";
-
-  };
+  if (installed)
+    return null;
 
   return (
 
-    <>
+    <div>
 
-      {/* INSTALL */}
+      {/* CUSTOM BUTTON */}
 
-      {!installed && (
+      <button
+        onClick={() =>
+          pwaRef.current?.showDialog()
+        }
+        style={{
 
-        <button
-          onClick={handleInstall}
-          disabled={
-            installing ||
-            !supported
-          }
-          style={{
+          padding:
+            "14px 22px",
 
-            position: "fixed",
+          border: "none",
 
-            bottom: "20px",
+          borderRadius:
+            "16px",
 
-            right: "20px",
+          background:
+            "linear-gradient(135deg,#14b8a6,#0f766e)",
 
-            zIndex: 999999,
+          color: "#fff",
 
-            border: "none",
+          fontWeight: "700",
 
-            outline: "none",
+          cursor: "pointer",
 
-            padding:
-              "15px 24px",
+          fontSize: "16px"
+        }}
+      >
+        📥 Install App
+      </button>
 
-            borderRadius:
-              "18px",
-
-            fontWeight: "700",
-
-            fontSize: "15px",
-
-            color: "#fff",
-
-            cursor: "pointer",
-
-            overflow: "hidden",
-
-            transition:
-              "0.3s",
-
-            backdropFilter:
-              "blur(10px)",
-
-            background:
-              installing
-                ? "linear-gradient(135deg,#4f46e5,#7c3aed)"
-                : "linear-gradient(135deg,#14b8a6,#0f766e)",
-
-            boxShadow:
-              "0 10px 30px rgba(0,0,0,0.25)"
-          }}
-        >
-
-          {installing
-            ? `Installing ${progress}%`
-            : supported
-            ? "📥 Install App"
-            : "❌ Not Supported"}
-
-          {/* PROGRESS */}
-
-          {installing && (
-
-            <div
-              style={{
-
-                position: "absolute",
-
-                left: 0,
-
-                bottom: 0,
-
-                width: `${progress}%`,
-
-                height: "4px",
-
-                background:
-                  "#fff",
-
-                transition:
-                  "0.2s"
-              }}
-            />
-
-          )}
-
-        </button>
-
-      )}
-
-      {/* OPEN APP */}
-
-      {installed && (
-
-        <button
-          onClick={openApp}
-          style={{
-
-            position: "fixed",
-
-            bottom: "20px",
-
-            right: "20px",
-
-            zIndex: 999999,
-
-            border: "none",
-
-            padding:
-              "15px 24px",
-
-            borderRadius:
-              "18px",
-
-            fontWeight: "700",
-
-            fontSize: "15px",
-
-            color: "#fff",
-
-            cursor: "pointer",
-
-            background:
-              "linear-gradient(135deg,#22c55e,#15803d)",
-
-            boxShadow:
-              "0 10px 30px rgba(0,0,0,0.25)"
-          }}
-        >
-          🚀 Open App
-        </button>
-
-      )}
-
-      {/* PWA */}
+      {/* PWA INSTALL */}
 
       <pwa-install
 
@@ -368,14 +153,13 @@ const handleInstall = async () => {
 
         use-local-storage
 
-        disable-screenshots="true"
+        disable-screenshots={false}
 
         manifest-url="/manifest.json"
 
       ></pwa-install>
 
-    </>
-
+    </div>
   );
 };
 
