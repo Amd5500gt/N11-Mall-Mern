@@ -8,6 +8,7 @@ import { useSearch } from '../../context/SearchContext';
 import toast from 'react-hot-toast';
 import api from '../../utils/Api';
 
+
 const Footer = () => {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);

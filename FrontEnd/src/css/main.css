@@ -961,3 +961,304 @@ body {
     transform: translateY(0) scale(1);
   }
 }
+
+/* =========================
+   INSTALL BUTTON
+========================= */
+
+.install-pwa-btn {
+
+  position: fixed;
+
+  bottom: 20px;
+
+  left: 50%;
+
+  transform: translateX(-50%);
+
+  z-index: 9999;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 12px 18px;
+
+  border-radius: 14px;
+
+  border: 1px solid #e0e0e0;
+
+  background: #ffffff;
+
+  color: #374151;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.25s;
+
+  box-shadow:
+    0 4px 14px rgba(0,0,0,0.06);
+
+  backdrop-filter: blur(10px);
+}
+
+.install-pwa-btn:hover {
+
+  transform:
+    translateX(-50%)
+    translateY(-3px);
+
+  color: #14b8a6;
+
+  border-color: #14b8a6;
+
+  box-shadow:
+    0 10px 24px rgba(20,184,166,0.18);
+}
+
+.install-pwa-btn svg {
+
+  font-size: 18px;
+}
+
+/* =========================
+   POPUP
+========================= */
+
+.install-popup-overlay {
+
+  position: fixed;
+
+  inset: 0;
+
+  background:
+    rgba(0,0,0,0.7);
+
+  backdrop-filter:
+    blur(8px);
+
+  z-index: 99999;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  padding: 20px;
+}
+
+.install-popup-card {
+
+  width: 100%;
+
+  max-width: 360px;
+
+  background: #ffffff;
+
+  border-radius: 24px;
+
+  padding: 28px;
+
+  position: relative;
+
+  text-align: center;
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.35);
+}
+
+/* CLOSE */
+
+.install-close-btn {
+
+  position: absolute;
+
+  top: 12px;
+
+  right: 14px;
+
+  border: none;
+
+  background: transparent;
+
+  font-size: 24px;
+
+  cursor: pointer;
+
+  color: #6b7280;
+}
+
+/* ICON */
+
+.install-icon {
+
+  width: 90px;
+
+  height: 90px;
+
+  margin:
+    0 auto 18px;
+
+  border-radius: 24px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #14b8a6,
+      #0f766e
+    );
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 42px;
+
+  color: #fff;
+}
+
+/* TITLE */
+
+.install-title {
+
+  margin-bottom: 10px;
+
+  font-size: 28px;
+
+  font-weight: 800;
+
+  color: #111827;
+}
+
+/* DESC */
+
+.install-desc {
+
+  color: #4b5563;
+
+  line-height: 1.7;
+
+  margin-bottom: 22px;
+}
+
+/* INSTALL NOW BTN */
+
+.install-now-btn {
+
+  width: 100%;
+
+  border: none;
+
+  padding: 14px;
+
+  border-radius: 14px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #14b8a6,
+      #0f766e
+    );
+
+  color: #ffffff;
+
+  font-size: 15px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  transition: 0.25s;
+}
+
+.install-now-btn:hover {
+
+  transform:
+    translateY(-2px);
+}
+
+/* LOADING */
+
+.install-loading {
+
+  color: #6b7280;
+
+  font-size: 14px;
+}
+
+/* =========================
+   DARK MODE
+========================= */
+
+.dark .install-pwa-btn {
+
+  background:
+    rgba(17,24,39,0.92);
+
+  color:
+    #f3f4f6;
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+}
+
+.dark .install-popup-card {
+
+  background:
+    #111827;
+}
+
+.dark .install-title {
+
+  color:
+    #f9fafb;
+}
+
+.dark .install-desc,
+.dark .install-loading {
+
+  color:
+    #d1d5db;
+}
+
+.dark .install-close-btn {
+
+  color:
+    #d1d5db;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+  .install-pwa-btn {
+
+    width:
+      calc(100% - 30px);
+
+    justify-content:
+      center;
+
+    bottom: 15px;
+  }
+
+}
