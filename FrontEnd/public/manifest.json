@@ -55,7 +55,28 @@
   "screenshots": [
 
     {
-      "src": "/screenshots/home.png",
+      "src": "/screenshots/desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "NexXcart Home"
+    },
+    {
+      "src": "/screenshots/desktop1.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "NexXcart Home"
+    },
+    {
+      "src": "/screenshots/desktop2.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "NexXcart Home"
+    },
+    {
+      "src": "/screenshots/desktop3.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide",
@@ -64,6 +85,27 @@
 
     {
       "src": "/screenshots/mobile.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "NexXcart Mobile"
+    },
+    {
+      "src": "/screenshots/mobile1.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "NexXcart Mobile"
+    },
+    {
+      "src": "/screenshots/mobile2.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "NexXcart Mobile"
+    },
+    {
+      "src": "/screenshots/mobile3.png",
       "sizes": "720x1280",
       "type": "image/png",
       "form_factor": "narrow",
