@@ -12,21 +12,42 @@ const SplashScreen = ({
   const [
     loading,
     setLoading
-  ] = useState(true);
+  ] = useState(false);
 
   useEffect(() => {
 
-    const timer =
-      setTimeout(() => {
+    const alreadyVisited =
 
-        setLoading(false);
+      localStorage.getItem(
+        "nexxcart_splash_seen"
+      );
 
-      }, 2000);
+    /* FIRST TIME ONLY */
 
-    return () =>
-      clearTimeout(timer);
+    if (!alreadyVisited) {
+
+      setLoading(true);
+
+      const timer =
+        setTimeout(() => {
+
+          setLoading(false);
+
+          localStorage.setItem(
+            "nexxcart_splash_seen",
+            "true"
+          );
+
+        }, 2600);
+
+      return () =>
+        clearTimeout(timer);
+
+    }
 
   }, []);
+
+  /* SHOW SPLASH */
 
   if (loading) {
 
