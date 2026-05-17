@@ -19,6 +19,7 @@ import AddressPage from './components/common/userInfo/address/AddressPage';
 import { useContext } from 'react';
 import AddressForm from './components/common/userInfo/addressForm/AddressForm';
 import ChangePassword from './components/common/userInfo/Profile.jsx/ChangePassword';
+import InstallPWA from './InstallPWA';
 
 const App = () => {
   const { cartCount, total, addedItems } = useContext(useCart);
