@@ -7,6 +7,7 @@ import logo from '../../assets/images/logo.png';
 import { useSearch } from '../../context/SearchContext';
 import toast from 'react-hot-toast';
 import api from '../../utils/Api';
+import InstallPWA from '../../InstallPWA';
 
 
 const Footer = () => {
@@ -165,6 +166,7 @@ const handleSubscribe = async (e) => {
         {/* Bottom Bar */}
         <div className="footer-bottom">
           <div className="footer-social-links">
+         
             {socialLinks.map((social) => (
               <a
                 key={social.name}
@@ -179,6 +181,7 @@ const handleSubscribe = async (e) => {
                 <span className="social-name">{social.name}</span>
               </a>
             ))}
+               <InstallPWA />
           </div>
           <div className="footer-copyright">
             <p>© {currentYear} NexXcart. All rights reserved.</p>
