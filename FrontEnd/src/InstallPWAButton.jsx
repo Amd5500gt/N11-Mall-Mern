@@ -73,15 +73,23 @@ const InstallPWAButton = () => {
     const installedHandler =
       () => {
 
-        setInstalling(false);
-
-        setInstalled(true);
+        /* COMPLETE INSTALL */
 
         setProgress(100);
 
-        setShowPopup(true);
-
         navigator.vibrate?.(200);
+
+        /* SMOOTH SUCCESS DELAY */
+
+        setTimeout(() => {
+
+          setInstalling(false);
+
+          setInstalled(true);
+
+        }, 800);
+
+        /* AUTO CLOSE */
 
         setTimeout(() => {
 
@@ -143,24 +151,23 @@ const InstallPWAButton = () => {
 
           current +=
             Math.floor(
-              Math.random() * 12
-            ) + 3;
+              Math.random() * 8
+            ) + 2;
+
+          /* STOP AT 90 */
 
           if (current >= 90) {
 
             current = 90;
 
-            clearInterval(
-              fakeLoader
-            );
           }
 
           setProgress(current);
 
-        }, 250);
+        }, 300);
 
       /* =====================
-         REAL INSTALL
+         SHOW INSTALL POPUP
       ===================== */
 
       deferredPrompt.prompt();
@@ -168,23 +175,28 @@ const InstallPWAButton = () => {
       const { outcome } =
         await deferredPrompt.userChoice;
 
-      clearInterval(fakeLoader);
+      /* =====================
+         USER CANCELLED
+      ===================== */
 
       if (
-        outcome === "accepted"
+        outcome !== "accepted"
       ) {
 
-        setProgress(100);
-
-      }
-
-      else {
+        clearInterval(fakeLoader);
 
         setInstalling(false);
 
         setProgress(0);
 
+        return;
       }
+
+      /* =====================
+         USER ACCEPTED
+         NOW WAIT FOR:
+         appinstalled EVENT
+      ===================== */
 
       setDeferredPrompt(null);
 
@@ -211,7 +223,7 @@ const InstallPWAButton = () => {
   };
 
   /* =========================
-     CLOSE
+     CLOSE POPUP
   ========================= */
 
   const closePopup = () => {
@@ -352,7 +364,7 @@ const InstallPWAButton = () => {
 
             <>
 
-              {/* CIRCLE */}
+              {/* PROGRESS CIRCLE */}
 
               <div
                 style={{
@@ -448,7 +460,7 @@ const InstallPWAButton = () => {
                 device 🚀
               </p>
 
-              {/* BAR */}
+              {/* PROGRESS BAR */}
 
               <div
                 style={{
@@ -483,7 +495,7 @@ const InstallPWAButton = () => {
           )}
 
           {/* =====================
-              INSTALLED
+              INSTALLED UI
           ===================== */}
 
           {!installing &&
@@ -590,9 +602,7 @@ const InstallPWAButton = () => {
 
       </div>
 
-      {/* =========================
-         ANIMATIONS
-      ========================= */}
+      {/* ANIMATIONS */}
 
       <style>
         {`
