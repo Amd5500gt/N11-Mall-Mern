@@ -1,22 +1,98 @@
 {
   "name": "NexXcart",
   "short_name": "NexXcart",
-  "description": "Curated products at unbeatable prices — with free shipping on every order you place.",
+
+  "description": "Premium shopping experience with lightning fast performance, offline access, and curated products at unbeatable prices.",
+
+  "id": "/",
+
   "start_url": "/",
+
+  "scope": "/",
+
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#14b8a6",
+
+  "display_override": [
+    "window-controls-overlay",
+    "standalone"
+  ],
+
   "orientation": "portrait",
+
+  "background_color": "#f7f7f7",
+
+  "theme_color": "#f7f7f7",
+
+  "lang": "en",
+
+  "dir": "ltr",
+
+  "categories": [
+    "shopping",
+    "ecommerce",
+    "business"
+  ],
+
+  "prefer_related_applications": false,
+
   "icons": [
     {
       "src": "/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
+
     {
       "src": "/icon-512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
+
+  ],
+
+  "screenshots": [
+
+    {
+      "src": "/screenshots/home.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "NexXcart Home"
+    },
+
+    {
+      "src": "/screenshots/mobile.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "NexXcart Mobile"
+    }
+
+  ],
+
+  "shortcuts": [
+
+    {
+      "name": "Shop Now",
+
+      "short_name": "Shop",
+
+      "description": "Browse products instantly",
+
+      "url": "/"
+    },
+
+    {
+      "name": "Cart",
+
+      "short_name": "Cart",
+
+      "description": "View your shopping cart",
+
+      "url": "/cart/checkout"
+    }
+
   ]
 }

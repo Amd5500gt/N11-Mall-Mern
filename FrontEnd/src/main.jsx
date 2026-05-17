@@ -6,9 +6,11 @@ import { SearchProvider } from './context/SearchContext.jsx'  // Change Cartcont
 import { GoogleOAuthProvider }
 from "@react-oauth/google";
 import { AddressProvider } from './context/AddressContext.jsx'
+import SplashScreen from './SplashScreen.jsx'
 
 createRoot(document.getElementById('root')).render(
     <BrowserRouter>
+        <SplashScreen>
     <GoogleOAuthProvider
   clientId="544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com"  >
       <SearchProvider>
@@ -20,5 +22,6 @@ createRoot(document.getElementById('root')).render(
             </AddressProvider>
         </SearchProvider>
         </GoogleOAuthProvider>
+        </SplashScreen>
     </BrowserRouter>
 )

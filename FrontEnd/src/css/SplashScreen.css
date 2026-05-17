@@ -1,0 +1,171 @@
+/* =========================
+   SPLASH SCREEN
+========================= */
+
+.splash-screen {
+
+  position: fixed;
+
+  inset: 0;
+
+  background:#f7f7f7;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+
+  overflow: hidden;
+
+  z-index: 999999;
+}
+
+/* GLOW */
+
+.splash-glow {
+
+  position: absolute;
+
+  width: 300px;
+
+  height: 300px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(20,184,166,0.18);
+
+  filter: blur(80px);
+
+  animation:
+    pulseGlow 3s infinite;
+}
+
+/* LOGO */
+
+.splash-logo {
+
+  position: relative;
+
+  z-index: 2;
+
+  animation:
+    floatLogo 2.5s ease-in-out infinite;
+}
+
+.splash-logo img {
+
+  width: 110px;
+
+  height: 110px;
+
+  border-radius: 28px;
+}
+/* TITLE */
+
+.splash-screen h1 {
+
+  margin-top: 22px;
+
+  color: #000000;
+
+  font-size: 34px;
+
+  font-weight: 800;
+
+  letter-spacing: 1px;
+
+  z-index: 2;
+}
+
+/* LOADER */
+
+.splash-loader {
+
+  width: 220px;
+
+  height: 6px;
+
+  margin-top: 26px;
+
+  border-radius: 999px;
+
+  overflow: hidden;
+
+  background:
+    rgba(42, 42, 42, 0.016);
+
+  position: relative;
+
+  z-index: 2;
+}
+
+.splash-loader span {
+
+  position: absolute;
+
+  left: -40%;
+
+  width: 40%;
+
+  height: 100%;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #141515,
+      #1a1c1c
+    );
+
+  animation:
+    loadingMove 1.2s infinite;
+}
+
+/* ANIMATIONS */
+
+@keyframes loadingMove {
+
+  100% {
+    left: 100%;
+  }
+
+}
+
+@keyframes floatLogo {
+
+  0%,100% {
+    transform:
+      translateY(0px);
+  }
+
+  50% {
+    transform:
+      translateY(-12px);
+  }
+
+}
+
+@keyframes pulseGlow {
+
+  0%,100% {
+
+    transform:
+      scale(1);
+
+    opacity: 0.7;
+  }
+
+  50% {
+
+    transform:
+      scale(1.15);
+
+    opacity: 1;
+  }
+
+}
