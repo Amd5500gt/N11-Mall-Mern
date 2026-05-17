@@ -29,6 +29,32 @@ const App = () => {
       localStorage.setItem('cartItems', JSON.stringify(addedItems));
     }
   }, [addedItems]);
+
+  if ("serviceWorker" in navigator) {
+
+  window.addEventListener(
+    "load",
+    () => {
+
+      navigator.serviceWorker
+        .register("/sw.js")
+        .then(() => {
+
+          console.log(
+            "✅ SW Registered"
+          );
+
+        })
+        .catch((err) => {
+
+          console.log(err);
+
+        });
+
+    }
+  );
+
+}
   return (
     <div>
       <Routes>
