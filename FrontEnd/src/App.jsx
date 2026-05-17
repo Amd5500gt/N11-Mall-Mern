@@ -20,6 +20,7 @@ import { useContext } from 'react';
 import AddressForm from './components/common/userInfo/addressForm/AddressForm';
 import ChangePassword from './components/common/userInfo/Profile.jsx/ChangePassword';
 import InstallPWA from './InstallPWA';
+import SearchPage from './pages/SearchPage';
 
 const App = () => {
   const { cartCount, total, addedItems } = useContext(useCart);
@@ -68,6 +69,7 @@ const App = () => {
           <Route path='/auth' element={<AuthPage />} />
           <Route path='/about' element={<About />} />
           <Route path='/contact' element={<Contact />} />
+          <Route path="/search" element={<SearchPage />} />
 
           {/* Protected Routes */}
           <Route element={<AuthLayout />}>

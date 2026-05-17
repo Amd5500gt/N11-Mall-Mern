@@ -14,7 +14,7 @@ const Products = () => {
   const[skip,setSkip] = useState(0)
   const [addedItemId, setAddedItemId] = useState(null);
   const [wishlist, setWishlist] = useState([]);
-  const {searchTerm,setSearchTerm,data,setData,filterData,setFilterData,loading,setLoading,total,setTotal,limit} = useSearch();
+  const {data,setData,filterData,setFilterData,loading,setLoading,total,setTotal,limit} = useSearch();
   const { newCart, removeCart, addedItems } = useCart();
   const visibleData = Array.isArray(filterData)
   ? filterData.slice(skip, skip + limit)
@@ -32,24 +32,6 @@ useEffect(() => {
   useEffect(() => {
     localStorage.setItem('wishlist_n11', JSON.stringify(wishlist));
   }, [wishlist]);
-useEffect(() => {
-  const value = searchTerm.toLowerCase();
-
-  if (!value) {
-    setFilterData(data);
-    setTotal(data.length);
-    return;
-  }
-
-  const result = data.filter(item =>
-    item.title?.toLowerCase().includes(value)
-  );
-
-  setFilterData(result);
-  setTotal(result.length);
-  setSkip(0);
-
-}, [searchTerm, data]);
 
   // Render stars
   const renderStars = (rating) => {

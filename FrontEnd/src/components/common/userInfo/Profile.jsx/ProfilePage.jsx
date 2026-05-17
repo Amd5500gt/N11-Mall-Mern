@@ -17,8 +17,10 @@ import api from "../../../../utils/Api";
 import CustomAlert from "../../../ui/CustomAlert";
 import ResetPassword from "../../../../Auth/pages/ForgetPassword/ResetPassword";
 import "./ProfilePage.css";
+import { useOrder } from "../../../../context/OrderContext";
 
 const ProfilePage = () => {
+  const { sortedOrders }  = useOrder()
   const [alert, setAlert] = useState(false);
   const [showResetPassword, setShowResetPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -32,18 +34,33 @@ const ProfilePage = () => {
   const { userData, isLogged, handleLogout } = useSearch();
 
   // Redirect if not logged in
-  useEffect(() => {
-    if (!isLogged) {
-      navigate("/auth");
-    } else {
-      // Calculate stats
-      const orders = JSON.parse(localStorage.getItem("orders") || "[]");
-      setStats({
-        orders: orders.length,
-        joinedDate: new Date().toLocaleDateString(),
-      });
+useEffect(() => {
+
+  if (!isLogged) {
+
+    navigate("/auth");
+
+  } else {
+
+    setStats({
+
+      orders: sortedOrders.length,
+
+ joinedDate :  new Date(userData.createdAt)
+  .toLocaleDateString(
+    "en-IN",
+    {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
     }
-  }, [isLogged, navigate]);
+  )
+
+    });
+
+  }
+
+}, [isLogged, navigate, sortedOrders]);
 
   // Send OTP for password reset
   const resetPassword = async () => {

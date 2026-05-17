@@ -23,7 +23,7 @@ const Header = ({ cartCount }) => {
   const [addresses, setAddresses] = useState([]);
 
   const {
-    setSearchTerm, token, isLogged,
+    token, isLogged,
     userData, handleLogout
   } = useSearch();
   const { name, email, picture } = userData
@@ -71,11 +71,16 @@ const Header = ({ cartCount }) => {
   ];
 
   const handleSearch = () => {
-    navigate("/")
-    if (!value.trim()) return;
-    setSearchTerm(value.trim().toLowerCase());
-  };
 
+    const trimmed =
+      value.trim();
+    if (!trimmed) return;
+    setValue(trimmed);
+    navigate(
+      `/search?q=${encodeURIComponent(trimmed)}`
+    );
+
+  };
   const handleLogin = () => {
     navigate("/auth");
   };
@@ -123,7 +128,10 @@ const Header = ({ cartCount }) => {
               className="search-input"
               type="text"
               placeholder="Search..."
-              onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') { handleSearch()
+                 }
+              }}
             />
             <button onClick={handleSearch} className="search-btn">🔍</button>
           </div>

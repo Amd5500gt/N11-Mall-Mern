@@ -4,24 +4,26 @@ import { BrowserRouter } from 'react-router-dom'
 import { CartProvider } from './context/CartContext.jsx'  // Change Cart to CartProvider
 import { SearchProvider } from './context/SearchContext.jsx'  // Change Cartcontext to SearchProvider
 import { GoogleOAuthProvider }
-from "@react-oauth/google";
+    from "@react-oauth/google";
 import { AddressProvider } from './context/AddressContext.jsx'
 import SplashScreen from './SplashScreen.jsx'
+import { OrderProvider } from './context/OrderContext.jsx'
 
 createRoot(document.getElementById('root')).render(
     <BrowserRouter>
         <SplashScreen>
-    <GoogleOAuthProvider
-  clientId="544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com"  >
-      <SearchProvider>
-            <AddressProvider>
-            <CartProvider>  {/* Change Cart to CartProvider */}
-                <App />
-                
-            </CartProvider>
-            </AddressProvider>
-        </SearchProvider>
-        </GoogleOAuthProvider>
+            <GoogleOAuthProvider
+                clientId="544841424268-ouptou7q8ca2j72gajck8ckrcr4btl7h.apps.googleusercontent.com"  >
+                <SearchProvider>
+                    <AddressProvider>
+                        <OrderProvider>
+                            <CartProvider> 
+                                <App />
+                            </CartProvider>
+                        </OrderProvider>
+                    </AddressProvider>
+                </SearchProvider>
+            </GoogleOAuthProvider>
         </SplashScreen>
     </BrowserRouter>
 )

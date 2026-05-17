@@ -7,65 +7,33 @@ import {
 import './OrderHistory.css';
 import toast from 'react-hot-toast';
 import api from "../../utils/Api"
+import { useOrder } from '../../context/OrderContext';
 
 const OrderHistory = () => {
   const [orders, setOrders] = useState([]);
- 
+   const { sortedOrders} = useOrder()
   const [loading, setLoading] = useState(true);
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [filterStatus, setFilterStatus] = useState('all');
   const [stats, setStats] = useState({ total: 0, delivered: 0, pending: 0, cancelled: 0 });
 
-const fetchOrders = async () => {
+useEffect(() => {
 
-  try {
+  if (sortedOrders.length > 0) {
 
-    setLoading(true);
+    setOrders(sortedOrders);
 
-    const res =
-      await api.post(
-        "/user/orders"
-      );
+    setFilteredOrders(sortedOrders);
 
-    if (res.data.success) {
-
-      const sortedOrders =
-        res.data.orders.sort(
-          (a, b) =>
-            new Date(b.createdAt) -
-            new Date(a.createdAt)
-        );
-
-      setOrders(sortedOrders);
-
-      setFilteredOrders(
-        sortedOrders
-      );
-
-      calculateStats(
-        sortedOrders
-      );
-
-    }
-
-  } catch (err) {
-
-    toast.error(
-      "Failed to fetch orders"
-    );
-
-  } finally {
-
-    setLoading(false);
+    calculateStats(sortedOrders);
 
   }
 
-};
+  setLoading(false);
 
-  useEffect(() => {
-    fetchOrders();
-  }, []);
+}, [sortedOrders]);
+
 
   useEffect(() => {
     let filtered = [...orders];

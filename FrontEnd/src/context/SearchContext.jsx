@@ -33,13 +33,6 @@ export const SearchProvider =
     useState(0);
 
   const limit = 12;
-
-  /* SEARCH */
-
-  const [searchTerm,
-    setSearchTerm] =
-    useState("");
-
   /* AUTH */
 
   const [token, setToken] =
@@ -48,7 +41,7 @@ export const SearchProvider =
         "jwtToken"
       ) || null
     );
-
+ const [searchItems, setSearchItems] = useState("")
   const isLogged = !!token;
 
   /* USER */
@@ -61,6 +54,7 @@ export const SearchProvider =
       picture: "",
       address: [],
       cart: [],
+      createdAt: ""
     });
 
   /* FETCH PRODUCTS */
@@ -238,33 +232,6 @@ useEffect(() => {
     }
 
   }, [token]);
-
-  /* SEARCH FILTER */
-
-  useEffect(() => {
-
-    if (
-      !searchTerm.trim()
-    ) {
-
-      setFilterData(data);
-
-      return;
-    }
-
-    const filtered =
-      data.filter((item) =>
-        item.title
-          ?.toLowerCase()
-          .includes(
-            searchTerm.toLowerCase()
-          )
-      );
-
-    setFilterData(filtered);
-
-  }, [searchTerm, data]);
-
   /* LOGOUT */
 
   const handleLogout =
@@ -290,6 +257,7 @@ useEffect(() => {
         picture: "",
         address: [],
         cart: [],
+        createdAt: ""
       });
 
       toast.success(
@@ -305,12 +273,6 @@ useEffect(() => {
 
     <SearchContext.Provider
       value={{
-
-        /* SEARCH */
-
-        searchTerm,
-        setSearchTerm,
-
         /* PRODUCTS */
 
         data,
