@@ -11564,7 +11564,74 @@
         "https://cdn.dummyjson.com/product-images/womens-watches/iwc-ingenieur-automatic-steel/3.webp"
       ],
       "thumbnail": "https://cdn.dummyjson.com/product-images/womens-watches/iwc-ingenieur-automatic-steel/thumbnail.webp"
+    },
+    {
+  "id": 999,
+  "title": "Handmade Motivational Surprise Box",
+  "description": "A handcrafted surprise gift box featuring a motivational 'BE LIMITLESS' design, personalized notes, and custom artwork. Perfect for birthdays, friendships, anniversaries, and special occasions.",
+  "category": "handmade-gifts",
+  "price": 499.99,
+  "discountPercentage": 10.5,
+  "rating": 4.8,
+  "stock": 15,
+  "tags": [
+    "gift box",
+    "handmade",
+    "surprise box",
+    "memory box",
+    "custom gift",
+    "birthday gift"
+  ],
+  "brand": "N11 Handmade",
+  "sku": "N11-HMB-001",
+  "weight": 250,
+  "dimensions": {
+    "width": 15,
+    "height": 15,
+    "depth": 8
+  },
+  "warrantyInformation": "No warranty",
+  "shippingInformation": "Ships within 2-3 business days",
+  "availabilityStatus": "In Stock",
+  "reviews": [
+    {
+      "rating": 5,
+      "comment": "Beautiful handmade gift box!",
+      "date": "2026-06-08T12:00:00.000Z",
+      "reviewerName": "Aman Singh",
+      "reviewerEmail": "aman@example.com"
+    },
+    {
+      "rating": 4,
+      "comment": "Loved the creativity and design.",
+      "date": "2026-06-08T12:00:00.000Z",
+      "reviewerName": "Priya Sharma",
+      "reviewerEmail": "priya@example.com"
+    },
+    {
+      "rating": 5,
+      "comment": "Perfect personalized surprise gift.",
+      "date": "2026-06-08T12:00:00.000Z",
+      "reviewerName": "Rohit Kumar",
+      "reviewerEmail": "rohit@example.com"
     }
+  ],
+  "returnPolicy": "7 days return policy",
+  "minimumOrderQuantity": 1,
+  "meta": {
+    "createdAt": "2026-06-08T12:00:00.000Z",
+    "updatedAt": "2026-06-08T12:00:00.000Z",
+    "barcode": "1234567890123",
+    "qrCode": "./assets/qrcode.png"
+  },
+  "images": [
+    "https://n11-backend.vercel.app/1.jpeg",
+    "./2.jpeg",
+    "./3.jpeg"
+  ],
+  "thumbnail": "./2.jpeg"
+}
+
   ],
     "total": 194
 }
