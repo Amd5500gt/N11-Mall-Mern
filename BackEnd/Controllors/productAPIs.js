@@ -3,12 +3,12 @@ const demodata = require("../productData/demodata.json")
 const myproduct = require("../productData/myproduct.json")
 
 const products = async (req, res) => {
-    try{  const email = req.params.email;
+    try{  const email = req.user?.email;
  if(email ==="jkhusshi95@gmail.com"){
  return res.json(myproduct)
  }
 
-        res.json(data)
+      return  res.json(data)
     }
   catch (err) {
     return res.status(500).json({
