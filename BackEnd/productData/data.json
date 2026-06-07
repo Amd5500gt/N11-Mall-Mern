@@ -11626,10 +11626,10 @@
   },
   "images": [
     "https://n11-backend.vercel.app/1.jpeg",
-    "./2.jpeg",
-    "./3.jpeg"
+    "https://n11-backend.vercel.app/2.jpeg",
+    "https://n11-backend.vercel.app/3.jpeg"
   ],
-  "thumbnail": "./2.jpeg"
+  "thumbnail": "https://n11-backend.vercel.app/2.jpeg"
 }
 
   ],
