@@ -19,13 +19,14 @@ const products = async (req, res) => {
 }
  const productPage =(req, res) => {
    const email = req.user?.email;
+     const id = req.params.id;
  if(email ==="jkhusshi95@gmail.com"){
   const product = myproduct.products.find(p => p.id === Number(id))
 
  return res.json(product)
  }
 
-  const id = req.params.id;
+
  
   // maan le products array hai
   const product = data.products.find(p => p.id === Number(id));
