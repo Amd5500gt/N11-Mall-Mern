@@ -60,7 +60,7 @@
     "qrCode": "./assets/qrcode.png"
   },
   "images": [
-    "./1.jpeg",
+    "https://n11-backend.vercel.app/1.jpeg",
     "./2.jpeg",
     "./3.jpeg"
   ],
