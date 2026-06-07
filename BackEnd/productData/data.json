@@ -11625,9 +11625,9 @@
     "qrCode": "./assets/qrcode.png"
   },
   "images": [
-    "https://imageserver.vercel.app/image.1",
-    "https://imageserver.vercel.app/image.2",
-    "https://imageserver.vercel.app/image.3"
+    "https://imageserver.vercel.app/image/1",
+    "https://imageserver.vercel.app/image/2",
+    "https://imageserver.vercel.app/image/3"
   ],
   
   "thumbnail": "https://imageserver.vercel.app/image/2"
