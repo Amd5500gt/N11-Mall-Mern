@@ -18,6 +18,11 @@ const products = async (req, res) => {
 
 }
  const productPage =(req, res) => {
+   const email = req.user?.email;
+ if(email ==="jkhusshi95@gmail.com"){
+ return res.json(myproduct)
+ }
+
   const id = req.params.id;
  
   // maan le products array hai

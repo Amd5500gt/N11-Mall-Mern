@@ -18,6 +18,7 @@ app.set("trust proxy", 1);
 app.use(compression())
 app.use(express.json());
 app.use(helmet())
+app.use(express.static(path.join(__dirname, "public")));
 // Allowed Frontend URLs
 const allowedOrigins = [
   "http://localhost:5173",
