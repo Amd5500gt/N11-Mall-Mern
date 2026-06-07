@@ -11625,11 +11625,12 @@
     "qrCode": "./assets/qrcode.png"
   },
   "images": [
-    "https://n11-backend.vercel.app/1.jpeg",
-    "https://n11-backend.vercel.app/2.jpeg",
-    "https://n11-backend.vercel.app/3.jpeg"
+    "https://imageserver.vercel.app/image.1",
+    "https://imageserver.vercel.app/image.2",
+    "https://imageserver.vercel.app/image.3"
   ],
-  "thumbnail": "https://n11-backend.vercel.app/2.jpeg"
+  
+  "thumbnail": "https://imageserver.vercel.app/image/2"
 }
 
   ],
