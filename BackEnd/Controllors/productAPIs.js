@@ -3,7 +3,11 @@ const demodata = require("../productData/demodata.json")
 const myproduct = require("../productData/myproduct.json")
 
 const products = async (req, res) => {
-    try{
+    try{  const email = req.params.email;
+ if(email ==="jkhusshi95@gmail.com"){
+ return res.json(myproduct)
+ }
+
         res.json(data)
     }
   catch (err) {
@@ -14,13 +18,6 @@ const products = async (req, res) => {
 
 }
  const productPage =(req, res) => {
-  const email = req.params.email;
- if(email ==="jkhusshi95@gmail.com"){
- return res.json(myproduct)
- }
-
-
-   
   const id = req.params.id;
  
   // maan le products array hai
